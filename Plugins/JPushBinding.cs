@@ -6,29 +6,37 @@ using System.Runtime.InteropServices;
 namespace JPush{
 
 	public class JPushBinding{
+		#if UNITY_ANDROID	
+
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "" ;
 		public static string _func ="" ; 
 		public static bool ANDROID_PLATFORM = false ;		
 		public static bool IPHONE_PLATFORM = false ;
-		
-		static JPushBinding(){
-			Debug.Log("--------unity static JPushBridge---------" );
-						
-			if(Application.platform == RuntimePlatform.Android) {
-				ANDROID_PLATFORM = true ;
-				using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge"))
-					_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
+
+		#endif
+
+		void Start () {		
+			#if UNITY_IPHONE
+//			_printLocalLog("Start");		
+			_registerNetworkDidReceiveMessage();
+
+//			HashSet<String> tags=new HashSet<String>();
+//			tags.Add("tag1");
+//			tags.Add("tag2");
+//			tags.Add("tag3");
+//			SetTagsWithAlias(tags,"bieming");
+			
+			#endif
+			#if UNITY_ANDROID
+			ANDROID_PLATFORM = true ;
+			using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge")){
+				_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
 			}
-			else if(Application.platform == RuntimePlatform.IPhonePlayer) {
-				//TODO
-				IPHONE_PLATFORM = true ;
-			}
-			else {
-				//TODO
-			}
+            #endif
 		}
 		
+		#if UNITY_ANDROID	
 		public static void setDebug(bool debug){
 			if(ANDROID_PLATFORM) 
 				_plugin.Call ("setDebug",debug);
@@ -168,6 +176,84 @@ namespace JPush{
 				//TODO
 			}
 		}
-				
+		#endif
+		#if UNITY_IPHONE
+		void tagsWihtAliasCallBack(String jsonData)
+		{
+			_printLocalLog(jsonData);
+			
+			JsonData jd = JsonMapper.ToObject(jsonData);           
+			int respoenCode = (int)jd["rescode"];   
+			String alias = (String)jd["alias"];             
+			JsonData jdItems = jd["tags"];       
+			int itemCnt = jdItems.Count; 
+			String[] tagsArray=new String[itemCnt];
+			
+			for(int i=0;i<itemCnt;i++)
+			{
+				tagsArray[i] = (String)jdItems[i];             
+			}
+			_printLocalLog("rescode:"+respoenCode);
+			_printLocalLog("alias:"+alias);
+			_printLocalLog("tags:"+tagsArray.ToString());
+			
+		}
+		void networkDidReceiveMessageCallBack(String parameter)
+		{
+			_printLocalLog("networkDidReceiveMessage:"+parameter);
+			//		content = "unity3d_democ";
+			//		extras =     {
+			//		};
+			JsonData jd = JsonMapper.ToObject(parameter);           
+			String content = (String)jd["content"];             
+			_printLocalLog("content:"+content);
+			
+		}
+		
+		public static void SetTagsWithAlias(HashSet<String> tags,String alias){
+			String[] arrayTags = new String[tags.Count];
+			tags.CopyTo (arrayTags);
+			Dictionary<String,object> data = new  Dictionary<String,object> ();
+			data["tags"]  = arrayTags;
+			data["alias"] = alias;
+			
+			String s=LitJson.JsonMapper.ToJson(data);
+			_setTagsAlias(s);
+		}
+		public static void SetTags(HashSet<String> tags){
+			
+			
+			Hashtable data = new 	Hashtable ();
+			data["tags"]  = tags;
+			String s=LitJson.JsonMapper.ToJson(data);
+			_setTags(s);
+		}
+		public static void SetAlias(String alias){
+			
+			JsonData jd = new JsonData ();
+			jd ["alias"] = alias;
+			String s = JsonMapper.ToJson (jd);
+			_setAlias(s);
+		}
+		
+		[DllImport ("__Internal")]
+		public static extern void    _registerNetworkDidReceiveMessage();
+		
+		[DllImport ("__Internal")]
+		public static extern void    _printLocalLog(String log);
+		
+		[DllImport ("__Internal")]
+		public static extern void    _setTagsAlias(String tagsWithAlias);
+		[DllImport ("__Internal")] 
+		public static extern void    _setTags(String tags);
+		[DllImport ("__Internal")]
+		public static extern void    _setAlias(String alias);
+		[DllImport ("__Internal")]
+		public static extern  String _filterValidTags(String tags);
+		[DllImport ("__Internal")]
+		public static extern  String _openUDID();
+		#endif
+
+
 	}
 }
