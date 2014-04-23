@@ -68,19 +68,19 @@ public class PluginsDemo : MonoBehaviour
 		str_unity = GUILayout.TextField(str_unity, GUILayout.Width(500),GUILayout.Height(150));
 							
 		if (GUILayout.Button ("initJPush", GUILayout.Height (100))) {
-			JPushTriggerManager.triggerInitJPush ();
+			JPushTriggerManager.triggerInitJPush (CustomEventObj.EVENT_INIT_JPUSH);
 		}
 		if (GUILayout.Button ("stopJPush", GUILayout.Height (100))) {
-			JPushTriggerManager.triggerStopJPush ();
+			JPushTriggerManager.triggerStopJPush (CustomEventObj.EVENT_STOP_JPUSH);
 		}
 		if (GUILayout.Button ("resumeJPush", GUILayout.Height (100))) {
-			JPushTriggerManager.triggerResumeJPush ();
+			JPushTriggerManager.triggerResumeJPush (CustomEventObj.EVENT_RESUME_JPUSH);
 		}
 		if (GUILayout.Button ("setTags", GUILayout.Height (100))) {
-			JPushTriggerManager.triggerSetTags (str_unity);
+			JPushTriggerManager.triggerSetTags ( CustomEventObj.EVENT_SET_TAGS , str_unity);
 		}
 		if (GUILayout.Button ("setAlias", GUILayout.Height (100))) {
-			JPushTriggerManager.triggerSetAlias (str_unity);
+			JPushTriggerManager.triggerSetAlias ( CustomEventObj.EVENT_SET_ALIAS , str_unity);
 		}
 				
 		if (GUILayout.Button ("showMessage", GUILayout.Height (100))) {
@@ -95,11 +95,13 @@ public class PluginsDemo : MonoBehaviour
 		
 		if (GUILayout.Button ("removeTrigger", GUILayout.Height (100))) {
 			// remove a single event
-			JPushEventManager.instance.removeEventListener(CustomEventObj.EVENT_SET_ALIAS, gameObject);
+			JPushEventManager.instance.removeEventListener(CustomEventObj.EVENT_SET_PUSH_TIME, gameObject);
 		}
 		if (GUILayout.Button ("addTrigger", GUILayout.Height (100))) {
 			// add a event
-			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_ALIAS , gameObject , "setAlias") ;
+			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_PUSH_TIME , gameObject , "setPushTime") ;
+			
+			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME) ;
 		}
 	}
 		
@@ -124,11 +126,19 @@ public class PluginsDemo : MonoBehaviour
 		string tags = (string)evt.arguments["tags"] ;
 		JPushBridge.setTags(tags) ;
 	}
-	
+	 
 	void setAlias(CustomEventObj evt) {
 		Debug.Log("---triggered setAlias----") ;
 		string alias = (string) evt.arguments["alias"] ;
 		JPushBridge.setAlias(alias) ;
+	}
+	
+	void setPushTime(CustomEventObj evt) { 
+		Debug.Log("---triggered setPushTime----") ;
+		string days = (string) evt.arguments["days"] ;
+		string start_time = (string) evt.arguments["start_time"] ;
+		string end_time = (string) evt.arguments["end_time"] ;
+		JPushBridge.setPushTime(days , start_time , end_time) ;
 	}
 	/* data format
 		{

@@ -8,19 +8,13 @@ namespace JPush{
 	public class JPushBridge{
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "" ;
-		public static string _func ="" ;
+		public static string _func ="" ; 
 		public static bool ANDROID_PLATFORM = false ;		
 		public static bool IPHONE_PLATFORM = false ;
 		
 		static JPushBridge(){
 			Debug.Log("--------unity static JPushBridge---------" );
-			
-			//#if UNITY_ANDROID
-			//using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge"))
-				//_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
-			//#elif UNITY_IPHONE
-			//#endif
-			
+						
 			if(Application.platform == RuntimePlatform.Android) {
 				ANDROID_PLATFORM = true ;
 				using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge"))
@@ -103,7 +97,7 @@ namespace JPush{
 			
 		}
 		
-		//Tag为大小写字母，数字，下划线,中文， 多个用以逗号分隔
+		//Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.
 		//Tag can be number, alphabet, underscore, Chinese. Use , to split many tags.
 		public static void setTags(string tags){
 			setTags(_gameObject , _func , tags) ;
@@ -124,7 +118,7 @@ namespace JPush{
 		
 		}
 		
-		//Alias为大小写字母，数字，下划线 Alias can be number, alphabet, underscore, Chinese.
+		//Alias为大小写字母,数字,下划线; Alias can be number, alphabet, underscore, Chinese.
 		public static void setAlias(string alias){
 			setAlias(_gameObject , _func , alias) ;
 		
@@ -134,6 +128,23 @@ namespace JPush{
 		
 			if(ANDROID_PLATFORM) {
 				_plugin.Call ("setAlias" , gameObject , func , alias);
+			}
+			else if(IPHONE_PLATFORM) {
+				//TODO
+			}
+			else {
+				//TODO
+			}
+		}
+		
+		public static void setPushTime(string days , string start_time , string end_time) {
+			setPushTime(_gameObject , _func , days , start_time , end_time) ;
+		}
+		public static void setPushTime(string gameObject , string func , string days , string start_time , string end_time) {
+			Debug.Log("unity---setPushTime") ;		
+		
+			if(ANDROID_PLATFORM) {
+				_plugin.Call ("setPushTime" , gameObject , func , days , start_time , end_time);
 			}
 			else if(IPHONE_PLATFORM) {
 				//TODO

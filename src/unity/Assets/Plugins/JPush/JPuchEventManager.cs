@@ -173,7 +173,7 @@ namespace JPush {
 		
 		// Remove all event listeners
 		public void removeAllEventListeners(GameObject listener) {
-			print ("listener.name------" + listener.name + " ---" + listener.GetInstanceID().ToString()) ;
+			//print ("listener.name------" + listener.name + " ---" + listener.GetInstanceID().ToString()) ;
 			_listeners.Clear() ;
 			
 			/*foreach (EventListener callback in _listeners) { 
@@ -228,7 +228,7 @@ namespace JPush {
 		}
 		
 		// delete event, if not already removed
-		private bool deleteEvent(string eventType) {
+		private bool deleteEvent(string eventType) { 
 			if (!checkForEvent(eventType)) return false;
 				_listeners.Remove(eventType);
 			return true;

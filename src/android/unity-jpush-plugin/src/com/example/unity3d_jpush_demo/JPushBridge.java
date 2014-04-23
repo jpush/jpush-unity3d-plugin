@@ -1,5 +1,6 @@
 package com.example.unity3d_jpush_demo;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -165,4 +166,21 @@ public class JPushBridge {
 		}
 
 	};
+	
+	public void setPushTime(String gameObject , String func , String _days, String _startime, String _endtime) {
+		//TODO check _days _starttime _endtime are vertify
+		if(!ExampleUtil.isNumeric(_startime) || !ExampleUtil.isNumeric(_endtime))
+			return ;
+		String[] strDays = _days.split("," ) ;
+		Set<Integer> days = new HashSet<Integer>() ;
+		for(String str : strDays) {
+			if(!ExampleUtil.isNumeric(str))
+				return ;
+			days.add(Integer.parseInt(str)) ;
+		}
+		int starttime = Integer.parseInt(_startime) ;
+		int endtime = Integer.parseInt(_endtime) ;
+		JPushInterface.setPushTime(getActivity(), days, starttime, endtime) ;
+		UnityPlayer.UnitySendMessage(gameObject ,func ,  "setPushTime" );
+	}
 }

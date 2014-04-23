@@ -12,6 +12,7 @@ namespace JPush {
 		public static string EVENT_RESUME_JPUSH = "event_resume_jpush" ;
 		public static string EVENT_SET_TAGS = "event_set_tags" ;
 		public static string EVENT_SET_ALIAS = "event_set_alias" ;
+		public static string EVENT_SET_PUSH_TIME = "event_set_push_time" ;
 		
 		// optionally add custom variables instead of using the arguments hashtable
 		public int myCustomEventVar1 = 0;
