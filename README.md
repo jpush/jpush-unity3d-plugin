@@ -9,7 +9,7 @@ JPush's officially supported Unity3d plugin (Android &amp; iOS). 极光推送官
 2. 生成ios工程，并打开该工程
 3. 必要的框架
 
-  ```objective-c
+  ```
     添加CoreTelehony.framework
   ```
   
