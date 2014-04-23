@@ -11,12 +11,12 @@ public class PluginsDemo : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		if(JPushBridge.ANDROID_PLATFORM) {
+		if(JPushBinding.ANDROID_PLATFORM) {
 			//TODO			
 			gameObject.name = "Main Camera";
 					
-			JPushBridge.setDebug(true) ;
-			JPushBridge.initJPush(gameObject.name , "") ;		
+			JPushBinding.setDebug(true) ;
+			JPushBinding.initJPush(gameObject.name , "") ;		
 			
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_INIT_JPUSH , gameObject , "initJPush") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_STOP_JPUSH , gameObject , "stopJPush") ;
@@ -24,7 +24,7 @@ public class PluginsDemo : MonoBehaviour
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_TAGS , gameObject , "setTags") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_ALIAS , gameObject , "setAlias") ;
 			
-		} else if(JPushBridge.IPHONE_PLATFORM) {
+		} else if(JPushBinding.IPHONE_PLATFORM) {
 			//TODO
 		} else {
 			//TODO default
@@ -45,10 +45,10 @@ public class PluginsDemo : MonoBehaviour
 	{
 		print ("unity3d---onDestroy") ;		
 		
-		if(JPushBridge.ANDROID_PLATFORM) {
+		if(JPushBinding.ANDROID_PLATFORM) {
 			//TODO
 		}
-		else if(JPushBridge.IPHONE_PLATFORM) {
+		else if(JPushBinding.IPHONE_PLATFORM) {
 			//TODO
 		} 
 		else {
@@ -107,30 +107,30 @@ public class PluginsDemo : MonoBehaviour
 		
 	void initJPush(CustomEventObj evt) {
 		Debug.Log("---triggered initjpush----") ;
-		JPushBridge.initJPush(gameObject.name , "") ;
+		JPushBinding.initJPush(gameObject.name , "") ;
 		//JPushBridge.initJPush() ;
 	}
 	
 	void stopJPush(CustomEventObj evt) {
 		Debug.Log("--triggered stopJPush----") ;
-		JPushBridge.stopJPush() ;
+		JPushBinding.stopJPush() ;
 	}
 	
 	void resumeJPush(CustomEventObj evt) {
 		Debug.Log("---triggered resumeJPush----") ;
-		JPushBridge.resumeJPush() ;
+		JPushBinding.resumeJPush() ;
 	}
 	
 	void setTags(CustomEventObj evt) {
 		Debug.Log("---triggered setTags----") ;
 		string tags = (string)evt.arguments["tags"] ;
-		JPushBridge.setTags(tags) ;
+		JPushBinding.setTags(tags) ;
 	}
 	 
 	void setAlias(CustomEventObj evt) {
 		Debug.Log("---triggered setAlias----") ;
 		string alias = (string) evt.arguments["alias"] ;
-		JPushBridge.setAlias(alias) ;
+		JPushBinding.setAlias(alias) ;
 	}
 	
 	void setPushTime(CustomEventObj evt) { 
@@ -138,7 +138,7 @@ public class PluginsDemo : MonoBehaviour
 		string days = (string) evt.arguments["days"] ;
 		string start_time = (string) evt.arguments["start_time"] ;
 		string end_time = (string) evt.arguments["end_time"] ;
-		JPushBridge.setPushTime(days , start_time , end_time) ;
+		JPushBinding.setPushTime(days , start_time , end_time) ;
 	}
 	/* data format
 		{
@@ -165,6 +165,6 @@ public class PluginsDemo : MonoBehaviour
 	}
 		
 	void beforeQuit(){
-		JPushBridge.isQuit() ;
+		JPushBinding.isQuit() ;
 	}
 }

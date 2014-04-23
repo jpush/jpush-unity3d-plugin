@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 
 namespace JPush{
 
-	public class JPushBridge{
+	public class JPushBinding{
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "" ;
 		public static string _func ="" ; 
 		public static bool ANDROID_PLATFORM = false ;		
 		public static bool IPHONE_PLATFORM = false ;
 		
-		static JPushBridge(){
+		static JPushBinding(){
 			Debug.Log("--------unity static JPushBridge---------" );
 						
 			if(Application.platform == RuntimePlatform.Android) {
