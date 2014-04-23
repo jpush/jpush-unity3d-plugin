@@ -3,9 +3,9 @@ jpush-unity3d-plugin
 
 JPush's officially supported Unity3d plugin (Android &amp; iOS). 极光推送官方支持的 Unity3d 插件（Android &amp; iOS）。
 ### 集成
-#### 开发者打开开发中心的Unity项目后，双击unitypackge文件，自自动把相应的sdk加到项目相应的位置
+#### 开发者打开开发中心的Unity项目后，双击unitypackge文件，自动把相应的sdk加到项目相应的位置
 ### ios集成sdk
-1. 在Unity3d游戏场景中，新建一个空的Gameobject，挂载JPushBinding.cs
+1. 在Unity3d游戏场景中，新建一个空的Gameobject，挂载JPushBinding.c
 2. 生成ios工程，并打开该工程
 3. 必要的框架
 
