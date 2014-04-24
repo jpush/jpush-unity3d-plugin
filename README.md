@@ -6,8 +6,7 @@ JPush's officially supported Unity3d plugin (Android &amp; iOS). 极光推送官
 #### 开发者打开开发中心的Unity项目后，双击unitypackge文件，自动把相应的sdk加到项目相应的位置
 
 ### android集成sdk
-1.修改Plugins\Android 目录下的AndroidManifest.xml文件，将其中的“com.jpush.unity3dplugin”替换成你在JPush服务器上
-<br>的应用包名<br>
+1.修改Plugins\Android 目录下的AndroidManifest.xml文件，将其中的“com.jpush.unity3dplugin”替换成你在JPush服务器上创建的应用的应用包名<br>
 
 2.将JPush\Demo目录下的PluginsDemo.cs附到一场景中<br>
 
@@ -17,7 +16,7 @@ JPush's officially supported Unity3d plugin (Android &amp; iOS). 极光推送官
 
 #### andriod集成Demo说明：
 1.在 unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本，大家在具体使用的时候可以根据需要动态的进行
-<br>事件的注册与触发.
+事件的注册与触发.
 ```
 /**
  * 注册事件 
@@ -74,19 +73,20 @@ void recvMessage(string str) {
 } 
 ```
 5.当使用“JPushTriggerManager.triggerSetTags(CustomEventObj.EVENT_SET_TAGS , str_unity)”来触发“setTags”时，
-<br>第二个参数的规则：Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.<br>
+第二个参数的规则：Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.<br>
 
 6.当使用“JPushTriggerManager.triggerSetAlias(CustomEventObj.EVENT_SET_ALIAS , str_unity)”来触发“setAlias”时，
-<br>第二个参数的规则：Alias为大小写字母,数字,下划线.<br>
+第二个参数的规则：Alias为大小写字母,数字,下划线.<br>
 
-7.当使用“PushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time)”<br>
+7.当使用“PushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time)”
 触发“setPushTime”来设置接收推送消息的时间段时.参数days , start_time , end_time 的格式如下：
 ``` 
 string days = "0,1,2,3,4,5,6" ; //任意以“0-6”的组合，中间以“,”分隔的字符串
 string start_time = "10" ;      //0-23的整形字符串
 string end_time = "18" ;        //0-23的整形字符串
 ```
-8.在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中<br>Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
+8.在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
+Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
 
 ### ios集成sdk
 1. 在Unity3d游戏场景中，新建一个空的Gameobject，挂载JPushBinding.c
