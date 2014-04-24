@@ -32,11 +32,11 @@ namespace JPush {
 			JPushEventManager.instance.dispatchEvent (evt);
 		}
 		
-		public static void triggerSetPushTime(string event_type) {
+		public static void triggerSetPushTime(string event_type , string days , string start_time , string end_time) {
 			CustomEventObj evt = new CustomEventObj (event_type);			
-			evt.arguments.Add ("days", "0,1,2,3,4,5,6");
-			evt.arguments.Add ("start_time" , "11") ;
-			evt.arguments.Add ("end_time" , "20") ;
+			evt.arguments.Add ("days", days);
+			evt.arguments.Add ("start_time" , start_time) ;
+			evt.arguments.Add ("end_time" , end_time) ;
 			JPushEventManager.instance.dispatchEvent (evt);
 		}
 				

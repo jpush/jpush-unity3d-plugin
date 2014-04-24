@@ -101,7 +101,10 @@ public class PluginsDemo : MonoBehaviour
 			// add a event
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_PUSH_TIME , gameObject , "setPushTime") ;
 			
-			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME) ;
+			string days = "0,1,2,3,4,5,6" ;
+			string start_time = "10" ;
+			string end_time = "18" ;
+			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time) ;
 		}
 	}
 		
