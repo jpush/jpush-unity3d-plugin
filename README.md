@@ -6,7 +6,7 @@ JPush's officially supported Unity3d plugin (Android &amp; iOS). 极光推送官
 #### 开发者打开开发中心的Unity项目后，双击unitypackge文件，自动把相应的sdk加到项目相应的位置
 
 ### android集成sdk
-1.修改Plugins\Android 目录下的AndroidManifest.xml文件，将其中的“com.jpush.unity3dplugin”替换成你在JPush服务器上创建的应用的应用包名<br>
+1.修改Plugins\Android 目录下的AndroidManifest.xml文件，将其中的“com.jpush.unity3dplugin”替换成你在JPush服务器上创建的应用的应用包名.并用应用详情里应用标志(AppKey)的值来替换掉 "JPUSH_APPKEY"的值<br>
 
 2.将JPush\Demo目录下的PluginsDemo.cs附到一场景中<br>
 
