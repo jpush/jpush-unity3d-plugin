@@ -2,10 +2,12 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using LitJson;
 
 namespace JPush{
 
-	public class JPushBinding{
+	public class JPushBinding:MonoBehaviour{
 		#if UNITY_ANDROID	
 
 		private static AndroidJavaObject _plugin;
@@ -18,14 +20,14 @@ namespace JPush{
 
 		void Start () {		
 			#if UNITY_IPHONE
-//			_printLocalLog("Start");		
+			_printLocalLog("Start");		
 			_registerNetworkDidReceiveMessage();
 
-//			HashSet<String> tags=new HashSet<String>();
-//			tags.Add("tag1");
-//			tags.Add("tag2");
-//			tags.Add("tag3");
-//			SetTagsWithAlias(tags,"bieming");
+			HashSet<String> tags=new HashSet<String>();
+			tags.Add("tag1");
+			tags.Add("tag2");
+			tags.Add("tag3");
+			SetTagsWithAlias(tags,"bieming");
 			
 			#endif
 			#if UNITY_ANDROID
@@ -238,9 +240,8 @@ namespace JPush{
 		
 		[DllImport ("__Internal")]
 		public static extern void    _registerNetworkDidReceiveMessage();
-		
 		[DllImport ("__Internal")]
-		public static extern void    _printLocalLog(String log);
+		private static extern void   _printLocalLog(String log);
 		
 		[DllImport ("__Internal")]
 		public static extern void    _setTagsAlias(String tagsWithAlias);
