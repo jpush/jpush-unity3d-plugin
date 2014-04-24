@@ -8,11 +8,11 @@ public class PluginsDemo : MonoBehaviour
 	bool B_MESSAGE = false ;
 	string str_message = "" ;
 	
+
 	// Use this for initialization
 	void Start ()
 	{
-		if(JPushBinding.ANDROID_PLATFORM) {
-			//TODO			
+		#if UNITY_ANDROID
 			gameObject.name = "Main Camera";
 					
 			JPushBinding.setDebug(true) ;
@@ -23,12 +23,11 @@ public class PluginsDemo : MonoBehaviour
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_RESUME_JPUSH , gameObject , "resumeJPush") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_TAGS , gameObject , "setTags") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_ALIAS , gameObject , "setAlias") ;
-			
-		} else if(JPushBinding.IPHONE_PLATFORM) {
-			//TODO
-		} else {
-			//TODO default
-		}		
+		#endif
+		
+		#if UNITY_IPHONE
+		//TODO
+		#endif		
 		
 	}
 		
@@ -45,45 +44,43 @@ public class PluginsDemo : MonoBehaviour
 	{
 		print ("unity3d---onDestroy") ;		
 		
-		if(JPushBinding.ANDROID_PLATFORM) {
-			//TODO
-		}
-		else if(JPushBinding.IPHONE_PLATFORM) {
-			//TODO
-		} 
-		else {
-			//TODO
-		}
-				
+		#if UNITY_ANDROID
 		if (gameObject) {          
 			// remove all events
 			JPushEventManager.instance.removeAllEventListeners (gameObject);
-		}
+		}		
+		#endif
+		
+		#if UNITY_IPHONE
+		//TODO
+		#endif	
+		
 		
 	}
 	
 	
 	void OnGUI ()
 	{		
+		#if UNITY_ANDROID
 		str_unity = GUILayout.TextField(str_unity, GUILayout.Width(500),GUILayout.Height(150));
 							
-		if (GUILayout.Button ("initJPush", GUILayout.Height (100))) {
+		if (GUILayout.Button ("initJPush", GUILayout.Height (80))) {
 			JPushTriggerManager.triggerInitJPush (CustomEventObj.EVENT_INIT_JPUSH);
 		}
-		if (GUILayout.Button ("stopJPush", GUILayout.Height (100))) {
+		if (GUILayout.Button ("stopJPush", GUILayout.Height (80))) {
 			JPushTriggerManager.triggerStopJPush (CustomEventObj.EVENT_STOP_JPUSH);
 		}
-		if (GUILayout.Button ("resumeJPush", GUILayout.Height (100))) {
+		if (GUILayout.Button ("resumeJPush", GUILayout.Height (80))) {
 			JPushTriggerManager.triggerResumeJPush (CustomEventObj.EVENT_RESUME_JPUSH);
 		}
-		if (GUILayout.Button ("setTags", GUILayout.Height (100))) {
+		if (GUILayout.Button ("setTags", GUILayout.Height (80))) {
 			JPushTriggerManager.triggerSetTags ( CustomEventObj.EVENT_SET_TAGS , str_unity);
 		}
-		if (GUILayout.Button ("setAlias", GUILayout.Height (100))) {
+		if (GUILayout.Button ("setAlias", GUILayout.Height (80))) {
 			JPushTriggerManager.triggerSetAlias ( CustomEventObj.EVENT_SET_ALIAS , str_unity);
 		}
 				
-		if (GUILayout.Button ("showMessage", GUILayout.Height (100))) {
+		if (GUILayout.Button ("showMessage", GUILayout.Height (80))) {
 			if(B_MESSAGE) {
 				str_unity = str_message ;
 				B_MESSAGE = false ;
@@ -93,11 +90,11 @@ public class PluginsDemo : MonoBehaviour
 			}
 		}
 		
-		if (GUILayout.Button ("removeTrigger", GUILayout.Height (100))) {
+		if (GUILayout.Button ("removeTrigger---setPushTime", GUILayout.Height (80))) {
 			// remove a single event
 			JPushEventManager.instance.removeEventListener(CustomEventObj.EVENT_SET_PUSH_TIME, gameObject);
 		}
-		if (GUILayout.Button ("addTrigger", GUILayout.Height (100))) {
+		if (GUILayout.Button ("addTrigger---setPushTime", GUILayout.Height (80))) {
 			// add a event
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_PUSH_TIME , gameObject , "setPushTime") ;
 			
@@ -106,6 +103,7 @@ public class PluginsDemo : MonoBehaviour
 			string end_time = "18" ;
 			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time) ;
 		}
+		#endif
 	}
 		
 	void initJPush(CustomEventObj evt) {

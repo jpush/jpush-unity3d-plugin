@@ -2,8 +2,11 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+
+#if UNITY_IPHONE
 using System.Collections.Generic;
 using LitJson;
+#endif
 
 namespace JPush{
 
@@ -13,9 +16,12 @@ namespace JPush{
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "" ;
 		public static string _func ="" ; 
-		public static bool ANDROID_PLATFORM = false ;		
-		public static bool IPHONE_PLATFORM = false ;
-
+		
+		static JPushBinding(){
+			using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge")){
+				_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
+			}
+		}
 		#endif
 
 		void Start () {		
@@ -30,24 +36,18 @@ namespace JPush{
 			SetTagsWithAlias(tags,"bieming");
 			
 			#endif
-			#if UNITY_ANDROID
-			ANDROID_PLATFORM = true ;
-			using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge")){
-				_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
-			}
-            #endif
+			
+			
 		}
 		
-		#if UNITY_ANDROID	
 		public static void setDebug(bool debug){
-			if(ANDROID_PLATFORM) 
+			#if UNITY_ANDROID
 				_plugin.Call ("setDebug",debug);
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 						
 		}
 		
@@ -58,17 +58,15 @@ namespace JPush{
 		public static void initJPush(string gameObject , string func ) {
 			Debug.Log("unity---initJPush") ;
 					
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_gameObject = gameObject ;
 				_func = func ;
 				_plugin.Call("initJPush" , gameObject , func);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 		}
 		
 		public static void stopJPush(){
@@ -77,15 +75,13 @@ namespace JPush{
 		public static void stopJPush(string gameObject , string func){
 			Debug.Log("unity---stopJPush") ;
 			
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("stopJPush" , gameObject , func);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 			
 		}
 
@@ -95,15 +91,13 @@ namespace JPush{
 		public static void resumeJPush(string gameObject , string func){
 			Debug.Log("unity---resumeJPush") ;
 			
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("resumeJPush" , gameObject , func);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 			
 		}
 		
@@ -116,15 +110,13 @@ namespace JPush{
 		public static void setTags(string gameObject , string func ,string tags){
 			Debug.Log("unity---setTags") ;
 			
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("setTags" , gameObject , func , tags);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 		
 		}
 		
@@ -136,15 +128,13 @@ namespace JPush{
 		public static void setAlias(string gameObject , string func ,string alias){
 			Debug.Log("unity---setAlias") ;		
 		
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("setAlias" , gameObject , func , alias);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 		}
 		
 		public static void setPushTime(string days , string start_time , string end_time) {
@@ -153,32 +143,28 @@ namespace JPush{
 		public static void setPushTime(string gameObject , string func , string days , string start_time , string end_time) {
 			Debug.Log("unity---setPushTime") ;		
 		
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("setPushTime" , gameObject , func , days , start_time , end_time);
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 		}
 		
 		
 		public static void isQuit() {
 			Debug.Log("unity---isQuit") ;	
 			
-			if(ANDROID_PLATFORM) {
+			#if UNITY_ANDROID
 				_plugin.Call ("isQuit" ) ;
-			}
-			else if(IPHONE_PLATFORM) {
-				//TODO
-			}
-			else {
-				//TODO
-			}
+			#endif
+			
+			#if UNITY_IPHONE
+			//TODO
+			#endif
 		}
-		#endif
+		
 		#if UNITY_IPHONE
 		void tagsWihtAliasCallBack(String jsonData)
 		{
