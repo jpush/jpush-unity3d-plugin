@@ -42,6 +42,7 @@
         <!-- For test only 测试的主程序-->
         <activity
             android:name="com.example.unity3d_jpush_demo.UnityPluginActivity"
+			android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
