@@ -80,12 +80,13 @@ void recvMessage(string str) {
 <br>第二个参数的规则：Alias为大小写字母,数字,下划线.<br>
 
 7.当使用“PushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time)”<br>
-来触发“setPushTime”时.参数days , start_time , end_time 的格式如下：
+触发“setPushTime”来设置接收推送消息的时间段时.参数days , start_time , end_time 的格式如下：
 ``` 
 string days = "0,1,2,3,4,5,6" ; //任意以“0-6”的组合，中间以“,”分隔的字符串
 string start_time = "10" ;      //0-23的整形字符串
 string end_time = "18" ;        //0-23的整形字符串
 ```
+8.在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中<br>Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
 
 ### ios集成sdk
 1. 在Unity3d游戏场景中，新建一个空的Gameobject，挂载JPushBinding.c
