@@ -1,36 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using JPush ;
+using System.Collections.Generic;
+using System;
+
 
 public class PluginsDemo : MonoBehaviour
 {
+	#if UNITY_ANDROID
 	string str_unity = "" ;
 	bool B_MESSAGE = false ;
 	string str_message = "" ;
-	
-
 	// Use this for initialization
 	void Start ()
 	{
-		#if UNITY_ANDROID
 			gameObject.name = "Main Camera";
-					
 			JPushBinding.setDebug(true) ;
 			JPushBinding.initJPush(gameObject.name , "") ;		
-			
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_INIT_JPUSH , gameObject , "initJPush") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_STOP_JPUSH , gameObject , "stopJPush") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_RESUME_JPUSH , gameObject , "resumeJPush") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_TAGS , gameObject , "setTags") ;
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_ALIAS , gameObject , "setAlias") ;
-		#endif
-		
-		#if UNITY_IPHONE
 		//TODO
-		#endif		
-		
 	}
-		
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Home)){
@@ -38,30 +31,18 @@ public class PluginsDemo : MonoBehaviour
 			Application.Quit();
 		}		
 	}
-	
 	// remove event listeners
 	void OnDestroy ()
 	{
-		print ("unity3d---onDestroy") ;		
-		
-		#if UNITY_ANDROID
+		print ("unity3d---onDestroy") ;		s
 		if (gameObject) {          
 			// remove all events
 			JPushEventManager.instance.removeAllEventListeners (gameObject);
 		}		
-		#endif
-		
-		#if UNITY_IPHONE
 		//TODO
-		#endif	
-		
-		
 	}
-	
-	
 	void OnGUI ()
 	{		
-		#if UNITY_ANDROID
 		str_unity = GUILayout.TextField(str_unity, GUILayout.Width(500),GUILayout.Height(150));
 							
 		if (GUILayout.Button ("initJPush", GUILayout.Height (80))) {
@@ -103,7 +84,6 @@ public class PluginsDemo : MonoBehaviour
 			string end_time = "18" ;
 			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time) ;
 		}
-		#endif
 	}
 		
 	void initJPush(CustomEventObj evt) {
@@ -168,4 +148,49 @@ public class PluginsDemo : MonoBehaviour
 	void beforeQuit(){
 		JPushBinding.isQuit() ;
 	}
+	#endif
+	//#if UNITY_IPHONE
+	public string tag1 = "tag1" ;
+	public string tag2 = "tag2" ;
+    public string tag3 = "tag3" ;
+
+	public string alias = "alias" ;
+	public string result;
+
+	void Start ()
+	{
+
+
+	}
+	void OnGUI ()
+	{
+		//tag1=GUI.TextField(Rect(10,10,80,20),tag1);
+		//tag2=GUI.TextField(Rect(100,10,80,20),tag2);
+		//tag3=GUI.TextField(Rect(190,10,80,20),tag3);
+
+		tag1 = GUILayout.TextField(tag1, GUILayout.Width(100),GUILayout.Height(20));
+		tag2 = GUILayout.TextField(tag2, GUILayout.Width(100),GUILayout.Height(20));
+		tag3 = GUILayout.TextField(tag2, GUILayout.Width(100),GUILayout.Height(20));
+		if (GUILayout.Button ("set tag/lias", GUILayout.Height (30))) {
+			HashSet<String> tags=new HashSet<String>();
+			tags.Add("tag1");
+			tags.Add("tag2");
+			tags.Add("tag3");
+			JPush.JPushBinding.SetTagsWithAlias(tags,"bieming",(m,n,p)=>{
+
+				result="respoen" +m.ToString();
+				result="alias"   +p;
+			});
+		}
+		GUILayout.Label(result, GUILayout.Width(100),GUILayout.Height(20));
+	}
+	void OnUpdate()
+	{
+
+	}
+
+
+	//#endif
+
+
 }

@@ -12,7 +12,6 @@ namespace JPush{
 
 	public class JPushBinding:MonoBehaviour{
 		#if UNITY_ANDROID	
-
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "" ;
 		public static string _func ="" ; 
@@ -22,119 +21,58 @@ namespace JPush{
 				_plugin = jpushClass.CallStatic<AndroidJavaObject> ("getInstance");
 			}
 		}
-		#endif
 
-		void Start () {		
-			#if UNITY_IPHONE
-			_printLocalLog("Start");		
-			_registerNetworkDidReceiveMessage();
-
-			HashSet<String> tags=new HashSet<String>();
-			tags.Add("tag1");
-			tags.Add("tag2");
-			tags.Add("tag3");
-			SetTagsWithAlias(tags,"bieming");
-			
-			#endif
-			
-			
-		}
-		
 		public static void setDebug(bool debug){
-			#if UNITY_ANDROID
-				_plugin.Call ("setDebug",debug);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
-						
+			_plugin.Call ("setDebug",debug);
 		}
 		
 		public static void initJPush(){
-			initJPush(_gameObject , _func) ;
 			
 		}		
 		public static void initJPush(string gameObject , string func ) {
 			Debug.Log("unity---initJPush") ;
-					
-			#if UNITY_ANDROID
-				_gameObject = gameObject ;
-				_func = func ;
-				_plugin.Call("initJPush" , gameObject , func);
-			#endif
 			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
+			_gameObject = gameObject ;
+			_func = func ;
+			_plugin.Call("initJPush" , gameObject , func);
 		}
 		
 		public static void stopJPush(){
 			stopJPush(_gameObject , _func) ;			
 		}		
 		public static void stopJPush(string gameObject , string func){
-			Debug.Log("unity---stopJPush") ;
-			
-			#if UNITY_ANDROID
-				_plugin.Call ("stopJPush" , gameObject , func);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
-			
+			Debug.Log("unity---stopJPush") ;	
+			_plugin.Call ("stopJPush" , gameObject , func);
 		}
-
+		
 		public static void resumeJPush(){
 			resumeJPush(_gameObject , _func) ;			
 		}		
 		public static void resumeJPush(string gameObject , string func){
-			Debug.Log("unity---resumeJPush") ;
-			
-			#if UNITY_ANDROID
-				_plugin.Call ("resumeJPush" , gameObject , func);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
-			
+			Debug.Log("unity---resumeJPush") ;			
+			_plugin.Call ("resumeJPush" , gameObject , func);
+
 		}
 		
 		//Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.
 		//Tag can be number, alphabet, underscore, Chinese. Use , to split many tags.
 		public static void setTags(string tags){
 			setTags(_gameObject , _func , tags) ;
-		
+			
 		}
 		public static void setTags(string gameObject , string func ,string tags){
 			Debug.Log("unity---setTags") ;
-			
-			#if UNITY_ANDROID
-				_plugin.Call ("setTags" , gameObject , func , tags);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
-		
+			_plugin.Call ("setTags" , gameObject , func , tags);
 		}
 		
 		//Alias为大小写字母,数字,下划线; Alias can be number, alphabet, underscore, Chinese.
 		public static void setAlias(string alias){
 			setAlias(_gameObject , _func , alias) ;
-		
+			
 		}
 		public static void setAlias(string gameObject , string func ,string alias){
 			Debug.Log("unity---setAlias") ;		
-		
-			#if UNITY_ANDROID
-				_plugin.Call ("setAlias" , gameObject , func , alias);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
+			_plugin.Call ("setAlias" , gameObject , func , alias);
 		}
 		
 		public static void setPushTime(string days , string start_time , string end_time) {
@@ -142,30 +80,28 @@ namespace JPush{
 		}
 		public static void setPushTime(string gameObject , string func , string days , string start_time , string end_time) {
 			Debug.Log("unity---setPushTime") ;		
-		
-			#if UNITY_ANDROID
-				_plugin.Call ("setPushTime" , gameObject , func , days , start_time , end_time);
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
+		   _plugin.Call ("setPushTime" , gameObject , func , days , start_time , end_time);
+
 		}
 		
 		
 		public static void isQuit() {
-			Debug.Log("unity---isQuit") ;	
-			
-			#if UNITY_ANDROID
-				_plugin.Call ("isQuit" ) ;
-			#endif
-			
-			#if UNITY_IPHONE
-			//TODO
-			#endif
+			Debug.Log("unity---isQuit") ;				
+			_plugin.Call ("isQuit" ) ;
 		}
-		
+
+		#endif
+
 		#if UNITY_IPHONE
+
+		public static	Action<int,HashSet<string>,string> _action;
+		void Start () {	
+
+			_printLocalLog("Start");		
+			_registerNetworkDidReceiveMessage();
+
+	   }
+
 		void tagsWihtAliasCallBack(String jsonData)
 		{
 			_printLocalLog(jsonData);
@@ -175,16 +111,19 @@ namespace JPush{
 			String alias = (String)jd["alias"];             
 			JsonData jdItems = jd["tags"];       
 			int itemCnt = jdItems.Count; 
-			String[] tagsArray=new String[itemCnt];
-			
+			HashSet<string> set = new HashSet<string> ();
+
 			for(int i=0;i<itemCnt;i++)
 			{
-				tagsArray[i] = (String)jdItems[i];             
+				set.Add((String)jdItems[i]);             
 			}
 			_printLocalLog("rescode:"+respoenCode);
 			_printLocalLog("alias:"+alias);
-			_printLocalLog("tags:"+tagsArray.ToString());
-			
+			_printLocalLog("tags:"+set.ToString());
+			if(_action!=null)
+			{
+				_action(respoenCode,set,alias);
+			}
 		}
 		void networkDidReceiveMessageCallBack(String parameter)
 		{
@@ -198,7 +137,8 @@ namespace JPush{
 			
 		}
 		
-		public static void SetTagsWithAlias(HashSet<String> tags,String alias){
+		public static void SetTagsWithAlias(HashSet<String> tags,String alias,Action<int,HashSet<string>,string> callBack){
+
 			String[] arrayTags = new String[tags.Count];
 			tags.CopyTo (arrayTags);
 			Dictionary<String,object> data = new  Dictionary<String,object> ();
@@ -206,11 +146,11 @@ namespace JPush{
 			data["alias"] = alias;
 			
 			String s=LitJson.JsonMapper.ToJson(data);
+			_action = callBack;
 			_setTagsAlias(s);
 		}
 		public static void SetTags(HashSet<String> tags){
-			
-			
+
 			Hashtable data = new 	Hashtable ();
 			data["tags"]  = tags;
 			String s=LitJson.JsonMapper.ToJson(data);
@@ -222,8 +162,8 @@ namespace JPush{
 			jd ["alias"] = alias;
 			String s = JsonMapper.ToJson (jd);
 			_setAlias(s);
+
 		}
-		
 		[DllImport ("__Internal")]
 		public static extern void    _registerNetworkDidReceiveMessage();
 		[DllImport ("__Internal")]
