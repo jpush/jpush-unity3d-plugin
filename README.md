@@ -47,67 +47,67 @@ PS:详细信息参见Plugins下的JPushBinding.cs文件
 
 * 在 unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本，大家在具体使用的时候可以根据需要动态的进行事件的注册与触发。
 
-```
-/**
- * 注册事件
- * 
- * CustomEventObj.EVENT_INIT_JPUSH 事件的类型
- * gameObject 作用于哪个游戏对象
- * 第三个参数是当这个事件被触发时回调的函数名,必须得重写
- */
-JPushEventManager.instance.addEventListener(CustomEventObj.EVENT_INIT_JPUSH, gameObject, "initJPush");
-
-/**
- * 触发事件
- * CustomEventObj.EVENT_INIT_JPUSH 为触发的事件类型
- */
-JPushTriggerManager.triggerInitJPush(CustomEventObj.EVENT_INIT_JPUSH);
-```
+    ```
+        /**
+         * 注册事件
+         * 
+         * CustomEventObj.EVENT_INIT_JPUSH 事件的类型
+         * gameObject 作用于哪个游戏对象
+         * 第三个参数是当这个事件被触发时回调的函数名,必须得重写
+         */
+        JPushEventManager.instance.addEventListener(CustomEventObj.EVENT_INIT_JPUSH, gameObject, "initJPush");
+        
+        /**
+         * 触发事件
+         * CustomEventObj.EVENT_INIT_JPUSH 为触发的事件类型
+         */
+        JPushTriggerManager.triggerInitJPush(CustomEventObj.EVENT_INIT_JPUSH);
+    ```
 
 * 在退出应用的时候，需要调用 beforeQuit() 方法。
 
 * 接受到通知，如果你要查看通知的内容或其他的显示方式，你可以重写“openNotification(string str)” 方法，例如：
 
-```
-/**
- * 开发者自己处理点击通知栏中的通知
- * str  为通知的内容，数据格式如下.
-    {
-          "title": "JPush-Unity-Plugin",
-  	    "message": "sdf",
-  	    "extras": {
-  	        "name": "zfl",
-  	        "a": "aaa"
-  	    }
-  	}
- */
-
-void openNotification(string str) {
-	Debug.Log ("recv --- openNotification---" + str) ;
-	str_unity = str ;
-}
-```
+    ```
+        /**
+         * 开发者自己处理点击通知栏中的通知
+         * str  为通知的内容，数据格式如下.
+            {
+                  "title": "JPush-Unity-Plugin",
+          	    "message": "sdf",
+          	    "extras": {
+          	        "name": "zfl",
+          	        "a": "aaa"
+          	    }
+          	}
+         */
+        
+        void openNotification(string str) {
+        	Debug.Log ("recv --- openNotification---" + str) ;
+        	str_unity = str ;
+        }
+    ```
 
 * 当收到消息时，你可以通过重写 “recvMessage(string str)”方法，来获取到消息的内容。
 
-```
-/**
- * 开发者自己处理由JPush推送下来的消息
- * str  为消息的内容，数据格式如下.
-		{
-		    "message": "hhh",
-		    "extras": {
-		        "f": "fff",
-		        "q": "qqq",
-		        "a": "aaa"
-		    }
-		}
- */
-void recvMessage(string str) {
-	Debug.Log("recv----message-----" + str) ; 
-	str_message = str ;
-} 
-```
+    ```
+        /**
+         * 开发者自己处理由JPush推送下来的消息
+         * str  为消息的内容，数据格式如下.
+        		{
+        		    "message": "hhh",
+        		    "extras": {
+        		        "f": "fff",
+        		        "q": "qqq",
+        		        "a": "aaa"
+        		    }
+        		}
+         */
+        void recvMessage(string str) {
+        	Debug.Log("recv----message-----" + str) ; 
+        	str_message = str ;
+        } 
+    ```
 
 * 当使用 “JPushTriggerManager.triggerSetTags(CustomEventObj.EVENT_SET_TAGS, str_unity)” 来触发“setTags” 时，
 第二个参数的规则：Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.<br>
@@ -118,11 +118,11 @@ void recvMessage(string str) {
 * 当使用“PushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time)”
 触发“setPushTime”来设置接收推送消息的时间段时.参数days , start_time , end_time 的格式如下：
 
-``` 
-string days = "0,1,2,3,4,5,6" ; //任意以“0-6”的组合，中间以“,”分隔的字符串
-string start_time = "10" ;      //0-23的整形字符串
-string end_time = "18" ;        //0-23的整形字符串
-```
+    ``` 
+        string days = "0,1,2,3,4,5,6" ; //任意以“0-6”的组合，中间以“,”分隔的字符串
+        string start_time = "10" ;      //0-23的整形字符串
+        string end_time = "18" ;        //0-23的整形字符串
+    ```
 
 * 在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
 Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
