@@ -34,7 +34,7 @@ public class PluginsDemo : MonoBehaviour
 	// remove event listeners
 	void OnDestroy ()
 	{
-		print ("unity3d---onDestroy") ;		s
+		print ("unity3d---onDestroy") ;
 		if (gameObject) {          
 			// remove all events
 			JPushEventManager.instance.removeAllEventListeners (gameObject);
@@ -71,10 +71,6 @@ public class PluginsDemo : MonoBehaviour
 			}
 		}
 		
-		if (GUILayout.Button ("removeTrigger---setPushTime", GUILayout.Height (80))) {
-			// remove a single event
-			JPushEventManager.instance.removeEventListener(CustomEventObj.EVENT_SET_PUSH_TIME, gameObject);
-		}
 		if (GUILayout.Button ("addTrigger---setPushTime", GUILayout.Height (80))) {
 			// add a event
 			JPushEventManager.instance.addEventListener (CustomEventObj.EVENT_SET_PUSH_TIME , gameObject , "setPushTime") ;
@@ -84,6 +80,11 @@ public class PluginsDemo : MonoBehaviour
 			string end_time = "18" ;
 			JPushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time) ;
 		}
+		if (GUILayout.Button ("removeTrigger---setPushTime", GUILayout.Height (80))) {
+			// remove a single event
+			JPushEventManager.instance.removeEventListener(CustomEventObj.EVENT_SET_PUSH_TIME, gameObject);
+		}
+		
 	}
 		
 	void initJPush(CustomEventObj evt) {

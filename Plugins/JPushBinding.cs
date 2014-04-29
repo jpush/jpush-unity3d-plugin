@@ -26,9 +26,14 @@ namespace JPush{
 			_plugin.Call ("setDebug",debug);
 		}
 		
+		//启用JPush推送服务
 		public static void initJPush(){
 			
 		}		
+		/**
+		 * 参数gameObject 代表游戏对象
+		 * 参数func 代表回调的方法名
+		 */
 		public static void initJPush(string gameObject , string func ) {
 			Debug.Log("unity---initJPush") ;
 			
@@ -37,6 +42,7 @@ namespace JPush{
 			_plugin.Call("initJPush" , gameObject , func);
 		}
 		
+		//停止JPush推送服务
 		public static void stopJPush(){
 			stopJPush(_gameObject , _func) ;			
 		}		
@@ -45,6 +51,7 @@ namespace JPush{
 			_plugin.Call ("stopJPush" , gameObject , func);
 		}
 		
+		//唤醒JPush推送服务，使用了stopJPush必须调用此方法才能恢复
 		public static void resumeJPush(){
 			resumeJPush(_gameObject , _func) ;			
 		}		
@@ -54,8 +61,7 @@ namespace JPush{
 
 		}
 		
-		//Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.
-		//Tag can be number, alphabet, underscore, Chinese. Use , to split many tags.
+		//设置设备标签. 参数tags 为多个Tag组成的字符串. (Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.)
 		public static void setTags(string tags){
 			setTags(_gameObject , _func , tags) ;
 			
@@ -65,7 +71,7 @@ namespace JPush{
 			_plugin.Call ("setTags" , gameObject , func , tags);
 		}
 		
-		//Alias为大小写字母,数字,下划线; Alias can be number, alphabet, underscore, Chinese.
+		//设置设备别名.参数 Alias为大小写字母,数字,下划线
 		public static void setAlias(string alias){
 			setAlias(_gameObject , _func , alias) ;
 			
@@ -75,6 +81,12 @@ namespace JPush{
 			_plugin.Call ("setAlias" , gameObject , func , alias);
 		}
 		
+		/**
+		 * 设置推送时间 
+		 * 参数days 为0-6之间由","连接而成的字符串
+		 * 参数start_time 为0-23的字符串
+		 * 参数end_time 为0-23的字符串
+		 */
 		public static void setPushTime(string days , string start_time , string end_time) {
 			setPushTime(_gameObject , _func , days , start_time , end_time) ;
 		}
@@ -84,7 +96,7 @@ namespace JPush{
 
 		}
 		
-		
+		//在应用退出前调用
 		public static void isQuit() {
 			Debug.Log("unity---isQuit") ;				
 			_plugin.Call ("isQuit" ) ;
