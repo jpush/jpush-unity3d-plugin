@@ -60,7 +60,7 @@ Assets\Plugins\Android目录下的JPush_Bridge.jar文件.
 ### Example 说明
 
 * 在unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本,其运行结果如下：<br>
-  ![sdf](https://github.com/jpush/jpush-unity3d-plugin/blob/dev/Plugins/Android/run.png?raw=true)
+  ![sdf](https://cloud.githubusercontent.com/assets/2249048/2829091/aa181b06-cf9e-11e3-91b5-f7bd83f1647d.png)
 
 * 点击"initJPush"按钮会启动JPush推送服务;在JPush服务上推送一个通知可以再通知栏中显示出来.
 
