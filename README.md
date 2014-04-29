@@ -5,39 +5,42 @@ JPush Unity3d Plugin
 
 ## 导入到 Unity 项目
 
-首先，你
+* 搭建好unity3d(ios/android)开发环境
 
-开发者打开开发中心的 Unity3d 项目后，双击 unitypackge 文件，自动把相应的 SDK 加到项目相应的位置。
+* 将git下来的jpush-unity3d-plugin.unitypackage导入到Unity中
 
 ## 集成 JPush Unity Android SDK
 
 ### 基本动作
 
-* 替换 AndroidManifest.xml 里的包名
+* 替换 AndroidManifest.xml 里的包名 <br>
+  将其中的 “com.jpush.unity3dplugin” 替换成你在 JPush服务器上创建的应用的应用包名
 
-* 配置 Appkey
+* 配置 Appkey <br>
+  将其中的"JPUSH_APPKEY" 值替换成应用详情里应用标志（AppKey）的值
 
-* 配置项目里的包名
+* 配置项目里的包名 <br>
+  在 unity 中选择 "File---Build Settings---Player Settings..."，将 "Identification" 选项下的 "Bundle Idenifier*" 设置为应用的包名。
 
-* 运行
+* 运行<br>
+  设置OK,直接 "Build&Run" 即可
 
 
+### API 功能说明
 
+* initJPush <br> 启用JPush推送服务
+  
+* stopJPush <br> 停止JPush推送服务
 
-* 修改 Plugins\Android 目录下的 AndroidManifest.xml 文件，将其中的 “com.jpush.unity3dplugin” 替换成你在 JPush服务器上创建的应用的应用包名，并用应用详情里应用标志（AppKey）的值来替换掉 "JPUSH_APPKEY" 的值。
+* resumeJPush <br> 重新启用JPush推送服务(如果是通过stopJPush来停止的，再次启用必须调用此方法)
 
-* 将 JPush\Demo 目录下的 PluginsDemo.cs 附到一场景中。
+* setTags <br> 设置设备标签
 
-* 在 unity 中选择 "File---Build Settings---Player Settings..."，将 "Identification" 选项下的 "Bundle Idenifier*" 设置为应用的包名。
+* setAlias <br> 设置设备别名
 
-* 设置 OK，直接 "Build&Run" 即可。
+* setPushTime <br> 设置接收推送的时间段
 
-### API
-
-* initPush
-
-* setTag
-
+PS:详细信息参见Plugins下的JPushBinding.cs文件
 
 
 ### Example 说明
@@ -70,7 +73,7 @@ JPushTriggerManager.triggerInitJPush(CustomEventObj.EVENT_INIT_JPUSH);
  * 开发者自己处理点击通知栏中的通知
  * str  为通知的内容，数据格式如下.
     {
-  	    "title": "JPush-Unity-Plugin",
+          "title": "JPush-Unity-Plugin",
   	    "message": "sdf",
   	    "extras": {
   	        "name": "zfl",
