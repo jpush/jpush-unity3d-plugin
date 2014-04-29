@@ -28,39 +28,39 @@ JPush Unity3d Plugin
 
 ### API 功能说明
 
-* initJPush(string gameObject , string func ) <br> 
-  功能描述：启用JPush推送服务 <br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
+* initJPush(string gameObject,string func) <br> 
+  功能描述：启用JPush推送服务. <br>
+  参数说明：gameObject代表游戏对象;func代表回调的方法名.
   
-* stopJPush(string gameObject , string func) <br> 
-  功能描述：停止JPush推送服务（必须通过resumeJPush再次启用）<br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
+* stopJPush(string gameObject,string func) <br> 
+  功能描述：停止JPush推送服务(必须通过resumeJPush再次启用.)<br>
+  参数说明：gameObject代表游戏对象;func代表回调的方法名.
 
-* resumeJPush(string gameObject , string func) <br> 
-  功能描述：重新启用JPush推送服务(如果是通过stopJPush来停止的，再次启用必须调用此方法)<br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
+* resumeJPush(string gameObject,string func) <br> 
+  功能描述：重新启用JPush推送服务(如果是通过stopJPush来停止的,再次启用必须调用此方法).<br>
+  参数说明：gameObject代表游戏对象;func代表回调的方法名.
 
-* setTags(string gameObject , string func ,string tags) <br> 
-  功能描述：设置设备标签<br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; tags 为多个Tag组成的字符串. (Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.)
+* setTags(string gameObject,string func,string tags) <br> 
+  功能描述：设置设备标签.<br>
+  参数说明：gameObject代表游戏对象;func代表回调的方法名;tags为多个Tag组成的字符串.(Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔).
 
-* setAlias(string gameObject , string func ,string alias) <br> 
-  功能描述：设置设备别名<br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; alias 为大小写字母,数字,下划线,中文组成的字符串
+* setAlias(string gameObject,string func,string alias) <br> 
+  功能描述：设置设备别名.<br>
+  参数说明：gameObject代表游戏对象;func代表回调的方法名;alias为大小写字母,数字,下划线,中文组成的字符串.
 
-* setPushTime(string gameObject , string func , string days , string start_time , string end_time) <br> 
+* setPushTime(string gameObject,string func,string days,string start_time,string end_time) <br> 
   功能描述：设置接收推送的时间段.<br>
-  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; days 为0-6之间由","连接而成的字符串 ; <br>
-start_time 为0-23的字符串 ; end_time 为0-23的字符串
+  参数说明：gameObject代表游戏对象;func代表回调的方法名;days为0-6之间由","连接而成的字符串;<br>
+start_time为0-23的字符串;end_time为0-23的字符串.
 
-* PS:在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
-Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
+* PS:在Plugins\Android\src目录下是一些java文件,你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
+Assets\Plugins\Android目录下的JPush_Bridge.jar文件.
 
 
 ### Example 说明
 
-* 在 unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本，其运行结果如下：
-  ![sdf](https://github.com/jpush/jpush-unity3d-plugin/tree/dev/Plugins/Android/run.png)
+* 在unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本,其运行结果如下：<br>
+  ![sdf](https://github.com/jpush/jpush-unity3d-plugin/blob/dev/Plugins/Android/run.png?raw=true)
 
 * 点击"initJPush"按钮会启动JPush推送服务;在JPush服务上推送一个通知可以再通知栏中显示出来.
 
