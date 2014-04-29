@@ -28,104 +28,55 @@ JPush Unity3d Plugin
 
 ### API 功能说明
 
-* initJPush <br> 启用JPush推送服务
+* initJPush(string gameObject , string func ) <br> 
+  功能描述：启用JPush推送服务 <br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
   
-* stopJPush <br> 停止JPush推送服务
+* stopJPush(string gameObject , string func) <br> 
+  功能描述：停止JPush推送服务（必须通过resumeJPush再次启用）<br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
 
-* resumeJPush <br> 重新启用JPush推送服务(如果是通过stopJPush来停止的，再次启用必须调用此方法)
+* resumeJPush(string gameObject , string func) <br> 
+  功能描述：重新启用JPush推送服务(如果是通过stopJPush来停止的，再次启用必须调用此方法)<br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名
 
-* setTags <br> 设置设备标签
+* setTags(string gameObject , string func ,string tags) <br> 
+  功能描述：设置设备标签<br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; tags 为多个Tag组成的字符串. (Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.)
 
-* setAlias <br> 设置设备别名
+* setAlias(string gameObject , string func ,string alias) <br> 
+  功能描述：设置设备别名<br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; alias 为大小写字母,数字,下划线,中文组成的字符串
 
-* setPushTime <br> 设置接收推送的时间段
+* setPushTime(string gameObject , string func , string days , string start_time , string end_time) <br> 
+  功能描述：设置接收推送的时间段.<br>
+  参数说明：gameObject 代表游戏对象 ； func 代表回调的方法名 ; days 为0-6之间由","连接而成的字符串 ; <br>
+start_time 为0-23的字符串 ; end_time 为0-23的字符串
 
-PS:详细信息参见Plugins下的JPushBinding.cs文件
+* PS:在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
+Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
 
 
 ### Example 说明
 
-* 在 unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本，大家在具体使用的时候可以根据需要动态的进行事件的注册与触发。
+* 在 unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本，其运行结果如下：
+  ![sdf](https://github.com/jpush/jpush-unity3d-plugin/tree/dev/Plugins/Android/run.png)
 
-    ```
-        /**
-         * 注册事件
-         * 
-         * CustomEventObj.EVENT_INIT_JPUSH 事件的类型
-         * gameObject 作用于哪个游戏对象
-         * 第三个参数是当这个事件被触发时回调的函数名,必须得重写
-         */
-        JPushEventManager.instance.addEventListener(CustomEventObj.EVENT_INIT_JPUSH, gameObject, "initJPush");
-        
-        /**
-         * 触发事件
-         * CustomEventObj.EVENT_INIT_JPUSH 为触发的事件类型
-         */
-        JPushTriggerManager.triggerInitJPush(CustomEventObj.EVENT_INIT_JPUSH);
-    ```
+* 点击"initJPush"按钮会启动JPush推送服务;在JPush服务上推送一个通知可以再通知栏中显示出来.
 
-* 在退出应用的时候，需要调用 beforeQuit() 方法。
+* 点击"stopJPush"按钮会停止JPush推送服务;在JPush服务上推送的任数据都不会接收.
 
-* 接受到通知，如果你要查看通知的内容或其他的显示方式，你可以重写“openNotification(string str)” 方法，例如：
+* 点击"resumeJPush"按钮会重新启动JPush推送服务.
 
-    ```
-        /**
-         * 开发者自己处理点击通知栏中的通知
-         * str  为通知的内容，数据格式如下.
-            {
-                  "title": "JPush-Unity-Plugin",
-          	    "message": "sdf",
-          	    "extras": {
-          	        "name": "zfl",
-          	        "a": "aaa"
-          	    }
-          	}
-         */
-        
-        void openNotification(string str) {
-        	Debug.Log ("recv --- openNotification---" + str) ;
-        	str_unity = str ;
-        }
-    ```
+* 点击"setTags"按钮并在输入框中输入tags的内容；如果出现“set tags success” 提示，则表明设置设备标签成功.
 
-* 当收到消息时，你可以通过重写 “recvMessage(string str)”方法，来获取到消息的内容。
+* 点击"setAlias"按钮并在输入框输入Alias的内容；如果出现"set Alias success" 提示，则表明设置设备别名成功.
 
-    ```
-        /**
-         * 开发者自己处理由JPush推送下来的消息
-         * str  为消息的内容，数据格式如下.
-        		{
-        		    "message": "hhh",
-        		    "extras": {
-        		        "f": "fff",
-        		        "q": "qqq",
-        		        "a": "aaa"
-        		    }
-        		}
-         */
-        void recvMessage(string str) {
-        	Debug.Log("recv----message-----" + str) ; 
-        	str_message = str ;
-        } 
-    ```
+* 点击"showMessage"按钮，如果有从服务器推送消息，那么成功的情况下会在输入框中显示出来.
 
-* 当使用 “JPushTriggerManager.triggerSetTags(CustomEventObj.EVENT_SET_TAGS, str_unity)” 来触发“setTags” 时，
-第二个参数的规则：Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.<br>
+* 点击"addTrigger---setPushTime"按钮，则该应用会监听"setPushTime"事件.并同时出发"setPushTime"设置接收推送的时间段.
 
-* 当使用“JPushTriggerManager.triggerSetAlias(CustomEventObj.EVENT_SET_ALIAS , str_unity)”来触发“setAlias”时，
-第二个参数的规则：Alias为大小写字母,数字,下划线.<br>
-
-* 当使用“PushTriggerManager.triggerSetPushTime(CustomEventObj.EVENT_SET_PUSH_TIME , days , start_time , end_time)”
-触发“setPushTime”来设置接收推送消息的时间段时.参数days , start_time , end_time 的格式如下：
-
-    ``` 
-        string days = "0,1,2,3,4,5,6" ; //任意以“0-6”的组合，中间以“,”分隔的字符串
-        string start_time = "10" ;      //0-23的整形字符串
-        string end_time = "18" ;        //0-23的整形字符串
-    ```
-
-* 在Plugins\Android\src目录下是一些java文件，你可以将其引入到android工程中对它们进行扩展.重新生成jar替换掉unity工程中
-Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
+* 点击"removeTrigger---setPushTime"按钮，则会将"setPushTime"移除.
 
 
 ## 集成 JPush Unity iOS SDK
