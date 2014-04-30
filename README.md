@@ -13,17 +13,17 @@ JPush Unity3d Plugin
 
 ### 基本动作
 
-* 替换 AndroidManifest.xml 里的包名 <br>
-  将其中的 “com.jpush.unity3dplugin” 替换成你在 JPush服务器上创建的应用的应用包名
+* 替换AndroidManifest.xml里的包名 <br>
+  将其中的“com.jpush.unity3dplugin”替换成你在JPush服务器上创建的应用的应用包名.
 
-* 配置 Appkey <br>
-  将其中的"JPUSH_APPKEY" 值替换成应用详情里应用标志（AppKey）的值
+* 配置Appkey <br>
+  将其中的"JPUSH_APPKEY"值替换成应用详情里应用标(AppKey)的值.
 
 * 配置项目里的包名 <br>
-  在 unity 中选择 "File---Build Settings---Player Settings..."，将 "Identification" 选项下的 "Bundle Idenifier*" 设置为应用的包名。
+  在unity中选择"File---Build Settings---Player Settings...",将"Identification"选项下的"Bundle Idenifier*" 设置为应用的包名.
 
 * 运行<br>
-  设置OK,直接 "Build&Run" 即可
+  设置OK,直接"Build&Run"即可.
 
 
 ### API 功能说明
@@ -59,7 +59,7 @@ Assets\Plugins\Android目录下的JPush_Bridge.jar文件.
 
 ### Example 说明
 
-* 在unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本,其运行结果如下：<br>
+* 在unity Assets\Plugins\Demo下的PluginsDemo.cs文件是一个测试脚本,其运行结果如下:<br>
   ![sdf](https://cloud.githubusercontent.com/assets/2249048/2829091/aa181b06-cf9e-11e3-91b5-f7bd83f1647d.png)
 
 * 点击"initJPush"按钮会启动JPush推送服务;在JPush服务上推送一个通知可以再通知栏中显示出来.
@@ -68,22 +68,22 @@ Assets\Plugins\Android目录下的JPush_Bridge.jar文件.
 
 * 点击"resumeJPush"按钮会重新启动JPush推送服务.
 
-* 点击"setTags"按钮并在输入框中输入tags的内容；如果出现“set tags success” 提示，则表明设置设备标签成功.
+* 点击"setTags"按钮并在输入框中输入tags的内容;如果出现“set tags success” 提示,则表明设置设备标签成功.
 
-* 点击"setAlias"按钮并在输入框输入Alias的内容；如果出现"set Alias success" 提示，则表明设置设备别名成功.
+* 点击"setAlias"按钮并在输入框输入Alias的内容;如果出现"set Alias success" 提示,则表明设置设备别名成功.
 
-* 点击"showMessage"按钮，如果有从服务器推送消息，那么成功的情况下会在输入框中显示出来.
+* 点击"showMessage"按钮,如果有从服务器推送消息,那么成功的情况下会在输入框中显示出来.
 
-* 点击"addTrigger---setPushTime"按钮，则该应用会监听"setPushTime"事件.并同时出发"setPushTime"设置接收推送的时间段.
+* 点击"addTrigger---setPushTime"按钮,则该应用会监听"setPushTime"事件.并同时出发"setPushTime"设置接收推送的时间段.
 
-* 点击"removeTrigger---setPushTime"按钮，则会将"setPushTime"移除.
+* 点击"removeTrigger---setPushTime"按钮,则会将"setPushTime"移除.
 
 
 ## 集成 JPush Unity iOS SDK
 
-* 在Unity3d游戏场景中，新建一个空的 Gameobject，挂载 JPushBinding.c
+* 在Unity3d游戏场景中,新建一个空的 Gameobject,挂载 JPushBinding.c
 
-* 生成ios工程，并打开该工程
+* 生成ios工程,并打开该工程
 
 * 必要的框架
 
