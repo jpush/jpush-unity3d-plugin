@@ -127,7 +127,7 @@ Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
 
 ## 集成 JPush Unity iOS SDK
 
-* 在Unity3d游戏场景中，新建一个空的 Gameobject，挂载 JPushBinding.c
+* 在Unity3d游戏场景中，新建一个空的 Gameobject，（重命名为JPushBinding）挂载JPushBinding.c
 
 * 生成ios工程，并打开该工程
 
@@ -143,7 +143,7 @@ Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
   并将其命名为PushConfig.plist，填入Portal为你的应用提供的APP_KEY等参数
   ```
   
-5. 找到xocde工程Libraries文件夹的APServer.h，拖入project中
+5. 找到xocde工程Libraries文件夹的APServer.h，拖入project中(或者点击右键，点击add files to "project name")
 6. 在UnityAppController.mm中添加头文件APServer.h
 
 ```
@@ -156,20 +156,23 @@ Assets\Plugins\Android 目录下的JPush_Bridge.jar文件.
   - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
   {
   // Required
-       [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                      UIRemoteNotificationTypeSound |
-                                                      UIRemoteNotificationTypeAlert)];
+        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                   UIRemoteNotificationTypeSound |
+                                                   UIRemoteNotificationTypeAlert)];
   // Required
           [APService setupWithOption:launchOptions];
           return YES;
-      }
-  - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-      // Required
-      [APService registerDeviceToken:deviceToken];
-  }
-  - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-      // Required
-      [APService handleRemoteNotification:userInfo];
-  }
+ }
 ```
-
+```
+  	- (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+      		// Required
+      		[APService registerDeviceToken:deviceToken];
+  		}
+```
+```	
+ 	 - (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
+     	 // Required
+     	 [APService handleRemoteNotification:userInfo];
+ 	 }
+```

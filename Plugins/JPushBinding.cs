@@ -97,7 +97,14 @@ namespace JPush{
 		public static	Action<int,HashSet<string>,string> _action;
 		void Start () {	
 
-			_printLocalLog("Start");		
+//			_printLocalLog("Start");
+//			HashSet<string> set = new HashSet<string> ();
+//			set.Add ("tag1");
+//			set.Add ("tag2");
+//			set.Add ("tag3");
+//
+			//FilterTags (set);
+			//_printLocalLog(_openUDID());
 			_registerNetworkDidReceiveMessage();
 
 	   }
@@ -117,9 +124,6 @@ namespace JPush{
 			{
 				set.Add((String)jdItems[i]);             
 			}
-			_printLocalLog("rescode:"+respoenCode);
-			_printLocalLog("alias:"+alias);
-			_printLocalLog("tags:"+set.ToString());
 			if(_action!=null)
 			{
 				_action(respoenCode,set,alias);
@@ -127,10 +131,7 @@ namespace JPush{
 		}
 		void networkDidReceiveMessageCallBack(String parameter)
 		{
-			_printLocalLog("networkDidReceiveMessage:"+parameter);
-			//		content = "unity3d_democ";
-			//		extras =     {
-			//		};
+
 			JsonData jd = JsonMapper.ToObject(parameter);           
 			String content = (String)jd["content"];             
 			_printLocalLog("content:"+content);
@@ -151,7 +152,7 @@ namespace JPush{
 		}
 		public static void SetTags(HashSet<String> tags){
 
-			Hashtable data = new 	Hashtable ();
+			Dictionary<String,object> data  = new 	Dictionary<String,object> ();
 			data["tags"]  = tags;
 			String s=LitJson.JsonMapper.ToJson(data);
 			_setTags(s);
@@ -164,11 +165,35 @@ namespace JPush{
 			_setAlias(s);
 
 		}
+		public static HashSet<String>  FilterTags(HashSet<String> tags){
+
+			String[] arrayTags = new String[tags.Count];
+			tags.CopyTo (arrayTags);
+
+			Dictionary<String,object> data  = new 	Dictionary<String,object> ();
+			data ["tags"] = arrayTags;
+			String s = JsonMapper.ToJson (data);
+			String filterTags= _filterValidTags(s);
+
+			_printLocalLog (filterTags);
+
+			JsonData jd = JsonMapper.ToObject(filterTags); 
+
+			JsonData jdItems = jd["tags"];       
+			int itemCnt = jdItems.Count; 
+			HashSet<string> set = new HashSet<string> ();
+			
+			for(int i=0;i<itemCnt;i++)
+			{
+				set.Add((String)jdItems[i]);             
+			}
+
+			return set;
+		}
 		[DllImport ("__Internal")]
 		public static extern void    _registerNetworkDidReceiveMessage();
 		[DllImport ("__Internal")]
-		private static extern void   _printLocalLog(String log);
-		
+		public static extern void   _printLocalLog(String log);
 		[DllImport ("__Internal")]
 		public static extern void    _setTagsAlias(String tagsWithAlias);
 		[DllImport ("__Internal")] 

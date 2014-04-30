@@ -168,21 +168,27 @@ public class PluginsDemo : MonoBehaviour
 		//tag2=GUI.TextField(Rect(100,10,80,20),tag2);
 		//tag3=GUI.TextField(Rect(190,10,80,20),tag3);
 
-		tag1 = GUILayout.TextField(tag1, GUILayout.Width(100),GUILayout.Height(20));
-		tag2 = GUILayout.TextField(tag2, GUILayout.Width(100),GUILayout.Height(20));
-		tag3 = GUILayout.TextField(tag2, GUILayout.Width(100),GUILayout.Height(20));
-		if (GUILayout.Button ("set tag/lias", GUILayout.Height (30))) {
+		tag1 = GUILayout.TextField(tag1, GUILayout.Width(300),GUILayout.Height(150));
+		tag2 = GUILayout.TextField(tag2, GUILayout.Width(300),GUILayout.Height(150));
+		tag3 = GUILayout.TextField(tag2, GUILayout.Width(300),GUILayout.Height(130));
+		if (GUILayout.Button ("set tag/lias", GUILayout.Height (200))) {
+
+			JPush.JPushBinding._printLocalLog("set tag/alias");
+
 			HashSet<String> tags=new HashSet<String>();
 			tags.Add("tag1");
 			tags.Add("tag2");
 			tags.Add("tag3");
+
 			JPush.JPushBinding.SetTagsWithAlias(tags,"bieming",(m,n,p)=>{
 
 				result="respoen" +m.ToString();
 				result="alias"   +p;
+				JPush.JPushBinding._printLocalLog("callbakc2");
 			});
+
 		}
-		GUILayout.Label(result, GUILayout.Width(100),GUILayout.Height(20));
+		GUILayout.Label(result, GUILayout.Width(300),GUILayout.Height(400));
 	}
 	void OnUpdate()
 	{

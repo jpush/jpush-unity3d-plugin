@@ -35,6 +35,16 @@ extern "C" {
 #if defined(__cplusplus)
 extern "C" {
 #endif
+    static char* MakeHeapString(const char* string) {
+        if (!string){
+            return NULL;
+        }
+        char* mem = static_cast<char*>(malloc(strlen(string) + 1));
+        if (mem) {
+            strcpy(mem, string);
+        }
+        return mem;
+    }
     NSString* CreateNSString (const char* string) {
         return [NSString stringWithUTF8String:(string ? string : "")];
     }
@@ -127,12 +137,14 @@ extern "C" {
         
         NSString *filterTags=[[NSString alloc] initWithData:filterData encoding:NSUTF8StringEncoding];
         
-        return [filterTags UTF8String];
+        return MakeHeapString([filterTags UTF8String]);
+
     }
     const char * _openUDID(){
         
         NSString * nsUDID=[APService openUDID];
-        return [nsUDID UTF8String];
+        return MakeHeapString([nsUDID UTF8String]);
+        
     }
 
 #if defined(__cplusplus)
