@@ -75,7 +75,7 @@ JPush Unity3d Plugin
 
 ### Example 说明
 
-* 在unity Assets\Plugins\Demo下的 PluginsDemo.cs 文件是一个测试脚本,其运行结果如下：
+在unity Assets\Plugins\Demo下的 PluginsDemo.cs 文件是一个测试脚本,其运行结果如下：
 
   ![sdf](https://cloud.githubusercontent.com/assets/2249048/2829091/aa181b06-cf9e-11e3-91b5-f7bd83f1647d.png)
 
