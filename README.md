@@ -152,4 +152,7 @@ CoreTelehony.framework
      	 [APService handleRemoteNotification:userInfo];
  	 }
 ```
+### Example 说明
+* 新建一个Unity3d的工程，将Examples/PluginsDemo.cs拖到Main Camera对象上生成相应的ios项目即可
+
 
