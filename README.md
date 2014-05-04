@@ -106,7 +106,7 @@ JPush Unity3d Plugin
 
 ## 集成 JPush Unity iOS SDK
 
-* 在Unity3d游戏场景中,新建一个空的 Gameobject,挂载 JPushBinding.c
+* 在Unity3d游戏场景中,新建一个空的 Gameobject,将其名称修改为JPushBinding,挂载 JPushBinding.cs
 
 * 生成ios工程,并打开该工程
 
