@@ -150,7 +150,8 @@ public class PluginsDemo : MonoBehaviour
 		JPushBinding.isQuit() ;
 	}
 	#endif
-	//#if UNITY_IPHONE
+
+	#if UNITY_IPHONE
 	public string tag1 = "tag1" ;
 	public string tag2 = "tag2" ;
     public string tag3 = "tag3" ;
@@ -161,28 +162,20 @@ public class PluginsDemo : MonoBehaviour
 	void Start ()
 	{
 
-
 	}
 	void OnGUI ()
 	{
-		//tag1=GUI.TextField(Rect(10,10,80,20),tag1);
-		//tag2=GUI.TextField(Rect(100,10,80,20),tag2);
-		//tag3=GUI.TextField(Rect(190,10,80,20),tag3);
-
 		tag1 = GUILayout.TextField(tag1, GUILayout.Width(300),GUILayout.Height(150));
 		tag2 = GUILayout.TextField(tag2, GUILayout.Width(300),GUILayout.Height(150));
 		tag3 = GUILayout.TextField(tag2, GUILayout.Width(300),GUILayout.Height(130));
 		if (GUILayout.Button ("set tag/lias", GUILayout.Height (200))) {
 
 			JPush.JPushBinding._printLocalLog("set tag/alias");
-
 			HashSet<String> tags=new HashSet<String>();
 			tags.Add("tag1");
 			tags.Add("tag2");
 			tags.Add("tag3");
-
 			JPush.JPushBinding.SetTagsWithAlias(tags,"bieming",(m,n,p)=>{
-
 				result="respoen" +m.ToString();
 				result="alias"   +p;
 				JPush.JPushBinding._printLocalLog("callbakc2");
@@ -195,9 +188,7 @@ public class PluginsDemo : MonoBehaviour
 	{
 
 	}
-
-
-	//#endif
+	#endif
 
 
 }
