@@ -10,7 +10,9 @@ public class PluginsDemo : MonoBehaviour
 	#if UNITY_ANDROID
 	string str_unity = "" ;
 	bool B_MESSAGE = false ;
-	string str_message = "" ;
+	static string str_message = "" ;
+	
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -62,13 +64,14 @@ public class PluginsDemo : MonoBehaviour
 		}
 				
 		if (GUILayout.Button ("showMessage", GUILayout.Height (80))) {
-			if(B_MESSAGE) {
+			str_unity = str_message ;
+			/*if(B_MESSAGE) {
 				str_unity = str_message ;
 				B_MESSAGE = false ;
 			} else {
 				//TODO no message
 				str_unity = "no message" ;
-			}
+			}*/
 		}
 		
 		if (GUILayout.Button ("addTrigger---setPushTime", GUILayout.Height (80))) {
@@ -137,7 +140,7 @@ public class PluginsDemo : MonoBehaviour
 		Debug.Log("recv----message-----" + str) ; 
 		B_MESSAGE = true ;
 		str_message = str ;
-		
+		str_unity = "有新消息" ;
 	} 
 	
 	//开发者自己处理点击通知栏中的通知
