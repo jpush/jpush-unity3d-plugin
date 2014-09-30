@@ -113,7 +113,15 @@ JPush Unity3d Plugin
 * 添加必要的框架：
 
 ```
-CoreTelehony.framework
+CoreFoundation.framework
+CFNetwork.framework
+SystemConfiguration.framework
+CoreTelephony.framework
+CoreGraphics.framework
+Foundation.framework
+UIKit.framework
+Security.framework
+libz.dylib
 ```
   
 * 在工程中创建一个新的 Property List 文件，并将其命名为 PushConfig.plist，填入Portal 为你的应用提供的 APP_KEY 等参数
@@ -132,9 +140,27 @@ CoreTelehony.framework
   - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
   {
   // Required
-        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                   UIRemoteNotificationTypeSound |
-                                                   UIRemoteNotificationTypeAlert)];
+	#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
+	    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+	        //可以添加自定义categories
+	        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+	                                                       UIUserNotificationTypeSound |
+	                                                       UIUserNotificationTypeAlert)
+	                                           categories:nil];
+	    } else {
+	        //categories 必须为nil
+	        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+	                                                       UIRemoteNotificationTypeSound |
+	                                                       UIRemoteNotificationTypeAlert)
+	                                           categories:nil];
+	    }
+	#else
+	    //categories 必须为nil
+	    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+	                                                   UIRemoteNotificationTypeSound |
+	                                                   UIRemoteNotificationTypeAlert)
+	                                       categories:nil];
+	#endif
   // Required
           [APService setupWithOption:launchOptions];
           return YES;

@@ -74,7 +74,7 @@ extern "C" {
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
         [defaultCenter addObserver:[JPushUnityInstnce sharedInstance]
                           selector:@selector(networkDidRecieveMessage:)
-                              name:kAPNetworkDidReceiveMessageNotification
+                              name:kJPFNetworkDidReceiveMessageNotification
                             object:nil];
     }
 
@@ -185,7 +185,7 @@ static JPushUnityInstnce * _sharedService = nil;
 - (void)networkDidRecieveMessage:(NSNotification *)notification {
     
     NSLog(@"已收到消息%@",notification);
-    if (notification.name==kAPNetworkDidReceiveMessageNotification&&!notification.userInfo){
+    if (notification.name==kJPFNetworkDidReceiveMessageNotification&&!notification.userInfo){
         
         NSData       *data=APNativeJSONData(notification.userInfo);
         NSString     *jsonStr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
