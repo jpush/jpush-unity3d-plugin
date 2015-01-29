@@ -7,14 +7,14 @@ JPush Unity3d Plugin
 
 * 搭建好unity3d(ios/android)开发环境
 
-* 将git下来的jpush-unity3d-plugin.unitypackage导入到Unity中
+* 将git下来的jpush-unity3d-plugin/Plugins导入到Unity中
 
 ## 集成 JPush Unity Android SDK
 
 ### 基本动作
 
 * 替换AndroidManifest.xml里的包名  
-  将其中的“com.thi.pushtest”`全部`替换成你在JPush服务器上创建的应用的应用包名.
+  将其中的“com.jpush.unity3dplugin”`全部`替换成你在JPush服务器上创建的应用的应用包名.
 
 * 配置Appkey  
   将其中的"JPUSH_APPKEY"值替换成应用详情里应用标(AppKey)的值.
