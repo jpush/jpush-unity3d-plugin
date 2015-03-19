@@ -50,6 +50,11 @@ public class MyReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
             JPushInterface.reportNotificationOpened(context, bundle.getString(JPushInterface.EXTRA_MSG_ID));
             
+   		 Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+   		 launch.addCategory(Intent.CATEGORY_LAUNCHER);
+   		 launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		 context.startActivity(launch);
+
         	//把数据打包，交给用户自己处理            
             if(!JPushBridge.ISQUIT) {
             	Log.d(TAG, "coming in---------no quit");
