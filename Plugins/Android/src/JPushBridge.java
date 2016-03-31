@@ -17,72 +17,72 @@ import cn.jpush.android.api.TagAliasCallback;
 import com.unity3d.player.UnityPlayer;
 
 
-/**  
+/**
  * Copyright © 2014  JPUSH. All rights reserved.
  * @Title: JPushBridge.java
  * @Prject: Unity_002
  * @Package: com.example.unity_002
  * @Description: TODO
- * @author: zhangfl  
+ * @author: zhangfl
  * @date: 2014-4-16 上午9:48:20
- * @version: V1.0  
+ * @version: V1.0
  */
 public class JPushBridge {
 	private static JPushBridge jpushBridge = new JPushBridge() ;
 	private Activity activity = null;
 	public static String gameObjectName = "" ;
 	public static String funcName = "" ;
-	
+
 	public static boolean ISQUIT = true ;
-	
+
 	private Activity getActivity(){
 		if(activity == null){
-			activity = UnityPlayer.currentActivity; 
+			activity = UnityPlayer.currentActivity;
 		}
-		
+
 		return activity;
 	}
-	
+
 	public static JPushBridge getInstance() {
-		if(null == jpushBridge) 
+		if(null == jpushBridge)
 			jpushBridge = new JPushBridge() ;
 		ISQUIT = false ;
 		return jpushBridge ;
 	}
-	
+
 	public void isQuit() {
 		ISQUIT = true ;
 	}
-	
+
 	public void setDebug(boolean enable) {
 		JPushInterface.setDebugMode(enable) ;
 	}
-	
-	
+
+
 	public void initJPush(String gameObject , String func) {
-		gameObjectName = gameObject ; 
+		gameObjectName = gameObject ;
 		funcName = func ;
-		
+
 		JPushInterface.init(getActivity()) ;
 		UnityPlayer.UnitySendMessage(gameObjectName ,funcName , "initJPush:" + gameObject + "---" + func );
 	}
-	
+
 	public  void stopJPush(String gameObject , String func) {
 		JPushInterface.stopPush(getActivity()) ;
 		UnityPlayer.UnitySendMessage(gameObject ,func ,  "stopJPush" );
 	}
-	
+
 	public  void resumeJPush(String gameObject , String func) {
 		JPushInterface.resumePush(getActivity()) ;
 		UnityPlayer.UnitySendMessage(gameObject ,func ,  "resumeJPush" );
 	}
-	
+
 	public void setTags(String gameObject , String func ,String unity_tags ) {
-		
+
 		if (TextUtils.isEmpty(unity_tags)) {
 			return;
 		}
-		
+
 		String[] sArray = unity_tags.split(",");
 		final Set<String> tagSet = new LinkedHashSet<String>();
 		for (String sTagItme : sArray) {
@@ -91,11 +91,11 @@ public class JPushBridge {
 			}
 			tagSet.add(sTagItme);
 		}
-		
+
 		UnityPlayer.UnitySendMessage(gameObject , func , "setTags:" + unity_tags);
-		
+
 		getActivity().runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -103,9 +103,9 @@ public class JPushBridge {
 			}
 		}) ;
 	}
-	
+
 	public void setAlias(String gameObject , String func , String unity_alias) {
-		
+
 		if (TextUtils.isEmpty(unity_alias)) {
 			return;
 		}
@@ -114,17 +114,17 @@ public class JPushBridge {
 		}
 		final String alias = unity_alias ;
 		getActivity().runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				JPushInterface.setAlias(getActivity(), alias, mAliasCallback) ;
 			}
 		});
-		
+
 		UnityPlayer.UnitySendMessage(gameObject , func , "setAlias:" + unity_alias );
 	}
-	
+
 	private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
 
 		@Override
@@ -137,18 +137,17 @@ public class JPushBridge {
 
 			case 6002:
 				logs = "Failed to set alias due to timeout. Try again after 60s.";
-				
+
 				break;
 
 			default:
 				logs = "Failed with errorCode = " + code;
 			}
-
-			showToast(logs, getActivity());
+			Log.i("JPushBridge", logs);
 		}
 
 	};
-	
+
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
 		@Override
@@ -166,12 +165,11 @@ public class JPushBridge {
 			default:
 				logs = "Failed with errorCode = " + code;
 			}
-
-			showToast(logs, getActivity());
+			Log.i("JPushBridge", logs);
 		}
 
 	};
-	
+
 	public void setPushTime(String gameObject , String func , String _days, String _startime, String _endtime) {
 		//TODO check _days _starttime _endtime are vertify
 		if(!isNumeric(_startime) || !isNumeric(_endtime))
@@ -188,7 +186,7 @@ public class JPushBridge {
 		JPushInterface.setPushTime(getActivity(), days, starttime, endtime) ;
 		UnityPlayer.UnitySendMessage(gameObject ,func ,  "setPushTime" );
 	}
-	
+
 	// 校验Tag Alias 只能是数字,英文字母和中文
 	private boolean isValidTagAndAlias(String s) {
 		Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-]{0,}$");
@@ -212,6 +210,6 @@ public class JPushBridge {
 		Pattern pattern = Pattern.compile("[0-9]*");
 		return pattern.matcher(str).matches();
 	}
-	
-	
+
+
 }

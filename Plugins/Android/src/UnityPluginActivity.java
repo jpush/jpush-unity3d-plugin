@@ -7,39 +7,36 @@ import cn.jpush.android.api.JPushInterface;
 import com.unity3d.player.UnityPlayerActivity;
 
 
-/**  
+/**
  * Copyright © 2014  JPUSH. All rights reserved.
  * @Title: UnityPluginActivity.java
  * @Prject: unity-jpush-plugin
  * @Package: com.example.jpushdemo
  * @Description: TODO
- * @author: zhangfl  
+ * @author: zhangfl
  * @date: 2014-4-16 下午7:07:02
- * @version: V1.0  
+ * @version: V1.0
  */
 public class UnityPluginActivity extends UnityPlayerActivity{
 	@Override
 	protected void onCreate(Bundle arg0) {
-		// TODO Auto-generated method stub
 		super.onCreate(arg0);
-		
+
 		WindowManager.LayoutParams attr = getWindow().getAttributes();
         attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setAttributes(attr);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 	}
-	
+
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-		JPushInterface.onResume(UnityPluginActivity.this ) ;
+		JPushInterface.onResume(UnityPluginActivity.this) ;
 	}
 	
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onStop();
+		super.onPause();
 		JPushInterface.onPause(UnityPluginActivity.this);
 	}
 }
