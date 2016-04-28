@@ -21,7 +21,7 @@ namespace JPush {
 		public int myCustomEventVar1 = 0;
 		public bool rockOn = true;
 
-		public CustomEventObj (string eventType = "")
+		public CustomEventObj(string eventType = "")
 		{
 			type = eventType;
 		}

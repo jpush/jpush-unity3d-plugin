@@ -8,26 +8,32 @@ using System.Collections.Generic;
 using LitJson;
 #endif
 
-namespace JPush {
+namespace JPush
+{
 
-	public class JPushBinding : MonoBehaviour {
+	public class JPushBinding : MonoBehaviour
+	{
 		#if UNITY_ANDROID
 		private static AndroidJavaObject _plugin;
 		public static string _gameObject = "";
 		public static string _func ="";
 
-		static JPushBinding() {
-			using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge")) {
+		static JPushBinding()
+		{
+			using(AndroidJavaClass jpushClass = new AndroidJavaClass("com.example.unity3d_jpush_demo.JPushBridge"))
+			{
 				_plugin = jpushClass.CallStatic<AndroidJavaObject>("getInstance");
 			}
 	}
 
-		public static void setDebug(bool debug) {
+		public static void setDebug(bool debug)
+		{
 			_plugin.Call("setDebug", debug);
 		}
 
 		//启用JPush推送服务
-		public static void initJPush() {
+		public static void initJPush()
+		{
 
 		}
 
@@ -35,7 +41,8 @@ namespace JPush {
 		 * 参数gameObject 代表游戏对象
 		 * 参数func 代表回调的方法名
 		 */
-		public static void initJPush(string gameObject, string func) {
+		public static void initJPush(string gameObject, string func)
+		{
 			Debug.Log("unity---initJPush");
 
 			_gameObject = gameObject;
@@ -44,42 +51,49 @@ namespace JPush {
 		}
 
 		//停止JPush推送服务
-		public static void stopJPush() {
+		public static void stopJPush()
+		{
 			stopJPush(_gameObject, _func);
 		}
 
-		public static void stopJPush(string gameObject, string func) {
+		public static void stopJPush(string gameObject, string func)
+		{
 			Debug.Log("unity---stopJPush");
 			_plugin.Call("stopJPush", gameObject, func);
 		}
 
 		//唤醒JPush推送服务，使用了stopJPush必须调用此方法才能恢复
-		public static void resumeJPush() {
+		public static void resumeJPush()
+		{
 			resumeJPush(_gameObject, _func);
 		}
 
-		public static void resumeJPush(string gameObject, string func) {
+		public static void resumeJPush(string gameObject, string func)
+		{
 			Debug.Log("unity---resumeJPush");
 			_plugin.Call("resumeJPush", gameObject, func);
-
 		}
 
 		//设置设备标签. 参数tags 为多个Tag组成的字符串.(Tag为大小写字母,数字,下划线,中文; 多个用逗号分隔.)
-		public static void setTags(string tags) {
+		public static void setTags(string tags)
+		{
 			setTags(_gameObject, _func, tags);
 		}
 
-		public static void setTags(string gameObject, string func, string tags) {
+		public static void setTags(string gameObject, string func, string tags)
+		{
 			Debug.Log("unity---setTags");
 			_plugin.Call("setTags", gameObject, func, tags);
 		}
 
 		//设置设备别名.参数 Alias为大小写字母,数字,下划线
-		public static void setAlias(string alias) {
+		public static void setAlias(string alias)
+		{
 			setAlias(_gameObject, _func, alias);
 		}
 
-		public static void setAlias(string gameObject, string func, string alias) {
+		public static void setAlias(string gameObject, string func, string alias)
+		{
 			Debug.Log("unity---setAlias");
 			_plugin.Call("setAlias", gameObject, func, alias);
 		}
@@ -90,30 +104,57 @@ namespace JPush {
 		 * 参数start_time 为0-23的字符串
 		 * 参数end_time 为0-23的字符串
 		 */
-		public static void setPushTime(string days, string start_time, string end_time) {
+		public static void setPushTime(string days, string start_time, string end_time)
+		{
 			setPushTime(_gameObject, _func, days, start_time, end_time);
 		}
 
 		public static void setPushTime(string gameObject, string func, string days,
-	 			string start_time, string end_time) {
+	 			string start_time, string end_time)
+		{
 			Debug.Log("unity---setPushTime");
 		   _plugin.Call("setPushTime", gameObject, func, days, start_time, end_time);
 		}
 
-		public static void addLocalNotification() {
-
+		public static void addLocalNotification(int builderId, string content,
+				string title, int notiId, int broadcastTime, string extrasStr)
+		{
+			addLocalNotification(_gameObject, _func, builderId, content, title,
+				notiId, broadcastTime, extrasStr);
 		}
 
-		public static void removeLocalNotification() {
-
+		public static void addLocalNotification(string gameObject, string func,
+				int builderId, string content, string title, int notiId,
+				int broadcastTime, string extrasStr)
+		{
+			_plugin.Call("addLocalNotification", gameObject, func, builderId,
+				content, title, notiId, broadcastTime, extrasStr);
 		}
 
-		public static void clearLocalNotification() {
-			
+		public static void removeLocalNotification(int notiId)
+		{
+			removeLocalNotification(_gameObject, _func, notiId);
+		}
+
+		public static void removeLocalNotification(string gameObject, string func,
+				int notiId)
+		{
+			_plugin.Call("removeLocalNotification", gameObject, func);
+		}
+
+		public static void clearLocalNotification()
+		{
+			clearLocalNotification(_gameObject, _func);
+		}
+
+		public static void clearLocalNotification(string gameObject, string func)
+		{
+			_plugin.Call("clearLocalNotification", gameObject, func);
 		}
 
 		//在应用退出前调用
-		public static void isQuit() {
+		public static void isQuit()
+		{
 			Debug.Log("unity---isQuit");
 			_plugin.Call("isQuit");
 		}

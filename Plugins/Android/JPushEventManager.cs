@@ -1,39 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace JPush {
+namespace JPush
+{
 
 	// internal event listener model
-	internal class EventListener {
+	internal class EventListener
+	{
 		public string name;
 		public GameObject listener;
 		public string function;
 	}
 
 	// Custom event class, extend when creating custom events
-	public class CustomEvent {
+	public class CustomEvent
+	{
 		private string _type;
 		private Hashtable _arguments = new Hashtable();
 
 		// constructor
-		public CustomEvent(string eventType = "") {
+		public CustomEvent(string eventType = "")
+		{
 			_type = eventType;
 		}
 
 		// the type of event
-		public string type {
+		public string type
+		{
 			get { return _type; }
 			set { _type = value; }
 		}
 
 		// the arguments to pass with the event
-		public Hashtable arguments {
+		public Hashtable arguments
+		{
 			get { return _arguments; }
 			set { _arguments = value; }
 		}
 	}
 
-	public class JPushEventManager : MonoBehaviour {
+	public class JPushEventManager : MonoBehaviour
+	{
 		// singleton instance
 		public static JPushEventManager instance;
 
@@ -46,25 +53,34 @@ namespace JPush {
 		private static bool _created = false;
 		private Hashtable _listeners = new Hashtable();
 
-		static JPushEventManager() {
+		static JPushEventManager()
+		{
 			instance = new JPushEventManager() ;
 		}
 
 		// setup singleton if allowed
-		public void Awake() {
-			if (!_created && allowSingleton) {
+		public void Awake()
+		{
+			if (!_created && allowSingleton)
+			{
 				DontDestroyOnLoad(this);
 				instance = this;
 				_created = true;
 				Setup();
-			} else {
-				if (allowSingleton) {
-					if (JPushEventManager.instance.allowWarningOutputs) {
+			}
+			else
+			{
+				if (allowSingleton)
+				{
+					if (JPushEventManager.instance.allowWarningOutputs)
+					{
 						Debug.LogWarning("Only a single instance of "
 							+ this.name + " should exists!");
 					}
 					Destroy(gameObject);
-				} else {
+				}
+				else
+				{
 					instance = this;
 					Setup();
 				}
@@ -72,7 +88,8 @@ namespace JPush {
 		}
 
 		// clear events on quit
-		public void OnApplicationQuit() {
+		public void OnApplicationQuit()
+		{
 			Debug.LogWarning("------Application Quit--------");
 			_listeners.Clear();
 		}
@@ -81,9 +98,12 @@ namespace JPush {
 
 		// Add event listener
 		public bool addEventListener(string eventType, GameObject listener,
-	 			string function) {
-			if (listener == null || eventType == null) {
-				if (allowWarningOutputs) {
+	 			string function)
+		{
+			if (listener == null || eventType == null)
+			{
+				if (allowWarningOutputs)
+				{
 					Debug.LogWarning("Event Manager:"
 						+ "AddListener failed due to no listener or event name specified.");
 				}
@@ -94,13 +114,17 @@ namespace JPush {
 		}
 
 		// Remove event listener
-		public bool removeEventListener(string eventType, GameObject listener) {
-			if (!checkForEvent(eventType)) {
+		public bool removeEventListener(string eventType, GameObject listener)
+		{
+			if (!checkForEvent(eventType))
+			{
 				return false;
 			}
 			ArrayList listenerList = _listeners[eventType] as ArrayList;
-			foreach (EventListener callback in listenerList) {
-				if (callback.name == listener.GetInstanceID().ToString()) {
+			foreach (EventListener callback in listenerList)
+			{
+				if (callback.name == listener.GetInstanceID().ToString())
+				{
 					listenerList.Remove(callback);
 					return true;
 				}
@@ -109,7 +133,8 @@ namespace JPush {
 		}
 
 		// Remove all event listeners
-		public void removeAllEventListeners(GameObject listener) {
+		public void removeAllEventListeners(GameObject listener)
+		{
 			//print ("listener.name------" + listener.name + " ---" + listener.GetInstanceID().ToString()) ;
 			_listeners.Clear() ;
 
@@ -121,10 +146,13 @@ namespace JPush {
 		}
 
 		// Dispatch an event
-		public bool dispatchEvent(CustomEvent evt) {
+		public bool dispatchEvent(CustomEvent evt)
+		{
 			string eventType = evt.type;
-			if (!checkForEvent(eventType)) {
-				if (allowWarningOutputs) {
+			if (!checkForEvent(eventType))
+			{
+				if (allowWarningOutputs)
+				{
 					Debug.LogWarning("Event Manager: Event \"" + eventType
 						+ "\" triggered has no listeners!");
 				}
@@ -132,15 +160,18 @@ namespace JPush {
 			}
 
 			ArrayList listenerList = _listeners[eventType] as ArrayList;
-			if (allowDebugOutputs) {
+			if (allowDebugOutputs)
+			{
 				Debug.Log("Event Manager: Event " + eventType
 					+ " dispatched to " + listenerList.Count
 					+ ((listenerList.Count == 1) ? " listener." : " listeners."));
 			}
 
-			foreach (EventListener callback in listenerList) {
+			foreach (EventListener callback in listenerList)
+			{
 				//print ("function---------" + callback.function) ;
-				if (callback.listener && callback.listener.activeSelf) {//callback.listener.active
+				if (callback.listener && callback.listener.activeSelf)
+				{//callback.listener.active
 					callback.listener.SendMessage(callback.function, evt,
 				 		SendMessageOptions.DontRequireReceiver);
 				}
@@ -150,29 +181,36 @@ namespace JPush {
 
 		// PRIVATE *******************************
 
-		private void Setup() {
+		private void Setup()
+		{
 		// TO DO: Self create GameObject if not already created
 		}
 
 		// see if event already exists
-		private bool checkForEvent(string eventType) {
-			if (_listeners.ContainsKey(eventType)) {
+		private bool checkForEvent(string eventType)
+		{
+			if (_listeners.ContainsKey(eventType))
+			{
 				return true;
 			}
 			return false;
 		}
 
 		// record event, if it doesn't already exists
-		private bool recordEvent(string eventType) {
-			if (!checkForEvent(eventType)) {
+		private bool recordEvent(string eventType)
+		{
+			if (!checkForEvent(eventType))
+			{
 				_listeners.Add(eventType, new ArrayList());
 			}
 			return true;
 		}
 
 		// delete event, if not already removed
-		private bool deleteEvent(string eventType) {
-			if (!checkForEvent(eventType)) {
+		private bool deleteEvent(string eventType)
+		{
+			if (!checkForEvent(eventType))
+			{
 				return false;
 			}
 			_listeners.Remove(eventType);
@@ -180,14 +218,18 @@ namespace JPush {
 		}
 
 		// check if listener exists
-		private bool checkForListener(string eventType, GameObject listener) {
-			if (!checkForEvent(eventType)) {
+		private bool checkForListener(string eventType, GameObject listener)
+		{
+			if (!checkForEvent(eventType))
+			{
 				recordEvent(eventType);
 			}
 
 			ArrayList listenerList = _listeners[eventType] as ArrayList;
-			foreach (EventListener callback in listenerList) {
-				if (callback.name == listener.GetInstanceID().ToString()) {
+			foreach (EventListener callback in listenerList)
+			{
+				if (callback.name == listener.GetInstanceID().ToString())
+				{
 					return true;
 				}
 			}
@@ -196,8 +238,10 @@ namespace JPush {
 
 		// record listener, if not already recorded
 		private bool recordListener(string eventType, GameObject listener,
-	 			string function) {
-			if (!checkForListener(eventType, listener)) {
+	 			string function)
+				{
+			if (!checkForListener(eventType, listener))
+			{
 				ArrayList listenerList = _listeners[eventType] as ArrayList;
 				EventListener callback = new EventListener();
 				callback.name = listener.GetInstanceID().ToString();
@@ -205,8 +249,11 @@ namespace JPush {
 				callback.function = function;
 				listenerList.Add(callback);
 				return true;
-			} else {
-				if (allowWarningOutputs) {
+			}
+			else
+			{
+				if (allowWarningOutputs)
+				{
 					Debug.LogWarning("Event Manager: Listener: "
 						+ listener.name + " is already in list for event: "
 						+ eventType);
