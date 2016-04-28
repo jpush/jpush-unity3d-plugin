@@ -73,6 +73,7 @@ namespace JPush {
 
 		// clear events on quit
 		public void OnApplicationQuit() {
+			Debug.LogWarning("------Application Quit--------");
 			_listeners.Clear();
 		}
 
@@ -97,7 +98,6 @@ namespace JPush {
 			if (!checkForEvent(eventType)) {
 				return false;
 			}
-
 			ArrayList listenerList = _listeners[eventType] as ArrayList;
 			foreach (EventListener callback in listenerList) {
 				if (callback.name == listener.GetInstanceID().ToString()) {

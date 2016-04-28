@@ -31,12 +31,12 @@ public class UnityPluginActivity extends UnityPlayerActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		JPushInterface.onResume(UnityPluginActivity.this ) ;
+		JPushInterface.onResume(UnityPluginActivity.this) ;
 	}
 
 	@Override
 	protected void onPause() {
-		super.onStop();
+		super.onPause();
 		JPushInterface.onPause(UnityPluginActivity.this);
 	}
 }

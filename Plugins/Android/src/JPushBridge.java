@@ -79,6 +79,8 @@ public class JPushBridge {
 		if (TextUtils.isEmpty(unity_tags)) {
 			return;
 		}
+		JPushInterface.setDebugMode(enable) ;
+
 		String[] sArray = unity_tags.split(",");
 		final Set<String> tagSet = new LinkedHashSet<String>();
 		for (String sTagItme : sArray) {
@@ -127,7 +129,7 @@ public class JPushBridge {
 			default:
 				logs = "Failed with errorCode = " + code;
 			}
-			showToast(logs, getActivity());
+			Log.i("JPushBridge", logs);
 		}
 	};
 
@@ -145,7 +147,7 @@ public class JPushBridge {
 			default:
 				logs = "Failed with errorCode = " + code;
 			}
-			showToast(logs, getActivity());
+			Log.i("JPushBridge", logs);
 		}
 	};
 
