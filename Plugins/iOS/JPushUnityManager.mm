@@ -7,7 +7,7 @@
 //
 
 #import "JPushUnityManager.h"
-#import "APService.h"
+#import "JPUSHService.h"
 //region A begin
 #pragma mark - Utility Function
 
@@ -97,7 +97,7 @@ extern "C" {
         NSArray      *tagsArray = [dict objectForKey:@"tags"];
         NSSet        *tagsSet   = [[NSSet alloc] initWithArray:tagsArray];
         SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        [APService setTags:tagsSet alias:alias callbackSelector:sel target:[JPushUnityInstnce sharedInstance]];
+        [JPUSHService setTags:tagsSet alias:alias callbackSelector:sel target:[JPushUnityInstnce sharedInstance]];
     }
     void _setTags(const char * tags){
         NSString *nsTags=CreateNSString(tags);
@@ -111,7 +111,7 @@ extern "C" {
         NSSet        *set=[[NSSet alloc] initWithArray:array];
         SEL sel = @selector(tagsAliasCallback:tags:alias:);
         
-        [APService setTags:set callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
+        [JPUSHService setTags:set callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
     }
     void _setAlias(const char * alias){
         NSString *nsAlias=CreateNSString(alias);
@@ -122,7 +122,7 @@ extern "C" {
         NSDictionary *dict = APNativeJSONObject(data);
         NSString     *sendAlias=[dict objectForKey:@"alias"];
         SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        [APService setAlias:sendAlias callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
+        [JPUSHService setAlias:sendAlias callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
     }
     const char * _filterValidTags(const char * tags){
         NSString     *nsTags=CreateNSString(tags);
@@ -130,7 +130,7 @@ extern "C" {
         NSArray      *array=[dict objectForKey:@"tags"];
         NSSet        *set=[[NSSet alloc]initWithArray:array];
         
-        NSSet *filterSet =[APService filterValidTags:set];
+        NSSet *filterSet =[JPUSHService filterValidTags:set];
         NSArray *filterArray=[filterSet allObjects];
         NSDictionary *filterDict=[[NSDictionary alloc]initWithObjectsAndKeys:filterArray,@"tags", nil];
         NSData *filterData=APNativeJSONData(filterDict);
@@ -142,7 +142,7 @@ extern "C" {
     }
     const char * _openUDID(){
         
-        NSString * nsUDID=[APService openUDID];
+        NSString * nsUDID=[JPUSHService registrationID];
         return MakeHeapString([nsUDID UTF8String]);
         
     }

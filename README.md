@@ -5,9 +5,9 @@ JPush Unity3d Plugin
 
 ## 导入到 Unity 项目
 
-* 搭建好unity3d(ios/android)开发环境
+* 搭建好 unity3d(ios/android)开发环境
 
-* 将git下来的jpush-unity3d-plugin/Plugins导入到Unity中
+* 将 git 下来的 jpush-unity3d-plugin/Plugins 导入到 Unity 中
 
 ## 集成 JPush Unity Android SDK
 
@@ -106,9 +106,9 @@ JPush Unity3d Plugin
 
 ## 集成 JPush Unity iOS SDK
 
-* 在Unity3d游戏场景中,新建一个空的 Gameobject,将其名称修改为JPushBinding,挂载 JPushBinding.cs
+* 在 Unity3d 游戏场景中,新建一个空的 Gameobject,将其名称修改为 JPushBinding，挂载 JPushBinding.cs
 
-* 生成ios工程,并打开该工程
+* 生成 iOS 工程,并打开该工程
 
 * 添加必要的框架：
 
@@ -121,20 +121,18 @@ CoreGraphics.framework
 Foundation.framework
 UIKit.framework
 Security.framework
-libz.dylib
+libz.tbd//如原先为 libz.dylib 则替换为 libz.tbd
+AdSupport.framework//如需使用广告标识符 IDFA 则添加该库，否则不添加
 ```
   
-* 在工程中创建一个新的 Property List 文件，并将其命名为 PushConfig.plist，填入Portal 为你的应用提供的 APP_KEY 等参数
-  
-*  找到 xcode 工程 Libraries 文件夹的 APServer.h，拖入 project 中(或者点击右键，点击 add files to "project name")
-
-* 在 UnityAppController.mm 中添加头文件 APServer.h
+* 在 UnityAppController.mm 中添加头文件 JPUSHService.h
 
 ```
-#import "APService.h"
+#import "JPUSHService.h"
+//#import <AdSupport/AdSupport.h>//如需使用广告标识符 IDFA 则添加该头文件，否则不添加
 ```
 
-* 在 UnityAppController.mm 中添加监听系统事件，相应地调用 JPush SDK 提供的 API 来实现功能
+* 在 UnityAppController.mm 中下列方法中添加以下代码：
 
 ```
   - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -143,42 +141,61 @@ libz.dylib
 	#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
 	    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
 	        //可以添加自定义categories
-	        [APService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
+	        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
 	                                                       UIUserNotificationTypeSound |
 	                                                       UIUserNotificationTypeAlert)
 	                                           categories:nil];
 	    } else {
 	        //categories 必须为nil
-	        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+	        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
 	                                                       UIRemoteNotificationTypeSound |
 	                                                       UIRemoteNotificationTypeAlert)
 	                                           categories:nil];
 	    }
 	#else
 	    //categories 必须为nil
-	    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+	    [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
 	                                                   UIRemoteNotificationTypeSound |
 	                                                   UIRemoteNotificationTypeAlert)
 	                                       categories:nil];
 	#endif
-  // Required
-          [APService setupWithOption:launchOptions];
-          return YES;
+	
+	/* 不使用 IDFA 启动 sdk
+       参数说明：
+            appKey：极光官网控制台应用标识
+            channel：频道，暂无可填任意
+            apsForProduction：YES发布环境/NO开发环境
+     */
+    [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO];
+
+
+    /* 使用 IDFA 启动 sdk （不与上述方法同时使用）
+       参数说明：
+            appKey：极光官网控制台应用标识
+            channel：频道，暂无可填任意
+            apsForProduction：YES发布环境/NO开发环境
+            advertisingIdentifier：IDFA广告标识符
+     */
+    //NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    //[JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO advertisingIdentifier:advertisingId];
+
+	return YES;
+	
  }
 ```
 ```
   	- (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
       		// Required
-      		[APService registerDeviceToken:deviceToken];
+      		[JPUSHService registerDeviceToken:deviceToken];
   		}
 ```
 ```	
  	 - (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
      	 // Required
-     	 [APService handleRemoteNotification:userInfo];
+     	 [JPUSHService handleRemoteNotification:userInfo];
  	 }
 ```
-### Example 说明
-* 新建一个Unity3d的工程，将Examples/PluginsDemo.cs拖到Main Camera对象上生成相应的ios项目即可
+### iOS Example 说明
+* 新建一个Unity3d的工程，将 Examples/PluginsDemo.cs 拖到 Main Camera 对象上生成相应的 iOS 项目即可
 
 
