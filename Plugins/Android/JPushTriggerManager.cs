@@ -24,6 +24,12 @@ namespace JPush
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
+		public static void triggerGetRegistrationId(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
 		public static void triggerSetTags(string event_type, string tags)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
@@ -39,12 +45,23 @@ namespace JPush
 		}
 
 		public static void triggerSetPushTime(string event_type, string days,
-				string start_time, string end_time)
+				int startTime, int endTime)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
 			evt.arguments.Add("days", days);
-			evt.arguments.Add("start_time", start_time);
-			evt.arguments.Add("end_time", end_time);
+			evt.arguments.Add("startTime", startTime);
+			evt.arguments.Add("endTime", endTime);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggertSetSilenceTime(string event_type, int startHour,
+				int startMinute, int endHour, int endMinute)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			evt.arguments.Add("startHour", startHour);
+			evt.arguments.Add("startMinute", startMinute);
+			evt.arguments.Add("endHour", endHour);
+			evt.arguments.Add("endMinute", endMinute);
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
@@ -71,6 +88,38 @@ namespace JPush
 		}
 
 		public static void triggerClearLocalNotification(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerClearAllNotification(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerRequestPermission(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerSetLatestNotificationNumber(string event_type,
+				int num)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			evt.arguments.Add("maxNum", num);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerSetBasicPushNotificationBuilder(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerSetCustomPushNotificationBuilder(string event_type)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
 			JPushEventManager.instance.dispatchEvent(evt);

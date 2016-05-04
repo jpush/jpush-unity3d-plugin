@@ -171,7 +171,8 @@ namespace JPush
 			{
 				//print ("function---------" + callback.function) ;
 				if (callback.listener && callback.listener.activeSelf)
-				{//callback.listener.active
+				{
+					//callback.listener.active
 					callback.listener.SendMessage(callback.function, evt,
 				 		SendMessageOptions.DontRequireReceiver);
 				}
@@ -239,7 +240,7 @@ namespace JPush
 		// record listener, if not already recorded
 		private bool recordListener(string eventType, GameObject listener,
 	 			string function)
-				{
+		{
 			if (!checkForListener(eventType, listener))
 			{
 				ArrayList listenerList = _listeners[eventType] as ArrayList;
