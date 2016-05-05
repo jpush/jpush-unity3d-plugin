@@ -24,9 +24,24 @@ namespace JPush
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
+		public static void triggerRequestPermission(string event_type)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
 		public static void triggerGetRegistrationId(string event_type)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
+			JPushEventManager.instance.dispatchEvent(evt);
+		}
+
+		public static void triggerSetAliasAndTags(string event_type,
+				string alias, string tags)
+		{
+			CustomEventObj evt = new CustomEventObj(event_type);
+			evt.arguments.Add("alias", alias);
+			evt.arguments.Add("tags", tags);
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
@@ -87,13 +102,13 @@ namespace JPush
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
-		public static void triggerClearLocalNotification(string event_type)
+		public static void triggerClearLocalNotifications(string event_type)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
-		public static void triggerClearAllNotification(string event_type)
+		public static void triggerClearAllNotifications(string event_type)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
 			JPushEventManager.instance.dispatchEvent(evt);

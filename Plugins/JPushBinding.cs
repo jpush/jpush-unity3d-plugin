@@ -180,7 +180,7 @@ namespace JPush
 				int startHour, int startMinute, int endHour, int endMinute)
 		{
 			Debug.Log("unity---setSilenceTime");
-			_plugin.Call("setSilenceTime", startHour, startMinute, endHour,
+			_plugin.Call("setSilenceTime",gameObject, func, startHour, startMinute, endHour,
 				endMinute);
 		}
 

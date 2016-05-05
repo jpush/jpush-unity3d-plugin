@@ -12,7 +12,7 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * 自定义接收器
- *
+ * <p>
  * 如果不定义这个 Receiver，则：
  * 1) 默认用户会打开主界面
  * 2) 接收不到自定义消息
@@ -35,12 +35,12 @@ public class MyReceiver extends BroadcastReceiver {
                     + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 
             //把数据打包，交给用户自己处理
-            if(!JPushBridge.isQuit) {
+            if (!JPushBridge.isQuit) {
                 Log.d(TAG, "coming in---------message");
                 String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
                 String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
                 UnityPlayer.UnitySendMessage(JPushBridge.gameObjectName,
-                        "recvMessage" , msg2str(message , extras)) ;
+                        "recvMessage", msg2str(message, extras));
             } else {
                 Log.d(TAG, "coming out---------message");
             }
@@ -59,7 +59,7 @@ public class MyReceiver extends BroadcastReceiver {
             context.startActivity(launch);
 
             //把数据打包，交给用户自己处理
-            if(!JPushBridge.isQuit) {
+            if (!JPushBridge.isQuit) {
                 Log.d(TAG, "coming in---------no quit");
                 String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
                 String content = bundle.getString(JPushInterface.EXTRA_ALERT);
@@ -92,14 +92,15 @@ public class MyReceiver extends BroadcastReceiver {
     }
 
     /**
-     {
-     "title": "JPush SDK Demo",
-     "message": "sdf",
-     "extras": {
-     "q": "ddd",
-     "a": "aaa"
-     }
-     }
+     * {
+     * "title": "JPush SDK Demo",
+     * "message": "sdf",
+     * "extras": {
+     * "q": "ddd",
+     * "a": "aaa"
+     * }
+     * }
+     *
      * @param title
      * @param content
      * @param extras
@@ -112,14 +113,15 @@ public class MyReceiver extends BroadcastReceiver {
     }
 
     /**
-     {
-     "message": "hhh",
-     "extras": {
-     "f": "fff",
-     "q": "qqq",
-     "a": "aaa"
-     }
-     }
+     * {
+     * "message": "hhh",
+     * "extras": {
+     * "f": "fff",
+     * "q": "qqq",
+     * "a": "aaa"
+     * }
+     * }
+     *
      * @param content
      * @param extras
      * @return
