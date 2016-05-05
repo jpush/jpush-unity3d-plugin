@@ -96,16 +96,6 @@ public class PluginsDemo : MonoBehaviour
 			JPushBinding.addLocalNotification(0, "content", "title", 1, 0, null);
 		}
 
-		if (GUILayout.Button("clearLocalNotifications", GUILayout.Height(80)))
-		{
-			JPushBinding.clearLocalNotifications();
-		}
-
-		if (GUILayout.Button("clearAllNotifications", GUILayout.Height(80)))
-		{
-			JPushBinding.clearAllNotifications();
-		}
-
 		if (GUILayout.Button("getRegistrationId", GUILayout.Height(80)))
 		{
 			string registrationId = JPushBinding.getRegistrationId();
