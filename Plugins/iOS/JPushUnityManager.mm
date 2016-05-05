@@ -97,7 +97,7 @@ extern "C" {
         NSArray      *tagsArray = [dict objectForKey:@"tags"];
         NSSet        *tagsSet   = [[NSSet alloc] initWithArray:tagsArray];
         SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        [JPUSHService setTags:tagsSet alias:alias callbackSelector:sel target:[JPushUnityInstnce sharedInstance]];
+        [JPUSHService setTags:tagsSet alias:alias callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
     }
     void _setTags(const char * tags){
         NSString *nsTags=CreateNSString(tags);
