@@ -227,13 +227,16 @@ public class JPushBridge {
 
     public void setPushTime(String gameObject, String func, String days,
             int startHour, int endHour) {
-        String[] strDays = days.split(",");
-        Set<Integer> daysSet = new HashSet<Integer>();
-        for (String str : strDays) {
-            if (!isNumeric(str)) {
-                return;
+        Set<Integer> daysSet = days == null ? null : new HashSet<Integer>();
+
+        if (!TextUtils.isEmpty(days)) {
+            String[] strDays = days.split(",");
+            for (String str : strDays) {
+                if (!isNumeric(str)) {
+                    return;
+                }
+                daysSet.add(Integer.parseInt(str));
             }
-            daysSet.add(Integer.parseInt(str));
         }
         JPushInterface.setPushTime(getActivity(), daysSet, startHour, endHour);
         UnityPlayer.UnitySendMessage(gameObject, func, "setPushTime");

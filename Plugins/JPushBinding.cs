@@ -47,12 +47,6 @@ namespace JPush
 			_plugin.Call("setDebug", debug);
 		}
 
-		//启用JPush推送服务
-		public static void initJPush()
-		{
-
-		}
-
 		/**
 		 * 参数gameObject 代表游戏对象
 		 * 参数func 代表回调的方法名

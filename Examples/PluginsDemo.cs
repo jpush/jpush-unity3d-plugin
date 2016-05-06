@@ -14,7 +14,7 @@ public class PluginsDemo : MonoBehaviour
 
 
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
 		gameObject.name = "Main Camera";
 		JPushBinding.setDebug(true);
@@ -41,7 +41,7 @@ public class PluginsDemo : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
 		if(Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Home))
 		{
@@ -51,7 +51,7 @@ public class PluginsDemo : MonoBehaviour
 	}
 
 	// remove event listeners
-	void OnDestroy ()
+	void OnDestroy()
 	{
 		print("unity3d---onDestroy");
 		if (gameObject)
@@ -61,7 +61,7 @@ public class PluginsDemo : MonoBehaviour
 		}
 	}
 
-	void OnGUI ()
+	void OnGUI()
 	{
 		str_unity = GUILayout.TextField(str_unity, GUILayout.Width(Screen.width - 80),
 			GUILayout.Height(200));
@@ -193,7 +193,7 @@ public class PluginsDemo : MonoBehaviour
 	void removeLocalNotification(CustomEventObj evt)
 	{
 		Debug.Log("---triggered removeLocalNotification---");
-		int notiId = (int)evt.arguments["notificationId"];
+		int notiId = (int) evt.arguments["notificationId"];
 		JPushBinding.removeLocalNotification(notiId);
 	}
 
@@ -208,19 +208,35 @@ public class PluginsDemo : MonoBehaviour
 		}
 	*/
 	//开发者自己处理由JPush推送下来的消息
-	void recvMessage(string str)
+	void recvMessage(string jsonStr)
 	{
-		Debug.Log("recv----message-----" + str);
+		Debug.Log("recv----message-----" + jsonStr);
 		B_MESSAGE = true;
-		str_message = str;
+		str_message = jsonStr;
 		str_unity = "有新消息";
 	}
 
-	//开发者自己处理点击通知栏中的通知
-	void openNotification(string str)
+	/**
+	* {
+	*	"title": "notiTitle",
+	*   "content": "content",
+	*   "extras": {
+	*		"key1": "value1",
+	*       "key2": "value2"
+	* 	}
+	* }
+	*/
+	// 获取的是 json 格式数据，开发者根据自己的需要进行处理。
+	void recvNotification(string jsonStr)
 	{
-		Debug.Log ("recv --- openNotification---" + str);
-		str_unity = str;
+		Debug.Log("recv---notification---" + jsonStr);
+	}
+
+	//开发者自己处理点击通知栏中的通知
+	void openNotification(string jsonStr)
+	{
+		Debug.Log("recv---openNotification---" + jsonStr);
+		str_unity = jsonStr;
 	}
 
 	void beforeQuit()

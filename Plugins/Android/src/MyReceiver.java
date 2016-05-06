@@ -47,6 +47,11 @@ public class MyReceiver extends BroadcastReceiver {
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             //默认在通知栏中显示
+            String content = bundle.getString(JPushInterface.EXTRA_ALERT);
+            String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
+            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObjectName,
+                    "recvNotification", noti2str(title, content, extras));
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
             JPushInterface.reportNotificationOpened(context,
@@ -100,14 +105,9 @@ public class MyReceiver extends BroadcastReceiver {
      * "a": "aaa"
      * }
      * }
-     *
-     * @param title
-     * @param content
-     * @param extras
-     * @return
      */
     private static String noti2str(String title, String content, String extras) {
-        String sb = ("{\"title\":\"" + title + "\",\"message\":\""
+        String sb = ("{\"title\":\"" + title + "\",\"content\":\""
                 + content + "\",\"extras\":" + extras + "}");
         return sb;
     }
@@ -122,9 +122,6 @@ public class MyReceiver extends BroadcastReceiver {
      * }
      * }
      *
-     * @param content
-     * @param extras
-     * @return
      */
     private static String msg2str(String content, String extras) {
         return ("{\"message\":\"" + content + "\",\"extras\":" + extras + "}");
