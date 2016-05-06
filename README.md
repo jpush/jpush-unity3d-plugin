@@ -1,4 +1,4 @@
-JPush Unity3d Plugin
+# JPush Unity3d Plugin
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpush/jpush-unity3d-plugin)
 [![release](https://img.shields.io/badge/release-2.1.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
@@ -31,7 +31,7 @@ JPush Unity3d Plugin
 > 在 Plugins\Android\src 目录下是一些 java 文件，你可以将其引入到 Android 工程中对它们进行扩展，重新生成 jar 替换掉 unity 工程中
  Assets\Plugins\Android 目录下的 JPush_Bridge.jar 文件。
 
- [Android API 详细文档](/Doc/AndroidAPI.md)
+ [Android API 详细文档](/Doc/AndroidAPI.md)。
 
 
 ### Example 说明
