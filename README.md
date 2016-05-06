@@ -1,6 +1,8 @@
 JPush Unity3d Plugin
 ====================
 
+[![Join the chat at https://gitter.im/jpush/jpush-unity3d-plugin](https://badges.gitter.im/jpush/jpush-unity3d-plugin.svg)](https://gitter.im/jpush/jpush-unity3d-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 这是极光推送官方支持的 Unity3d 插件（Android &amp; iOS）。
 
 ## 导入到 Unity 项目
