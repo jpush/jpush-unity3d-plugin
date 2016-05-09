@@ -14,10 +14,10 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-   extern void       UnitySendMessage(const char* obj, const char* method, const char* msg);
-   extern NSString*  CreateNSString (const char* string);
-   extern id         APNativeJSONObject(NSData *data);
-   extern NSData *   APNativeJSONData(id obj);
+    extern void       UnitySendMessage(const char* obj, const char* method, const char* msg);
+    extern NSString*  CreateNSString (const char* string);
+    extern id         APNativeJSONObject(NSData *data);
+    extern NSData *   APNativeJSONData(id obj);
 #if defined(__cplusplus)
 }
 #endif
@@ -69,8 +69,85 @@ extern "C" {
         }
         return data;
     }
+
+    void _printLocalLog(char *log){
+
+        NSString *nsLog = CreateNSString(log);
+        NSLog(@"JPush Unity3d Plugin Log >>>>> %@",nsLog);
+    }
+
+    //---------------------------- tags / alias ----------------------------//
+
+    void _setTagsAlias(const char* tagsWithAlias){
+        NSString *nsTagsWithAlias = CreateNSString(tagsWithAlias);
+        if (![nsTagsWithAlias length]) {
+            return;
+        }
+        NSData       *data = [nsTagsWithAlias dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+
+        NSString     *alias     = dict[@"alias"];
+        NSArray      *tagsArray = dict[@"tags"];
+        NSSet        *tagsSet   = [[NSSet alloc] initWithArray:tagsArray];
+
+        [JPUSHService setTags:tagsSet alias:alias callbackSelector:@selector(tagsAliasCallback:tags:alias:) object:[JPushUnityInstnce sharedInstance]];
+    }
+
+    void _setTags(const char * tags){
+        NSString *nsTags = CreateNSString(tags);
+        if (![nsTags length]) {
+            return;
+        }
+        NSData       *data  = [nsTags dataUsingEncoding:NSUTF8StringEncoding];
+
+        NSDictionary *dict  = APNativeJSONObject(data);
+        NSArray      *array = dict[@"tags"];
+        NSSet        *set   = [[NSSet alloc] initWithArray:array];
+
+        [JPUSHService setTags:set callbackSelector:@selector(tagsAliasCallback:tags:alias:) object:[JPushUnityInstnce sharedInstance]];
+    }
+
+    void _setAlias(const char * alias){
+        NSString *nsAlias = CreateNSString(alias);
+        if (![nsAlias length]) {
+            return ;
+        }
+        NSData       *data =[nsAlias dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendAlias = [dict objectForKey:@"alias"];
+        [JPUSHService setAlias:sendAlias callbackSelector:@selector(tagsAliasCallback:tags:alias:) object:[JPushUnityInstnce sharedInstance]];
+    }
+
+    const char * _filterValidTags(const char * tags){
+        NSString     *nsTags=CreateNSString(tags);
+        NSDictionary *dict=APNativeJSONObject([nsTags dataUsingEncoding:NSUTF8StringEncoding]);
+        NSArray      *array=[dict objectForKey:@"tags"];
+        NSSet        *set=[[NSSet alloc]initWithArray:array];
+
+        NSSet *filterSet =[JPUSHService filterValidTags:set];
+        NSArray *filterArray=[filterSet allObjects];
+        NSDictionary *filterDict=[[NSDictionary alloc]initWithObjectsAndKeys:filterArray,@"tags", nil];
+        NSData *filterData=APNativeJSONData(filterDict);
+
+        NSString *filterTags=[[NSString alloc] initWithData:filterData encoding:NSUTF8StringEncoding];
+
+        return MakeHeapString([filterTags UTF8String]);
+
+    }
+
+    //---------------------------- registrationID ----------------------------//
+
+    const char * _registrationID(){
+
+        NSString * registrationID = [JPUSHService registrationID];
+        return MakeHeapString([registrationID UTF8String]);
+
+    }
+
+
+    //---------------------------- notification / message ----------------------------//
+
     void _registerNetworkDidReceiveMessage(){
-    
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
         [defaultCenter addObserver:[JPushUnityInstnce sharedInstance]
                           selector:@selector(networkDidRecieveMessage:)
@@ -78,73 +155,82 @@ extern "C" {
                             object:nil];
     }
 
-    
-    void _printLocalLog(char *log){
-        
-        NSString *nsLog=CreateNSString(log);
-        NSLog(@"unity3d local log is %@",nsLog);
+    //---------------------------- badge ----------------------------//
+
+    void _setBadge(const int badge){
+        NSInteger nsBadge = [badge integerValue];
+        [JPUSHService setBadge:nsBadge];
     }
 
-    void _setTagsAlias(const char* tagsWithAlias){
-        NSString *nsTagsWithAlias=CreateNSString(tagsWithAlias);
-        if (![nsTagsWithAlias length]) {
-            return;
-        }
-        NSData       *data =[nsTagsWithAlias dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *dict = APNativeJSONObject(data);
-        
-        NSString     *alias     = [dict objectForKey:@"alias"];
-        NSArray      *tagsArray = [dict objectForKey:@"tags"];
-        NSSet        *tagsSet   = [[NSSet alloc] initWithArray:tagsArray];
-        SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        [JPUSHService setTags:tagsSet alias:alias callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
+    void _resetBadge(){
+        [JPUSHService resetBadge];
     }
-    void _setTags(const char * tags){
-        NSString *nsTags=CreateNSString(tags);
-        if (![nsTags length]) {
-            return;
-        }
-        NSData       *data =[nsTags dataUsingEncoding:NSUTF8StringEncoding];
-        
-        NSDictionary *dict = APNativeJSONObject(data);
-        NSArray      *array=[dict objectForKey:@"tags"];
-        NSSet        *set=[[NSSet alloc] initWithArray:array];
-        SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        
-        [JPUSHService setTags:set callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
-    }
-    void _setAlias(const char * alias){
-        NSString *nsAlias=CreateNSString(alias);
-        if (![nsAlias length]) {
-            return ;
-        }
-        NSData       *data =[nsAlias dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *dict = APNativeJSONObject(data);
-        NSString     *sendAlias=[dict objectForKey:@"alias"];
-        SEL sel = @selector(tagsAliasCallback:tags:alias:);
-        [JPUSHService setAlias:sendAlias callbackSelector:sel object:[JPushUnityInstnce sharedInstance]];
-    }
-    const char * _filterValidTags(const char * tags){
-        NSString     *nsTags=CreateNSString(tags);
-        NSDictionary *dict=APNativeJSONObject([nsTags dataUsingEncoding:NSUTF8StringEncoding]);
-        NSArray      *array=[dict objectForKey:@"tags"];
-        NSSet        *set=[[NSSet alloc]initWithArray:array];
-        
-        NSSet *filterSet =[JPUSHService filterValidTags:set];
-        NSArray *filterArray=[filterSet allObjects];
-        NSDictionary *filterDict=[[NSDictionary alloc]initWithObjectsAndKeys:filterArray,@"tags", nil];
-        NSData *filterData=APNativeJSONData(filterDict);
-        
-        NSString *filterTags=[[NSString alloc] initWithData:filterData encoding:NSUTF8StringEncoding];
-        
-        return MakeHeapString([filterTags UTF8String]);
 
+    void _setApplicationIconBadgeNumber(const int badge){
+        NSInteger nsBadge = [badge integerValue];
+        [JPUSHService setApplicationIconBadgeNumber:nsBadge];
     }
-    const char * _openUDID(){
-        
-        NSString * nsUDID=[JPUSHService registrationID];
-        return MakeHeapString([nsUDID UTF8String]);
-        
+
+    int _getApplicationIconBadgeNumber(){
+        NSInteger nsBadge = [JPUSHService getApplicationIconBadgeNumber];
+        return [nsBadge intValue];
+    }
+
+    //---------------------------- 页面统计 ----------------------------//
+
+    void _startLogPageView(const char *pageName){
+        NSString *nsPageName = CreateNSString(pageName);
+        [JPUSHService startLogPageView:nsPageName];
+    }
+
+    void _stopLogPageView(const char *pageName){
+        NSString *nsPageName = CreateNSString(pageName);
+        [JPUSHService stopLogPageView:nsPageName];
+    }
+
+    void _beginLogPageView(const char *pageName){
+        NSString *nsPageName = CreateNSString(pageName);
+        [JPUSHService beginLogPageView:nsPageName];
+    }
+
+    //---------------------------- 开关日志 ----------------------------//
+
+    void _setDebugMode(){
+        [JPUSHService setDebugMode];
+    }
+
+    void _setLogOFF(){
+        [JPUSHService setLogOFF];
+    }
+
+    void _crashLogON(){
+        [JPUSHService crashLogON];
+    }
+
+    //---------------------------- 本地推送 ----------------------------//
+
+    void _setLocalNotification(int delay, char *alertBody, int badge, char *idKey){
+        NSData *date = [NSDate dateWithTimeIntervalSinceNow:[delay intValue]];
+        NSString *nsAlertBody = CreateNSString(alertBody);
+        NSString *nsIdKey = CreateNSString(idKey);
+        [JPUSHService setLocalNotification:date alertBody:alertBody badge:badge alertAction:nil identifierKey:idKey userInfo:nil soundName:nil];
+    }
+
+    void _deleteLocalNotificationWithIdentifierKey(char *idKey){
+        NSString *nsIdKey = CreateNSString(idKey);
+        [JPUSHService deleteLocalNotificationWithIdentifierKey:nsIdKey];
+    }
+
+    void _clearAllLocalNotifications(){
+        [JPUSHService clearAllLocalNotifications];
+    }
+
+    //---------------------------- 地理位置上报 ----------------------------//
+
+    void _setLocation(char *latitude, char *longitude){
+        NSString *nsLatitude = CreateNSString(latitude);
+        NSString *nsLongitude = CreateNSString(longitude);
+        [JPUSHService setLatitude:[nsLatitude doubleValue] longitude:[nsLongitude doubleValue]];
     }
 
 #if defined(__cplusplus)
@@ -169,31 +255,32 @@ static JPushUnityInstnce * _sharedService = nil;
     });
     return _sharedService;
 }
+
 - (void)tagsAliasCallback:(int)iResCode tags:(NSSet*)tags alias:(NSString*)alias {
-    
+
     NSLog(@"rescode: %d, \ntags: %@, \nalias: %@\n", iResCode, tags , alias);
     NSArray *tagsArray=[tags allObjects];
-    
-    NSMutableDictionary *dict=[[NSMutableDictionary alloc]init];
+
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     [dict setValue:[[NSNumber alloc] initWithInt:iResCode] forKey:@"rescode"];
     [dict setValue:alias forKey:@"alias"];
     [dict setValue:tagsArray forKey:@"tags"];
-    NSData       *data=APNativeJSONData(dict);
-    NSString     *jsonStr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    NSData       *data    = APNativeJSONData(dict);
+    NSString     *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     UnitySendMessage("JPushBinding","tagsWihtAliasCallBack",jsonStr.UTF8String);
 }
+
 - (void)networkDidRecieveMessage:(NSNotification *)notification {
-    
+
     NSLog(@"已收到消息%@",notification);
     if (notification.name==kJPFNetworkDidReceiveMessageNotification&&!notification.userInfo){
-        
+
         NSData       *data=APNativeJSONData(notification.userInfo);
         NSString     *jsonStr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UnitySendMessage("JPushBinding","networkDidReceiveMessageCallBack",jsonStr.UTF8String);
     }
 }
+
 @end
-
-
 
 
