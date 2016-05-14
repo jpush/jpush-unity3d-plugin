@@ -5,6 +5,8 @@
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 [![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
 
+[![Join the chat at https://gitter.im/jpush/jpush-unity3d-plugin](https://badges.gitter.im/jpush/jpush-unity3d-plugin.svg)](https://gitter.im/jpush/jpush-unity3d-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 这是极光推送官方支持的 Unity3d 插件（Android &amp; iOS）。
 
 ## 导入到 Unity 项目
