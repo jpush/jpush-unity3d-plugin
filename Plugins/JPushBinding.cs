@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -323,6 +323,7 @@ namespace JPush
 
 		#endif
 
+		
 		#if UNITY_IPHONE
 
 		public static Action<int, HashSet<string>, string> _action;
@@ -340,34 +341,7 @@ namespace JPush
 			_registerNetworkDidReceiveMessage();
 	   }
 
-		void tagsWihtAliasCallBack(String jsonData)
-		{
-			_printLocalLog(jsonData);
-
-			JsonData jd = JsonMapper.ToObject(jsonData);
-			int respoenCode = (int)jd["rescode"];
-			String alias = (String)jd["alias"];
-			JsonData jdItems = jd["tags"];
-			int itemCnt = jdItems.Count;
-			HashSet<string> set = new HashSet<string>();
-
-			for(int i = 0; i < itemCnt; i++)
-			{
-				set.Add((String)jdItems[i]);
-			}
-
-			if(_action!=null)
-			{
-				_action(respoenCode, set, alias);
-			}
-		}
-
-		void networkDidReceiveMessageCallBack(String parameter)
-		{
-			JsonData jd = JsonMapper.ToObject(parameter);
-			String content = (String) jd["content"];
-			_printLocalLog("content:" + content);
-		}
+	    //---------------------------- tags / alias ----------------------------//
 
 		public static void SetTagsWithAlias(HashSet<String> tags, String alias,
 				Action<int,HashSet<string>,string> callBack)
@@ -399,6 +373,28 @@ namespace JPush
 			_setAlias(s);
 		}
 
+		void tagsWihtAliasCallBack(String jsonData)
+		{
+			_printLocalLog(jsonData);
+
+			JsonData jd = JsonMapper.ToObject(jsonData);
+			int respoenCode = (int)jd["rescode"];
+			String alias = (String)jd["alias"];
+			JsonData jdItems = jd["tags"];
+			int itemCnt = jdItems.Count;
+			HashSet<string> set = new HashSet<string>();
+
+			for(int i = 0; i < itemCnt; i++)
+			{
+				set.Add((String)jdItems[i]);
+			}
+
+			if(_action!=null)
+			{
+				_action(respoenCode, set, alias);
+			}
+		}
+
 		public static HashSet<String> FilterTags(HashSet<String> tags)
 		{
 			String[] arrayTags = new String[tags.Count];
@@ -424,12 +420,92 @@ namespace JPush
 
 			return set;
 		}
-
-		[DllImport("__Internal")]
-		public static extern void _registerNetworkDidReceiveMessage();
-
-		[DllImport("__Internal")]
-		public static extern void _printLocalLog(String log);
+		
+		//---------------------------- registrationID ----------------------------//
+		
+		public static String RegistrationID(){
+			return _registrationID();
+		}
+		
+		//---------------------------- notification / message ----------------------------//
+		
+		void networkDidReceiveMessageCallBack(String parameter){
+			JsonData jd = JsonMapper.ToObject(parameter);
+			String content = (String) jd["content"];
+			_printLocalLog("content:" + content);
+		}
+		
+		//---------------------------- badge ----------------------------//
+		
+		public static void SetBadge(int badge){
+			_setBadge(badge);
+		}
+		
+		public static void ResetBadge(){
+			_resetBadge();
+		}
+		
+		public static void SetApplicationIconBadgeNumber(int badge){
+			_setApplicationIconBadgeNumber(badge);
+		}
+		
+		public static int GetApplicationIconBadgeNumber(){
+			return _getApplicationIconBadgeNumber();
+		}
+		
+		//---------------------------- 页面统计 ----------------------------//
+		
+		public static void StartLogPageView(String pageName){
+			_startLogPageView(JsonMapper.ToJson(pageName));
+		}
+		
+		public static void StopLogPageView(String pageName){
+			_stopLogPageView(JsonMapper.ToJson(pageName));
+		}
+		
+		public static void BeginLogPageView(String pageName){
+			_beginLogPageView(JsonMapper.ToJson(pageName));
+		}
+		
+		//---------------------------- 开关日志 ----------------------------//
+		
+		public static void SetDebugMode()[
+			_setDebugMode();
+		]
+		
+		public static void SetLogOFF(){
+			_setLogOFF();
+		}
+		
+		public static void CrashLogON(){
+			_crashLogON();
+		}
+		
+		//---------------------------- 本地推送 ----------------------------//
+		
+		public static void SetLocalNotification(int delay, String alertBody, int badge, String idKey){
+			_setLocalNotification(delay, JsonMapper.ToJson(alertBody), badge, JsonMapper.ToJson(idKey));
+		}
+	
+		public static void DeleteLocalNotificationWithIdentifierKey(String idKey){
+			_deleteLocalNotificationWithIdentifierKey(JsonMapper.ToJson(idKey));
+		}
+		
+		public static void ClearAllLocalNotifications(){
+			_clearAllLocalNotifications();
+		}
+		
+		//---------------------------- 地理位置上报 ----------------------------//
+		
+		public static void SetLocation(String latitude, String longitude){
+			_setLocalNotification(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
+		}
+		
+		
+		
+		//---------------------------- DllImport ----------------------------//
+				
+		//--- tags / alias ---//
 
 		[DllImport("__Internal")]
 		public static extern void _setTagsAlias(String tagsWithAlias);
@@ -443,8 +519,73 @@ namespace JPush
 		[DllImport("__Internal")]
 		public static extern String _filterValidTags(String tags);
 
+		//--- rid ---//
+		
 		[DllImport("__Internal")]
-		public static extern String _openUDID();
+		public static extern String _registrationID();
+		
+		//--- notification / message ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _registerNetworkDidReceiveMessage();
+
+		//--- badge ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _setBadge(int badge);
+		
+		[DllImport("__Internal")]
+		public static extern void _resetBadge();
+		
+		[DllImport("__Internal")]
+		public static extern void _setApplicationIconBadgeNumber(int badge);
+		
+		[DllImport("__Internal")]
+		public static extern int _getApplicationIconBadgeNumber();
+ 
+		//--- 页面统计 ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _startLogPageView(String pageName);
+		
+		[DllImport("__Internal")]
+		public static extern void _stopLogPageView(String pageName);
+		
+		[DllImport("__Internal")]
+		public static extern void _beginLogPageView(String pageName);
+		
+		//--- 开关日志 ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _setDebugMode();
+		
+		[DllImport("__Internal")]
+		public static extern void _setLogOFF();
+		
+		[DllImport("__Internal")]
+		public static extern void _crashLogON();
+		
+		//--- 本地推送 ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _setLocalNotification(int delay, String alertBody, int badge, String idKey);
+		
+		[DllImport("__Internal")]
+		public static extern void _deleteLocalNotificationWithIdentifierKey(String idKey);
+		
+		[DllImport("__Internal")]
+		public static extern void _clearAllLocalNotifications();
+		
+		//--- 地理位置上报 ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _setLocation(String latitude, String longitude);
+
+		//--- log ---//
+		
+		[DllImport("__Internal")]
+		public static extern void _printLocalLog(String log);
+		
 
 		#endif
 	}
