@@ -84,6 +84,17 @@ namespace JPush
 			_plugin.Call("resumeJPush", gameObject, func);
 		}
 
+		public static bool isPushStopped()
+		{
+			return isPushStopped(_gameObject, _func);
+		}
+
+		public static bool isPushStopped(string gameObject, string func)
+		{
+			Debug.Log("unity---isPushStopped");
+			return _plugin.Call<bool>("isPushStopped", gameObject, func);
+		}
+
 		public static string getRegistrationId()
 		{
 			return getRegistrationId(_gameObject, _func);
