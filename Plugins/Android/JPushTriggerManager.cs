@@ -24,12 +24,6 @@ namespace JPush
 			JPushEventManager.instance.dispatchEvent(evt);
 		}
 
-		public static void triggerRequestPermission(string event_type)
-		{
-			CustomEventObj evt = new CustomEventObj(event_type);
-			JPushEventManager.instance.dispatchEvent(evt);
-		}
-
 		public static void triggerGetRegistrationId(string event_type)
 		{
 			CustomEventObj evt = new CustomEventObj(event_type);
