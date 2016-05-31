@@ -5,6 +5,7 @@
 - [初始化推送服务](#初始化推送服务)
 - [停止推送服务](#停止推送服务)
 - [恢复推送服务](#恢复推送服务)
+- [检查推送服务是否停止](#检查推送服务是否停止)
 - [获取 RegistrationID](#获取-registrationid)
 - [回调事件](#回调事件)
 - [设置别名与标签](#设置别名与标签)
@@ -61,6 +62,22 @@
 #### 代码示例
 
     JPushBinding.resumeJPush();
+
+## 检查推送服务是否停止
+### API - isPushStopped
+调用此 API 来判断当前 Push Service 是否停止。
+
+#### 接口定义
+
+	public static bool isPushStopped()
+
+#### 代码示例
+
+	bool isStopped = JPushBinding.isPushStopped();
+
+#### 返回值说明
+- true: 调用了 stopJPush() 之后，返回 true；
+- false: 初始化后但没有调用 stopJPush() 之前，或者停止后再重新调用了 resumeJPush() ，返回 false;
 
 ## 获取 RegistrationID
 ### API - getRegistrationId
