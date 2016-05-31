@@ -498,7 +498,7 @@ namespace JPush
 		//---------------------------- 地理位置上报 ----------------------------//
 
 		public static void SetLocation(String latitude, String longitude){
-			_setLocalNotification(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
+			_setLocation(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
 		}
 
 
