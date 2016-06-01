@@ -448,9 +448,18 @@
 	public static void addLocalNotification(int builderId, string content,
 			string title, int notiId, int broadcastTime, string extrasJsonStr)
 
+#### 参数说明
+
+- builderId：通知的样式 ID，0 代表默认样式。
+- content：通知内容。
+- title：通知标题。
+- notiId：通知 ID。
+- broadcastTime：广播时间，代表从现有时间开始之后多长时间来发送这条本地通知，单位是毫秒。
+- extrasJsonStr：要在通知中附加的额外 Json 信息。
+
 #### 代码示例
 
-    JPushBinding.addLocalNotification(1, "content", "title", 1, 0, "yourJsonStr");
+    JPushBinding.addLocalNotification(0, "content", "title", 1, 1000 * 60 * 10, "yourJsonStr");
 
 ### API - removeLocalNotification
 移除指定本地通知。
