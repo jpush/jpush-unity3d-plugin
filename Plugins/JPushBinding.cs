@@ -463,8 +463,8 @@ namespace JPush
 			_stopLogPageView(JsonMapper.ToJson(pageName));
 		}
 
-		public static void BeginLogPageView(String pageName){
-			_beginLogPageView(JsonMapper.ToJson(pageName));
+		public static void BeginLogPageView(String pageName, int duration){
+			_beginLogPageView(JsonMapper.ToJson(pageName), duration);
 		}
 
 		//---------------------------- 开关日志 ----------------------------//
@@ -552,7 +552,7 @@ namespace JPush
 		public static extern void _stopLogPageView(String pageName);
 
 		[DllImport("__Internal")]
-		public static extern void _beginLogPageView(String pageName);
+		public static extern void _beginLogPageView(String pageName, int duration);
 
 		//--- 开关日志 ---//
 
