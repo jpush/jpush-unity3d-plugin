@@ -147,14 +147,14 @@ extern "C" {
         return [n intValue];
     }
 
-
     //---------------------------- registrationID ----------------------------//
 
     const char * _registrationID(){
+
         NSString * registrationID = [JPUSHService registrationID];
         return MakeHeapString([registrationID UTF8String]);
-    }
 
+    }
 
     //---------------------------- notification / message ----------------------------//
 
@@ -294,4 +294,5 @@ static JPushUnityInstnce * _sharedService = nil;
 }
 
 @end
+
 

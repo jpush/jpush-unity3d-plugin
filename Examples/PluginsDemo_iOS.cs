@@ -246,12 +246,14 @@ public class PluginsDemo : MonoBehaviour
 	#endif
 
 	#if UNITY_IPHONE
+
+	public string rid = "RegistrationID:";
 	public string tag1 = "tag1";
 	public string tag2 = "tag2";
-    public string tag3 = "tag3";
-
 	public string alias = "alias";
-	public string result;
+	public string tagAliasResult = "";
+	public string notification = "";
+	public string message = "";
 
 	void Start ()
 	{
@@ -260,23 +262,53 @@ public class PluginsDemo : MonoBehaviour
 
 	void OnGUI ()
 	{
-		tag1 = GUILayout.TextField(tag1, GUILayout.Width(600), GUILayout.Height(300));
-		tag2 = GUILayout.TextField(tag2, GUILayout.Width(600), GUILayout.Height(300));
-		alias = GUILayout.TextField(alias, GUILayout.Width(600), GUILayout.Height(300));
+		GUIStyle textFieldStyle = GUI.skin.textField;  
+		textFieldStyle.fontSize = 40;    
+		textFieldStyle.fixedWidth = 600;
+		textFieldStyle.fixedHeight = 150;
+		textFieldStyle.alignment = TextAnchor.MiddleCenter;
 
-		if (GUILayout.Button ("set tag/lias", GUILayout.Height (300)))
+		GUIStyle buttonStyle = GUI.skin.button;
+		buttonStyle.fontSize = 40;
+		buttonStyle.fixedWidth = 600;
+		buttonStyle.fixedHeight = 150;
+
+		GUIStyle labelStyle = new GUIStyle (textFieldStyle);
+		labelStyle.fontSize = 28;
+		labelStyle.fixedHeight = 100;
+		labelStyle.alignment = TextAnchor.MiddleLeft;
+
+		rid = GUILayout.TextField (rid + "\n" + JPush.JPushBinding.RegistrationID(), labelStyle);
+		tag1 = GUILayout.TextField(tag1);
+		tag2 = GUILayout.TextField(tag2);
+		alias = GUILayout.TextField(alias);
+
+		if (GUILayout.Button ("set tag/lias"))
 		{
 			JPush.JPushBinding._printLocalLog("set tag/alias");
 			HashSet<String> tags = new HashSet<String>();
 			tags.Add(tag1);
 			tags.Add(tag2);
 			JPush.JPushBinding.SetTagsWithAlias(tags,alias,(m,n,p)=>{
-				result = "respoen" + m.ToString();
-				result = "alias"   + p;
-				JPush.JPushBinding._printLocalLog("callbakc2");
+				tagAliasResult = "iResCode:" + m.ToString();
+				tagAliasResult = tagAliasResult + "\ntags:" + tag1 + "," + tag2;
+				tagAliasResult = tagAliasResult + "\nalias:" + p;
+				JPush.JPushBinding._printLocalLog("callback");
 			});
 		}
-		GUILayout.Label(result, GUILayout.Width(300), GUILayout.Height(400));
+
+		if(tagAliasResult != ""){
+			GUILayout.Label(tagAliasResult, labelStyle);
+		}
+
+		if(notification != ""){
+			GUILayout.Label(notification, labelStyle);
+		}
+
+		if (message != "") {
+			GUILayout.Label(notification, labelStyle);
+		}	
+
 	}
 
 	void OnUpdate()

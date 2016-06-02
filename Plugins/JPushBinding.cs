@@ -359,8 +359,10 @@ namespace JPush
 
 		public static void SetTags(HashSet<String> tags)
 		{
+			String[] arrayTags = new String[tags.Count];
+			tags.CopyTo(arrayTags);
 			Dictionary<String, object> data = new Dictionary<String, object>();
-			data["tags"] = tags;
+			data["tags"] = arrayTags;
 			String s = LitJson.JsonMapper.ToJson(data);
 			_setTags(s);
 		}
@@ -500,7 +502,7 @@ namespace JPush
 		public static void SetLocation(String latitude, String longitude){
 			_setLocation(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
 		}
-
+	
 
 
 		//---------------------------- DllImport ----------------------------//
