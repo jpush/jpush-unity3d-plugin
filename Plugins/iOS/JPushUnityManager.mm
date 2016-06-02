@@ -135,6 +135,18 @@ extern "C" {
 
     }
 
+    //---------------------------- private ----------------------------//
+
+    NSInteger _integerValue(int intValue){
+        NSNumber *n = [NSNumber numberWithInt:intValue];
+        return [n integerValue];
+    }
+
+    int _intValue(NSInteger integerValue){
+        NSNumber *n = [NSNumber numberWithInteger:integerValue];
+        return [n intValue];
+    }
+
     //---------------------------- registrationID ----------------------------//
 
     const char * _registrationID(){
@@ -143,7 +155,6 @@ extern "C" {
         return MakeHeapString([registrationID UTF8String]);
 
     }
-
 
     //---------------------------- notification / message ----------------------------//
 
@@ -155,11 +166,11 @@ extern "C" {
                             object:nil];
     }
 
+
     //---------------------------- badge ----------------------------//
 
     void _setBadge(const int badge){
-        NSInteger nsBadge = [badge integerValue];
-        [JPUSHService setBadge:nsBadge];
+        [JPUSHService setBadge:_integerValue(badge)];
     }
 
     void _resetBadge(){
@@ -167,13 +178,11 @@ extern "C" {
     }
 
     void _setApplicationIconBadgeNumber(const int badge){
-        NSInteger nsBadge = [badge integerValue];
-        [JPUSHService setApplicationIconBadgeNumber:nsBadge];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = _integerValue(badge);
     }
 
     int _getApplicationIconBadgeNumber(){
-        NSInteger nsBadge = [JPUSHService getApplicationIconBadgeNumber];
-        return [nsBadge intValue];
+        return _intValue([UIApplication sharedApplication].applicationIconBadgeNumber);
     }
 
     //---------------------------- 页面统计 ----------------------------//
@@ -188,9 +197,9 @@ extern "C" {
         [JPUSHService stopLogPageView:nsPageName];
     }
 
-    void _beginLogPageView(const char *pageName){
+    void _beginLogPageView(const char *pageName, const int duration){
         NSString *nsPageName = CreateNSString(pageName);
-        [JPUSHService beginLogPageView:nsPageName];
+        [JPUSHService beginLogPageView:nsPageName duration:duration];
     }
 
     //---------------------------- 开关日志 ----------------------------//
@@ -210,10 +219,10 @@ extern "C" {
     //---------------------------- 本地推送 ----------------------------//
 
     void _setLocalNotification(int delay, char *alertBody, int badge, char *idKey){
-        NSData *date = [NSDate dateWithTimeIntervalSinceNow:[delay intValue]];
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:_integerValue(delay)];
         NSString *nsAlertBody = CreateNSString(alertBody);
         NSString *nsIdKey = CreateNSString(idKey);
-        [JPUSHService setLocalNotification:date alertBody:alertBody badge:badge alertAction:nil identifierKey:idKey userInfo:nil soundName:nil];
+        [JPUSHService setLocalNotification:date alertBody:nsAlertBody badge:badge alertAction:nil identifierKey:nsIdKey userInfo:nil soundName:nil];
     }
 
     void _deleteLocalNotificationWithIdentifierKey(char *idKey){
@@ -232,6 +241,9 @@ extern "C" {
         NSString *nsLongitude = CreateNSString(longitude);
         [JPUSHService setLatitude:[nsLatitude doubleValue] longitude:[nsLongitude doubleValue]];
     }
+
+
+
 
 #if defined(__cplusplus)
 }

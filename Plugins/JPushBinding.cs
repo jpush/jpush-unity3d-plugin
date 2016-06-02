@@ -359,8 +359,10 @@ namespace JPush
 
 		public static void SetTags(HashSet<String> tags)
 		{
+			String[] arrayTags = new String[tags.Count];
+			tags.CopyTo(arrayTags);
 			Dictionary<String, object> data = new Dictionary<String, object>();
-			data["tags"] = tags;
+			data["tags"] = arrayTags;
 			String s = LitJson.JsonMapper.ToJson(data);
 			_setTags(s);
 		}
@@ -463,8 +465,8 @@ namespace JPush
 			_stopLogPageView(JsonMapper.ToJson(pageName));
 		}
 
-		public static void BeginLogPageView(String pageName){
-			_beginLogPageView(JsonMapper.ToJson(pageName));
+		public static void BeginLogPageView(String pageName, int duration){
+			_beginLogPageView(JsonMapper.ToJson(pageName), duration);
 		}
 
 		//---------------------------- 开关日志 ----------------------------//
@@ -500,7 +502,7 @@ namespace JPush
 		public static void SetLocation(String latitude, String longitude){
 			_setLocation(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
 		}
-
+	
 
 
 		//---------------------------- DllImport ----------------------------//
@@ -552,7 +554,7 @@ namespace JPush
 		public static extern void _stopLogPageView(String pageName);
 
 		[DllImport("__Internal")]
-		public static extern void _beginLogPageView(String pageName);
+		public static extern void _beginLogPageView(String pageName, int duration);
 
 		//--- 开关日志 ---//
 
