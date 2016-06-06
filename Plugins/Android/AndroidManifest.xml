@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jpush.unity3dplugin"   
+    package="com.jpush.unity3dplugin"
     android:versionCode="161"
     android:versionName="1.6.1"
     >
@@ -8,7 +8,7 @@
     <permission
         android:name="com.jpush.unity3dplugin.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-  
+
     <!-- Required  一些系统要求的权限，如访问网络等-->
     <uses-permission android:name="com.jpush.unity3dplugin.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
@@ -21,10 +21,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>  
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
-    
-    
+
+
     <!-- Optional for location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -32,24 +32,23 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    
+
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"		
+        android:label="@string/app_name"
         android:theme="@android:style/Theme.NoTitleBar">
-        
-        
+
         <!-- For test only 测试的主程序-->
         <activity
             android:name="com.example.unity3d_jpush_demo.UnityPluginActivity"
-			android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-     
+
         <!-- Required SDK核心功能-->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -67,8 +66,7 @@
             android:enabled="true"
             android:exported="false" >
         </service>
-    
-        
+
         <!-- Required SDK 核心功能-->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -79,10 +77,10 @@
                 <action android:name="cn.jpush.android.intent.REPORT" />
                 <action android:name="cn.jpush.android.intent.PushService" />
                 <action android:name="cn.jpush.android.intent.PUSH_TIME" />
-                
+
             </intent-filter>
         </service>
-        
+
         <!-- Required SDK核心功能-->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
@@ -101,19 +99,19 @@
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
                 <data android:scheme="package" />
             </intent-filter>
-   
+
         </receiver>
-        
+
         <!-- Required SDK核心功能-->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
-        
+
         <!-- User defined.  For test only  用户自定义的广播接收器-->
         <receiver
             android:name="com.example.unity3d_jpush_demo.MyReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />  
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!--Required  用户接收SDK消息的intent-->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!--Required  用户接收SDK通知栏信息的intent-->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!--Required  用户打开自定义通知栏的intent-->
@@ -121,11 +119,11 @@
                 <category android:name="com.jpush.unity3dplugin" />
             </intent-filter>
         </receiver>
- 
-        
+
+
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <meta-data android:name="JPUSH_APPKEY" android:value="68a6a21369a9c99649d2a482" /> <!--  </>值来自开发者平台取得的AppKey-->
-        
+
     </application>
 </manifest>
