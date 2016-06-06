@@ -82,7 +82,7 @@ CoreGraphics.framework
 Foundation.framework
 UIKit.framework
 Security.framework
-libz.tbd//如原先为 libz.dylib 则替换为 libz.tbd
+libz.tbd//Xcode7 之前为 libz.dylib 之后为 libz.tbd
 AdSupport.framework//如需使用广告标识符 IDFA 则添加该库，否则不添加
 ```
 
@@ -96,8 +96,8 @@ AdSupport.framework//如需使用广告标识符 IDFA 则添加该库，否则�
 * 在 UnityAppController.mm 中下列方法中添加以下代码：
 
 ```
-  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-  {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
   // Required
 	#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
 	    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
@@ -142,19 +142,28 @@ AdSupport.framework//如需使用广告标识符 IDFA 则添加该库，否则�
 
 	return YES;
 
- }
+}
+```
+在 `[JPUSHService setupWithOption:appKey:channel:apsForProduction:advertisingIdentifier:]
+` 方法中
+
+- `appkey:` 参数填写自己的 `appkey`
+- `apsForProduction:` 参数根据所用 Apple 证书的不同填写 `YES` 发布环境/ `NO` 开发环境
+- `advertisingIdentifier:` 根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法
+
+```
+- (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+	// Required
+	[JPUSHService registerDeviceToken:deviceToken];
+}
 ```
 ```
-  	- (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-      		// Required
-      		[JPUSHService registerDeviceToken:deviceToken];
-  		}
+- (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
+	// Required
+	[JPUSHService handleRemoteNotification:userInfo];
+}
 ```
-```
- 	 - (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
-     	 // Required
-     	 [JPUSHService handleRemoteNotification:userInfo];
- 	 }
-```
+### API 说明
+iOS API 集中在文件 `/Plugins/JPushBinding.cs` 中，代码 `#if UNITY_IPHONE` 后面的即为可调用的 iOS API，相应的 API 说明可以参考：[iOS SDK API](http://docs.jpush.io/client/ios_api/)
 ### iOS Example 说明
 * 新建一个 Unity3d 的工程，将 Examples/PluginsDemo.cs 拖到 Main Camera 对象上生成相应的 iOS 项目即可。
