@@ -324,272 +324,295 @@ namespace JPush
 		#endif
 
 
-		#if UNITY_IPHONE
-
-		public static Action<int, HashSet<string>, string> _action;
-
-		void Start()
-		{
-//			_printLocalLog("Start");
-//			HashSet<string> set = new HashSet<string>();
-//			set.Add("tag1");
-//			set.Add("tag2");
-//			set.Add("tag3");
-//
-			//FilterTags(set);
-			//_printLocalLog(_openUDID());
-			_registerNetworkDidReceiveMessage();
-	   }
-
-	    //---------------------------- tags / alias ----------------------------//
-
-		public static void SetTagsWithAlias(HashSet<String> tags, String alias,
-				Action<int,HashSet<string>,string> callBack)
-		{
-			String[] arrayTags = new String[tags.Count];
-			tags.CopyTo(arrayTags);
-			Dictionary<String, object> data = new Dictionary<String, object>();
-			data["tags"] = arrayTags;
-			data["alias"] = alias;
-
-			String s = LitJson.JsonMapper.ToJson(data);
-			_action = callBack;
-			_setTagsAlias(s);
-		}
-
-		public static void SetTags(HashSet<String> tags)
-		{
-			String[] arrayTags = new String[tags.Count];
-			tags.CopyTo(arrayTags);
-			Dictionary<String, object> data = new Dictionary<String, object>();
-			data["tags"] = arrayTags;
-			String s = LitJson.JsonMapper.ToJson(data);
-			_setTags(s);
-		}
-
-		public static void SetAlias(String alias)
-		{
-			JsonData jd = new JsonData();
-			jd["alias"] = alias;
-			String s = JsonMapper.ToJson(jd);
-			_setAlias(s);
-		}
-
-		void tagsWihtAliasCallBack(String jsonData)
-		{
-			_printLocalLog(jsonData);
-
-			JsonData jd = JsonMapper.ToObject(jsonData);
-			int respoenCode = (int)jd["rescode"];
-			String alias = (String)jd["alias"];
-			JsonData jdItems = jd["tags"];
-			int itemCnt = jdItems.Count;
-			HashSet<string> set = new HashSet<string>();
-
-			for(int i = 0; i < itemCnt; i++)
-			{
-				set.Add((String)jdItems[i]);
-			}
-
-			if(_action!=null)
-			{
-				_action(respoenCode, set, alias);
-			}
-		}
-
-		public static HashSet<String> FilterTags(HashSet<String> tags)
-		{
-			String[] arrayTags = new String[tags.Count];
-			tags.CopyTo(arrayTags);
-
-			Dictionary<String, object> data = new Dictionary<String, object>();
-			data ["tags"] = arrayTags;
-			String s = JsonMapper.ToJson(data);
-			String filterTags = _filterValidTags(s);
-
-			_printLocalLog(filterTags);
-
-			JsonData jd = JsonMapper.ToObject(filterTags);
-
-			JsonData jdItems = jd["tags"];
-			int itemCnt = jdItems.Count;
-			HashSet<string> set = new HashSet<string>();
-
-			for(int i=0;i<itemCnt;i++)
-			{
-				set.Add((String)jdItems[i]);
-			}
-
-			return set;
-		}
-
-		//---------------------------- registrationID ----------------------------//
 
-		public static String RegistrationID(){
-			return _registrationID();
-		}
+        #if UNITY_IPHONE
+
+        public static Action<int, HashSet<string>, string> _action;
+
+        void Start()
+        {
+            //			_printLocalLog("Start");
+            //			HashSet<string> set = new HashSet<string>();
+            //			set.Add("tag1");
+            //			set.Add("tag2");
+            //			set.Add("tag3");
+            //
+            //FilterTags(set);
+            //_printLocalLog(_openUDID());
+            _registerNetworkDidReceiveMessage();
+        }
+
+        //---------------------------- tags / alias ----------------------------//
+
+        public static void SetTagsWithAlias(HashSet<String> tags, String alias,
+        Action<int,HashSet<string>,string> callBack)
+        {
+            String[] arrayTags = new String[tags.Count];
+            tags.CopyTo(arrayTags);
+            Dictionary<String, object> data = new Dictionary<String, object>();
+            data["tags"] = arrayTags;
+            data["alias"] = alias;
+
+            String s = LitJson.JsonMapper.ToJson(data);
+            _action = callBack;
+            _setTagsAlias(s);
+        }
+
+        public static void SetTags(HashSet<String> tags)
+        {
+            String[] arrayTags = new String[tags.Count];
+            tags.CopyTo(arrayTags);
+            Dictionary<String, object> data = new Dictionary<String, object>();
+            data["tags"] = arrayTags;
+            String s = LitJson.JsonMapper.ToJson(data);
+            _setTags(s);
+        }
+
+        public static void SetAlias(String alias)
+        {
+            JsonData jd = new JsonData();
+            jd["alias"] = alias;
+            String s = JsonMapper.ToJson(jd);
+            _setAlias(s);
+        }
+
+        void tagsWihtAliasCallBack(String jsonData)
+        {
+            _printLocalLog(jsonData);
+
+            JsonData jd = JsonMapper.ToObject(jsonData);
+            int respoenCode = (int)jd["rescode"];
+            String alias = (String)jd["alias"];
+            JsonData jdItems = jd["tags"];
+            int itemCnt = jdItems.Count;
+            HashSet<string> set = new HashSet<string>();
+
+            for(int i = 0; i < itemCnt; i++)
+            {
+                set.Add((String)jdItems[i]);
+            }
+
+            if(_action!=null)
+            {
+                _action(respoenCode, set, alias);
+            }
+        }
+
+        public static HashSet<String> FilterTags(HashSet<String> tags)
+        {
+            String[] arrayTags = new String[tags.Count];
+            tags.CopyTo(arrayTags);
+
+            Dictionary<String, object> data = new Dictionary<String, object>();
+            data ["tags"] = arrayTags;
+            String s = JsonMapper.ToJson(data);
+            String filterTags = _filterValidTags(s);
+
+            _printLocalLog(filterTags);
+
+            JsonData jd = JsonMapper.ToObject(filterTags);
+
+            JsonData jdItems = jd["tags"];
+            int itemCnt = jdItems.Count;
+            HashSet<string> set = new HashSet<string>();
+
+            for(int i=0;i<itemCnt;i++)
+            {
+                set.Add((String)jdItems[i]);
+            }
+
+            return set;
+        }
+
+        //---------------------------- registrationID ----------------------------//
+
+        public static String RegistrationID(){
+            return _registrationID();
+        }
+
+        //---------------------------- notification / message ----------------------------//
 
-		//---------------------------- notification / message ----------------------------//
+        void networkDidReceiveMessageCallBack(String parameter){
+            JsonData jd = JsonMapper.ToObject(parameter);
+            String content = (String) jd["content"];
+            _printLocalLog("content:" + content);
+        }
 
-		void networkDidReceiveMessageCallBack(String parameter){
-			JsonData jd = JsonMapper.ToObject(parameter);
-			String content = (String) jd["content"];
-			_printLocalLog("content:" + content);
-		}
+        //---------------------------- badge ----------------------------//
 
-		//---------------------------- badge ----------------------------//
+        public static void SetBadge(int badge){
+            _setBadge(badge);
+        }
 
-		public static void SetBadge(int badge){
-			_setBadge(badge);
-		}
+        public static void ResetBadge(){
+            _resetBadge();
+        }
 
-		public static void ResetBadge(){
-			_resetBadge();
-		}
+        public static void SetApplicationIconBadgeNumber(int badge){
+            _setApplicationIconBadgeNumber(badge);
+        }
 
-		public static void SetApplicationIconBadgeNumber(int badge){
-			_setApplicationIconBadgeNumber(badge);
-		}
+        public static int GetApplicationIconBadgeNumber(){
+            return _getApplicationIconBadgeNumber();
+        }
 
-		public static int GetApplicationIconBadgeNumber(){
-			return _getApplicationIconBadgeNumber();
-		}
+        //---------------------------- 页面统计 ----------------------------//
 
-		//---------------------------- 页面统计 ----------------------------//
+        public static void StartLogPageView(String pageName){
+            JsonData jd = new JsonData();
+            jd["pageName"] = pageName;
+            String s = JsonMapper.ToJson(jd);
+            _startLogPageView(s);
+        }
 
-		public static void StartLogPageView(String pageName){
-			_startLogPageView(JsonMapper.ToJson(pageName));
-		}
+        public static void StopLogPageView(String pageName){
+            JsonData jd = new JsonData();
+            jd["pageName"] = pageName;
+            String s = JsonMapper.ToJson(jd);
+            _stopLogPageView(s);
+        }
 
-		public static void StopLogPageView(String pageName){
-			_stopLogPageView(JsonMapper.ToJson(pageName));
-		}
+        public static void BeginLogPageView(String pageName, int duration){
+            JsonData jd = new JsonData();
+            jd["pageName"] = pageName;
+            String s = JsonMapper.ToJson(jd);
+            _beginLogPageView(s, duration);
+        }
 
-		public static void BeginLogPageView(String pageName, int duration){
-			_beginLogPageView(JsonMapper.ToJson(pageName), duration);
-		}
+        //---------------------------- 开关日志 ----------------------------//
 
-		//---------------------------- 开关日志 ----------------------------//
+        public static void SetDebugMode() {
+            _setDebugMode();
+        }
 
-		public static void SetDebugMode() {
-			_setDebugMode();
-		}
+        public static void SetLogOFF(){
+            _setLogOFF();
+        }
 
-		public static void SetLogOFF(){
-			_setLogOFF();
-		}
+        public static void CrashLogON(){
+            _crashLogON();
+        }
 
-		public static void CrashLogON(){
-			_crashLogON();
-		}
+        //---------------------------- 本地推送 ----------------------------//
 
-		//---------------------------- 本地推送 ----------------------------//
+        public static void SetLocalNotification(int delay, String alertBody, int badge, String idKey){
+            JsonData jd = new JsonData();
+            jd["alertBody"] = alertBody;
+            jd ["idKey"] = idKey;
+            String s = JsonMapper.ToJson(jd);
+            _setLocalNotification(delay, badge, s);
+        }
 
-		public static void SetLocalNotification(int delay, String alertBody, int badge, String idKey){
-			_setLocalNotification(delay, JsonMapper.ToJson(alertBody), badge, JsonMapper.ToJson(idKey));
-		}
+        public static void DeleteLocalNotificationWithIdentifierKey(String idKey){
+            JsonData jd = new JsonData();
+            jd["idKey"] = idKey;
+            String s = JsonMapper.ToJson(jd);
+            _deleteLocalNotificationWithIdentifierKey(s);
+        }
 
-		public static void DeleteLocalNotificationWithIdentifierKey(String idKey){
-			_deleteLocalNotificationWithIdentifierKey(JsonMapper.ToJson(idKey));
-		}
+        public static void ClearAllLocalNotifications(){
+            _clearAllLocalNotifications();
+        }
 
-		public static void ClearAllLocalNotifications(){
-			_clearAllLocalNotifications();
-		}
+        //---------------------------- 地理位置上报 ----------------------------//
 
-		//---------------------------- 地理位置上报 ----------------------------//
+        public static void SetLocation(String latitude, String longitude){
+            JsonData jd = new JsonData();
+            jd["latitude"] = latitude;
+            jd["longitude"] = longitude;
+            String s = JsonMapper.ToJson(jd);
+            _setLocation(s);
+        }
 
-		public static void SetLocation(String latitude, String longitude){
-			_setLocation(JsonMapper.ToJson(latitude), JsonMapper.ToJson(longitude));
-		}
-	
 
 
-		//---------------------------- DllImport ----------------------------//
+        //---------------------------- DllImport ----------------------------//
 
-		//--- tags / alias ---//
+        //--- tags / alias ---//
 
-		[DllImport("__Internal")]
-		public static extern void _setTagsAlias(String tagsWithAlias);
+        [DllImport("__Internal")]
+        public static extern void _setTagsAlias(String tagsWithAlias);
 
-		[DllImport("__Internal")]
-		public static extern void _setTags(String tags);
+        [DllImport("__Internal")]
+        public static extern void _setTags(String tags);
 
-		[DllImport("__Internal")]
-		public static extern void _setAlias(String alias);
+        [DllImport("__Internal")]
+        public static extern void _setAlias(String alias);
 
-		[DllImport("__Internal")]
-		public static extern String _filterValidTags(String tags);
+        [DllImport("__Internal")]
+        public static extern String _filterValidTags(String tags);
 
-		//--- rid ---//
+        //--- rid ---//
 
-		[DllImport("__Internal")]
-		public static extern String _registrationID();
+        [DllImport("__Internal")]
+        public static extern String _registrationID();
 
-		//--- notification / message ---//
+        //--- notification / message ---//
 
-		[DllImport("__Internal")]
-		public static extern void _registerNetworkDidReceiveMessage();
+        [DllImport("__Internal")]
+        public static extern void _registerNetworkDidReceiveMessage();
 
-		//--- badge ---//
+        //--- badge ---//
 
-		[DllImport("__Internal")]
-		public static extern void _setBadge(int badge);
+        [DllImport("__Internal")]
+        public static extern void _setBadge(int badge);
 
-		[DllImport("__Internal")]
-		public static extern void _resetBadge();
+        [DllImport("__Internal")]
+        public static extern void _resetBadge();
 
-		[DllImport("__Internal")]
-		public static extern void _setApplicationIconBadgeNumber(int badge);
+        [DllImport("__Internal")]
+        public static extern void _setApplicationIconBadgeNumber(int badge);
 
-		[DllImport("__Internal")]
-		public static extern int _getApplicationIconBadgeNumber();
+        [DllImport("__Internal")]
+        public static extern int _getApplicationIconBadgeNumber();
 
-		//--- 页面统计 ---//
+        //--- 页面统计 ---//
 
-		[DllImport("__Internal")]
-		public static extern void _startLogPageView(String pageName);
+        [DllImport("__Internal")]
+        public static extern void _startLogPageView(String pageName);
 
-		[DllImport("__Internal")]
-		public static extern void _stopLogPageView(String pageName);
+        [DllImport("__Internal")]
+        public static extern void _stopLogPageView(String pageName);
 
-		[DllImport("__Internal")]
-		public static extern void _beginLogPageView(String pageName, int duration);
+        [DllImport("__Internal")]
+        public static extern void _beginLogPageView(String pageName, int duration);
 
-		//--- 开关日志 ---//
+        //--- 开关日志 ---//
 
-		[DllImport("__Internal")]
-		public static extern void _setDebugMode();
+        [DllImport("__Internal")]
+        public static extern void _setDebugMode();
 
-		[DllImport("__Internal")]
-		public static extern void _setLogOFF();
+        [DllImport("__Internal")]
+        public static extern void _setLogOFF();
 
-		[DllImport("__Internal")]
-		public static extern void _crashLogON();
+        [DllImport("__Internal")]
+        public static extern void _crashLogON();
 
-		//--- 本地推送 ---//
+        //--- 本地推送 ---//
 
-		[DllImport("__Internal")]
-		public static extern void _setLocalNotification(int delay, String alertBody, int badge, String idKey);
+        [DllImport("__Internal")]
+        public static extern void _setLocalNotification(int delay, int badge, String alertBodyAdnIdKey);
 
-		[DllImport("__Internal")]
-		public static extern void _deleteLocalNotificationWithIdentifierKey(String idKey);
+        [DllImport("__Internal")]
+        public static extern void _deleteLocalNotificationWithIdentifierKey(String idKey);
 
-		[DllImport("__Internal")]
-		public static extern void _clearAllLocalNotifications();
+        [DllImport("__Internal")]
+        public static extern void _clearAllLocalNotifications();
 
-		//--- 地理位置上报 ---//
+        //--- 地理位置上报 ---//
 
-		[DllImport("__Internal")]
-		public static extern void _setLocation(String latitude, String longitude);
+        [DllImport("__Internal")]
+        public static extern void _setLocation(String latitudeAndlongitude);
 
-		//--- log ---//
+        //--- log ---//
 
-		[DllImport("__Internal")]
-		public static extern void _printLocalLog(String log);
+        [DllImport("__Internal")]
+        public static extern void _printLocalLog(String log);
 
 
-		#endif
-	}
+        #endif
+    }
 
 }
+
+
