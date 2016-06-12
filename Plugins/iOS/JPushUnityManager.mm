@@ -188,18 +188,40 @@ extern "C" {
     //---------------------------- 页面统计 ----------------------------//
 
     void _startLogPageView(const char *pageName){
+
         NSString *nsPageName = CreateNSString(pageName);
-        [JPUSHService startLogPageView:nsPageName];
+        if (![nsPageName length]) {
+            return ;
+        }
+        NSData       *data =[nsPageName dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendPageName = dict[@"pageName"];
+
+        [JPUSHService startLogPageView:sendPageName];
     }
 
     void _stopLogPageView(const char *pageName){
+
         NSString *nsPageName = CreateNSString(pageName);
-        [JPUSHService stopLogPageView:nsPageName];
+        if (![nsPageName length]) {
+            return ;
+        }
+        NSData       *data =[nsPageName dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendPageName = dict[@"pageName"];
+
+        [JPUSHService stopLogPageView:sendPageName];
     }
 
     void _beginLogPageView(const char *pageName, const int duration){
         NSString *nsPageName = CreateNSString(pageName);
-        [JPUSHService beginLogPageView:nsPageName duration:duration];
+        if (![nsPageName length]) {
+            return ;
+        }
+        NSData       *data =[nsPageName dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendPageName = dict[@"pageName"];
+        [JPUSHService beginLogPageView:sendPageName duration:duration];
     }
 
     //---------------------------- 开关日志 ----------------------------//
@@ -218,16 +240,32 @@ extern "C" {
 
     //---------------------------- 本地推送 ----------------------------//
 
-    void _setLocalNotification(int delay, char *alertBody, int badge, char *idKey){
+    void _setLocalNotification(int delay, int badge, char *alertBodyAndIdKey){
         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:_integerValue(delay)];
-        NSString *nsAlertBody = CreateNSString(alertBody);
-        NSString *nsIdKey = CreateNSString(idKey);
-        [JPUSHService setLocalNotification:date alertBody:nsAlertBody badge:badge alertAction:nil identifierKey:nsIdKey userInfo:nil soundName:nil];
+
+        NSString *nsalertBodyAndIdKey = CreateNSString(alertBodyAndIdKey);
+        if (![nsalertBodyAndIdKey length]) {
+            return ;
+        }
+        NSData       *data =[nsalertBodyAndIdKey dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendAlertBody = dict[@"alertBody"];
+        NSString     *sendIdkey = dict[@"idKey"];
+
+        [JPUSHService setLocalNotification:date alertBody:sendAlertBody badge:badge alertAction:nil identifierKey:sendIdkey userInfo:nil soundName:nil];
     }
 
     void _deleteLocalNotificationWithIdentifierKey(char *idKey){
+
         NSString *nsIdKey = CreateNSString(idKey);
-        [JPUSHService deleteLocalNotificationWithIdentifierKey:nsIdKey];
+        if (![nsIdKey length]) {
+            return ;
+        }
+        NSData       *data =[nsIdKey dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendIdkey = dict[@"idKey"];
+
+        [JPUSHService deleteLocalNotificationWithIdentifierKey:sendIdkey];
     }
 
     void _clearAllLocalNotifications(){
@@ -236,10 +274,18 @@ extern "C" {
 
     //---------------------------- 地理位置上报 ----------------------------//
 
-    void _setLocation(char *latitude, char *longitude){
-        NSString *nsLatitude = CreateNSString(latitude);
-        NSString *nsLongitude = CreateNSString(longitude);
-        [JPUSHService setLatitude:[nsLatitude doubleValue] longitude:[nsLongitude doubleValue]];
+    void _setLocation(char *latitudeAndlongitude){
+
+        NSString *nsLatitudeAndlongitude = CreateNSString(latitudeAndlongitude);
+        if (![nsLatitudeAndlongitude length]) {
+            return ;
+        }
+        NSData       *data =[nsLatitudeAndlongitude dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendLatitude = dict[@"latitude"];
+        NSString     *sendLongitude = dict[@"longitude"];
+
+        [JPUSHService setLatitude:[sendLatitude doubleValue] longitude:[sendLongitude doubleValue]];
     }
 
 
@@ -286,7 +332,7 @@ static JPushUnityInstnce * _sharedService = nil;
 
     NSLog(@"已收到消息%@",notification);
     if (notification.name==kJPFNetworkDidReceiveMessageNotification&&!notification.userInfo){
-
+        
         NSData       *data=APNativeJSONData(notification.userInfo);
         NSString     *jsonStr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UnitySendMessage("JPushBinding","networkDidReceiveMessageCallBack",jsonStr.UTF8String);
