@@ -454,7 +454,7 @@
 - content：通知内容。
 - title：通知标题。
 - notiId：通知 ID。
-- broadcastTime：广播时间，代表从现有时间开始之后多长时间来发送这条本地通知，单位是毫秒。
+- broadcastTime：广播时间，代表从现有时间开始之后多长时间来发送这条本地通知，单位是秒。
 - extrasJsonStr：要在通知中附加的额外 Json 信息。
 
 #### 代码示例
