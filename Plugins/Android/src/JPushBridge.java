@@ -277,7 +277,7 @@ public class JPushBridge {
             ln.setContent(content);
             ln.setTitle(title);
             ln.setNotificationId(notiId);
-            ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime);
+            ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime * 1000);
             ln.setExtras(extras.toString());
 
             JPushInterface.addLocalNotification(
