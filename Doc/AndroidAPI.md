@@ -459,7 +459,8 @@
 
 #### 代码示例
 
-    JPushBinding.addLocalNotification(0, "content", "title", 1, 1000 * 60 * 10, "yourJsonStr");
+	// 10 秒之后触发该本地推送。
+    JPushBinding.addLocalNotification(0, "content", "title", 1, 10, "yourJsonStr");
 
 ### API - removeLocalNotification
 移除指定本地通知。
