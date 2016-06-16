@@ -41,7 +41,7 @@ public class JPushBridge {
 
     private static JPushBridge jpushBridge = new JPushBridge();
     private Activity activity = null;
-    public static String gameObjectName = "";
+    public static String gameObjectName = "Main Camera";
     public static String funcName = "";
     public static boolean isQuit = true;
 
