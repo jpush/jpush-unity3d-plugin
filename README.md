@@ -116,3 +116,7 @@
 iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面的即为可调用的 iOS API。
 
 > [iOS SDK API](http://docs.jpush.io/client/ios_api/)。
+
+## 更多
+- [JPush 官网文档](http://docs.jiguang.cn/guideline/jmessage_guide/)。
+- 有问题可访问[极光社区](http://community.jpush.cn/)搜索和提问。
