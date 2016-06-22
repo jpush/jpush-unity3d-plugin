@@ -1,4 +1,4 @@
-# JPush Unity3d Plugin
+# JPush Unity Plugin
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpush/jpush-unity3d-plugin)
 [![release](https://img.shields.io/badge/release-2.1.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
@@ -8,18 +8,18 @@
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
 
 ## 集成
-运行插件目录中的 JPushUnityPlugin_vX.X.X.unitypackage。
+运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage。
 
 ### Android
 - 替换 AndroidManifest.xml 里的包名，将其中的 *com.jpush.unity3dplugin* 全部替换成在极光控制台上创建的应用包名。
 - 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
-- 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Idenifier* 设置为应用的包名.
+- 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Idenifier* 设置为应用的包名。
 - 配置项目的图标。
 
 ### iOS
-* 在 Unity3d 游戏场景中，新建一个空的 Gameobject，将其名称修改为 JPushBinding，挂载 JPushBinding.cs。
-* 生成 iOS 工程，并打开该工程。
-* 添加必要的框架：
+- 在 Unity 游戏场景中，新建一个空的 Gameobject，将其名称修改为 JPushBinding，挂载 JPushBinding.cs。
+- 生成 iOS 工程，并打开该工程。
+- 添加必要的框架。
 
         CoreFoundation.framework
         CFNetwork.framework
@@ -32,13 +32,13 @@
         libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
         AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
 
-* 在 UnityAppController.mm 中添加头文件 JPUSHService.h：
+- 在 UnityAppController.mm 中添加头文件 JPUSHService.h。
 
         #import "JPUSHService.h"
         // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
         #import <AdSupport/AdSupport.h>
 
-* 在 UnityAppController.mm 中下列方法中添加以下代码：
+- 在 UnityAppController.mm 的下列方法中添加以下代码：
 
         - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
         {
@@ -88,9 +88,9 @@
         	return YES;
         }
 
-在 `[JPUSHService setupWithOption:appKey:channel:apsForProduction:advertisingIdentifier:]` 方法中
-- appkey: 参数填写自己应用的 AppKey。
-- apsForProduction: 参数根据所用 Apple 证书的不同填写。
+在 [JPUSHService setupWithOption:appKey:channel:apsForProduction:advertisingIdentifier:] 方法中：
+- appkey: 填写自己应用的 AppKey。
+- apsForProduction: 根据所用 Apple 证书的不同填写。
     - YES: 发布环境。
     - NO: 开发环境。
 - advertisingIdentifier: 根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
