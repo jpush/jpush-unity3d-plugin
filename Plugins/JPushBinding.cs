@@ -331,14 +331,6 @@ namespace JPush
 
         void Start()
         {
-            //			_printLocalLog("Start");
-            //			HashSet<string> set = new HashSet<string>();
-            //			set.Add("tag1");
-            //			set.Add("tag2");
-            //			set.Add("tag3");
-            //
-            //FilterTags(set);
-            //_printLocalLog(_openUDID());
             _registerNetworkDidReceiveMessage();
         }
 
