@@ -217,6 +217,14 @@ namespace JPush
 				content, title, notiId, broadcastTime, extrasStr);
 		}
 
+		public static void addLocalNotification(int builderId, string content,
+				string title, int notiId, int year, int month, int day, int hour,
+				int minute, int second, string extrasStr)
+		{
+			_plugin.Call("addLocalNotification", builderId, content, title, notiId,
+				year, month, day, hour, minute, second, extrasStr);
+		}
+
 		public static void removeLocalNotification(int notiId)
 		{
 			removeLocalNotification(_gameObject, _func, notiId);
@@ -606,5 +614,3 @@ namespace JPush
     }
 
 }
-
-

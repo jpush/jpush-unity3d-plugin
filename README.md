@@ -11,7 +11,7 @@
 运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage。
 
 ### Android
-- 替换 AndroidManifest.xml 里的包名，将其中的 *com.jpush.unity3dplugin* 全部替换成在极光控制台上创建的应用包名。
+- 替换 AndroidManifest.xml 里的包名。
 - 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
 - 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Idenifier* 设置为应用的包名。
 - 配置项目的图标。

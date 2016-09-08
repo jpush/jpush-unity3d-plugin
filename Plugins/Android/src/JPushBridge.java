@@ -27,14 +27,6 @@ import cn.jpush.android.data.JPushLocalNotification;
 
 /**
  * Copyright © 2014  JPUSH. All rights reserved.
- *
- * @Title: JPushBridge.java
- * @Prject: Unity_002
- * @Package: com.example.unity_002
- * @Description: TODO
- * @author: zhangfl
- * @date: 2014-4-16 上午9:48:20
- * @version: V1.0
  */
 public class JPushBridge {
     private static final String TAG = "JPush";
@@ -150,7 +142,7 @@ public class JPushBridge {
     }
 
     public void setAliasAndTags(String gameObject, String func, final String alias,
-            String tags) {
+                                String tags) {
         if (TextUtils.isEmpty(alias)) {
             setTags(gameObject, func, tags);
             return;
@@ -226,7 +218,7 @@ public class JPushBridge {
     };
 
     public void setPushTime(String gameObject, String func, String days,
-            int startHour, int endHour) {
+                            int startHour, int endHour) {
         Set<Integer> daysSet = days == null ? null : new HashSet<Integer>();
 
         if (!TextUtils.isEmpty(days)) {
@@ -247,14 +239,14 @@ public class JPushBridge {
      *
      * @param gameObject
      * @param func
-     * @param startHour   静音时段的开始时间 - 小时(范围： 0 - 23)
-     * @param startMinute 静音时段的开始时间 - 分钟(范围: 0 - 59)
-     * @param endHour     静音时段的结束时间 - 小时(范围: 0 - 23)
-     * @param endMinute   静音时段的结束时间 - 分钟(范围: 0 - 59)
+     * @param startHour   静音时段的开始时间 - 小时(范围：0 - 23)
+     * @param startMinute 静音时段的开始时间 - 分钟(范围：0 - 59)
+     * @param endHour     静音时段的结束时间 - 小时(范围：0 - 23)
+     * @param endMinute   静音时段的结束时间 - 分钟(范围：0 - 59)
      * @throws Exception
      */
     public void setSilenceTime(String gameObject, String func, int startHour,
-            int startMinute, int endHour, int endMinute) throws Exception {
+                               int startMinute, int endHour, int endMinute) throws Exception {
         if (startHour < 0 || startHour > 23 || startMinute < 0 || startMinute > 59) {
             throw new IllegalArgumentException("开始时间不正确");
         }
@@ -266,30 +258,28 @@ public class JPushBridge {
         UnityPlayer.UnitySendMessage(gameObject, func, "setSilenceTime");
     }
 
-    public void addLocalNotification(String gameObject, String func, int builderId,
-            String content, String title, int notiId, int broadcastTime,
-            String extrasStr) {
+    public void addLocalNotification(String gameObject, String func, int builderId, String content,
+                                     String title, int notiId, int broadcastTime, String extrasStr) {
         try {
-            JSONObject extras = TextUtils.isEmpty(extrasStr) ? new JSONObject() : new JSONObject(extrasStr);
-
             JPushLocalNotification ln = new JPushLocalNotification();
             ln.setBuilderId(builderId);
             ln.setContent(content);
             ln.setTitle(title);
             ln.setNotificationId(notiId);
             ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime * 1000);
-            ln.setExtras(extras.toString());
 
-            JPushInterface.addLocalNotification(
-                    getActivity().getApplicationContext(), ln);
+            if (!TextUtils.isEmpty(extrasStr)) {
+                ln.setExtras(new JSONObject(extrasStr).toString());
+            }
+
+            JPushInterface.addLocalNotification(getActivity().getApplicationContext(), ln);
             UnityPlayer.UnitySendMessage(gameObject, func, "addLocalNotification");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void removeLocalNotification(String gameObject, String func,
-            int notificationId) {
+    public void removeLocalNotification(String gameObject, String func, int notificationId) {
         JPushInterface.removeLocalNotification(getActivity().getApplicationContext(),
                 notificationId);
         UnityPlayer.UnitySendMessage(gameObject, func, "removeLocalNotification");
@@ -327,23 +317,22 @@ public class JPushBridge {
      *
      * @param gameObject
      * @param func
-     * @param builderId             样式 Id，代表这种通知样式，服务器推送时需要制定
+     * @param builderId             样式 Id，代表这种通知样式，服务器推送时需要制定。
      * @param notificationDefault
      * @param notificationFlags
-     * @param statusBarDrawableName 通知图片名称，需要先放在 Android 资源目录中
+     * @param statusBarDrawableName 通知图片名称，需要先放在 Android 资源目录中。
      */
-    public void setBasicPushNotificationBuilder(String gameObject, String func,
-            int builderId, int notificationDefault, int notificationFlags,
-            String statusBarDrawableName) {
-        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(
-                getActivity());
+    public void setBasicPushNotificationBuilder(String gameObject, String func, int builderId,
+                                                int notificationDefault, int notificationFlags,
+                                                String statusBarDrawableName) {
+        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(getActivity());
         if (notificationDefault != -1) {
             builder.notificationDefaults = notificationDefault;
         }
         if (notificationFlags != 16) {
             builder.notificationFlags = notificationFlags;
         }
-        if (TextUtils.isEmpty(statusBarDrawableName)) {
+        if (!TextUtils.isEmpty(statusBarDrawableName)) {
             builder.statusBarDrawable = getResourceId(statusBarDrawableName, "drawable");
         }
         JPushInterface.setPushNotificationBuilder(builderId, builder);
@@ -361,23 +350,27 @@ public class JPushBridge {
      * @param statusBarDrawableName  顶层状态栏小图标
      * @param layoutIconDrawableName 下拉状态栏时的图标
      */
-    public void setCustomPushNotificationBuilder(String gameObject, String func,
-            int builderId, String layoutName, String statusBarDrawableName,
-            String layoutIconDrawableName) {
+    public void setCustomPushNotificationBuilder(String gameObject, String func, int builderId,
+                                                 String layoutName, String statusBarDrawableName,
+                                                 String layoutIconDrawableName) {
         int layoutId = getResourceId(layoutName, "layout");
         int iconId = getResourceId("icon", "id");
         int titleId = getResourceId("title", "id");
         int textId = getResourceId("text", "id");
+
         int statusBarDrawableId = getResourceId(statusBarDrawableName, "drawable");
         int layoutIconDrawableId = getResourceId(layoutIconDrawableName, "drawable");
+
         CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(
                 getActivity(), layoutId, iconId, titleId, textId);
+
         if (statusBarDrawableId != 0) {
             builder.statusBarDrawable = statusBarDrawableId;
         }
         if (layoutIconDrawableId != 0) {
             builder.layoutIconDrawable = layoutIconDrawableId;
         }
+
         JPushInterface.setPushNotificationBuilder(builderId, builder);
         UnityPlayer.UnitySendMessage(gameObject, func, "setCustomPushNotificationBuilder");
     }
@@ -390,8 +383,7 @@ public class JPushBridge {
      * @param num        保留的通知条数
      */
     public void setLatestNotificationNumber(String gameObject, String func, int num) {
-        JPushInterface.setLatestNotificationNumber(getActivity().getApplicationContext(),
-                num);
+        JPushInterface.setLatestNotificationNumber(getActivity().getApplicationContext(), num);
         UnityPlayer.UnitySendMessage(gameObject, func, "setLatestNotificationNum");
     }
 
@@ -422,8 +414,8 @@ public class JPushBridge {
         if (TextUtils.isEmpty(resourceName)) {
             return 0;
         }
-        return getActivity().getResources().getIdentifier(resourceName, type,
-                getActivity().getPackageName());
+        return getActivity().getResources().getIdentifier(
+                resourceName, type, getActivity().getPackageName());
     }
 
 }
