@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.jpush.unity3dplugin">
+          package="您的包名">
 
     <permission
-        android:name="com.jpush.unity3dplugin.permission.JPUSH_MESSAGE"
+        android:name="您的包名.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature"/>
 
     <!-- Required  一些系统要求的权限，如访问网络等-->
-    <uses-permission android:name="com.jpush.unity3dplugin.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="您的包名.permission.JPUSH_MESSAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -30,7 +30,8 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:icon="@drawable/app_icon">
 
         <!-- For test only. 测试的主程序 -->
         <activity
@@ -43,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Required. SDK 核心功能-->
+        <!-- Required. SDK 核心功能 start -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -52,17 +53,28 @@
                 <action android:name="cn.jpush.android.ui.PushActivity"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="com.jpush.unity3dplugin"/>
+                <category android:name="您的包名"/>
             </intent-filter>
         </activity>
-        <!-- Required. SDK 核心功能 -->
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+                <category android:name="您的包名" />
+            </intent-filter>
+        </service>
+
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
             android:exported="false">
         </service>
 
-        <!-- Required. SDK 核心功能 -->
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
@@ -76,14 +88,13 @@
             </intent-filter>
         </service>
 
-        <!-- Required. SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <!-- Required. 显示通知栏 -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-                <category android:name="com.jpush.unity3dplugin"/>
+                <category android:name="您的包名"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT"/>
@@ -99,8 +110,15 @@
 
         </receiver>
 
-        <!-- Required. SDK 核心功能 -->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
+        <!-- Required. SDK 核心功能 end -->
+
+        <!-- Rich push 核心功能 since 2.0.6 -->
+        <activity
+            android:name="cn.jpush.android.ui.PopWinActivity"
+            android:exported="false"
+            android:theme="@style/MyDialogStyle">
+        </activity>
 
         <!-- User defined. For test only 用户自定义的广播接收器 -->
         <receiver
@@ -118,7 +136,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
                 <!-- Optional. 用户接受Rich Push Javascript 回调函数的 intent -->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>
-                <category android:name="com.jpush.unity3dplugin"/>
+                <category android:name="您的包名"/>
             </intent-filter>
         </receiver>
 
@@ -126,10 +144,11 @@
         <meta-data
             android:name="JPUSH_CHANNEL"
             android:value="developer-default"/>
+
         <!-- 值来自开发者平台取得的 AppKey-->
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="68a6a21369a9c99649d2a482"/>
+            android:value="您的 APPKEY"/>
 
     </application>
-</manifest>
+</manifest>

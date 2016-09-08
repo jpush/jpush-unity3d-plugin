@@ -11,7 +11,7 @@
 运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage。
 
 ### Android
-- 替换 AndroidManifest.xml 里的包名，将其中的 *com.jpush.unity3dplugin* 全部替换成在极光控制台上创建的应用包名。
+- 替换 AndroidManifest.xml 里的包名。
 - 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
 - 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Idenifier* 设置为应用的包名。
 - 配置项目的图标。
@@ -116,6 +116,14 @@
 iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面的即为可调用的 iOS API。
 
 > [iOS SDK API](http://docs.jpush.io/client/ios_api/)。
+
+亦可参照以下文档中与 `JPushBinding.cs` 中相同方法名的方法说明：
+
+> [JPush Phonegap Plugin Common API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/Common_detail_api.md)
+
+> [JPush Phonegap Plugin iOS API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/iOS_API.md)
+
+
 
 ## 更多
 - [JPush 官网文档](http://docs.jiguang.cn/guideline/jmessage_guide/)。
