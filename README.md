@@ -31,10 +31,14 @@
         Security.framework
         libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
         AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
+        libresolv.tbd
+        UserNotifications.framework
 
 - 在 UnityAppController.mm 中添加头文件 JPUSHService.h。
 
         #import "JPUSHService.h"
+        #import <UserNotifications/UserNotifications.h>
+
         // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
         #import <AdSupport/AdSupport.h>
 
@@ -42,28 +46,28 @@
 
         - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
         {
-            // Required.
-        	#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
-        	    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-        	        // 可以添加自定义 categories。
-        	        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |
-        	                                                       UIUserNotificationTypeSound |
-        	                                                       UIUserNotificationTypeAlert)
-        	                                           categories:nil];
-        	    } else {
-        	        // categories 必须为 nil。
-        	        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-        	                                                       UIRemoteNotificationTypeSound |
-        	                                                       UIRemoteNotificationTypeAlert)
-        	                                           categories:nil];
-        	    }
-        	#else
-        	    // categories 必须为 nil。
-        	    [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-        	                                                   UIRemoteNotificationTypeSound |
-        	                                                   UIRemoteNotificationTypeAlert)
-        	                                       categories:nil];
-        	#endif
+           
+	    	if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
+		#ifdef NSFoundationVersionNumber_iOS_9_x_Max
+	        JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+   		     entity.types = UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound;
+	        [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+		#endif
+	    }
+
+		#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
+		    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+       	 	//可以添加自定义categories
+				[JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
+		    } else {
+	        //categories 必须为nil
+				[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |  UIRemoteNotificationTypeAlert) categories:nil];
+		    }
+		#else
+	  	 	 //categories 必须为nil
+   			 [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |UIRemoteNotificationTypeAlert) categories:nil];
+		#endif
+
 
         	/*
                不使用 IDFA 启动 SDK。
@@ -95,16 +99,36 @@
     - NO: 开发环境。
 - advertisingIdentifier: 根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
 
-        - (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-        	// Required.
-        	[JPUSHService registerDeviceToken:deviceToken];
-        }
+	- (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+		// Required.
+		[JPUSHService registerDeviceToken:deviceToken];
+	}
 
-        - (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
-        	// Required.
-        	[JPUSHService handleRemoteNotification:userInfo];
-        }
+	- (void)application:(UIApplication *)application 	didReceiveRemoteNotification:(NSDictionary *)userInfo {
+		// Required.
+		[JPUSHService handleRemoteNotification:userInfo];
+	}
 
+	// iOS 10 Support
+	- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
+   		 // Required
+	    NSDictionary * userInfo = notification.request.content.userInfo;
+   		 if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+       		 [JPUSHService handleRemoteNotification:userInfo];
+    	}
+	    [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
+    	completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound); // 需要执行这个方法，选择是否提醒用户，有Badge、Sound、Alert三种类型可以选择设置
+}
+
+	// iOS 10 Support
+	- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+   		 // Required
+	    NSDictionary * userInfo = response.notification.request.content.userInfo;
+   		 if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+       	 [JPUSHService handleRemoteNotification:userInfo];
+	    }
+   		 completionHandler();  // 系统要求执行这个方法
+	}
 
 ## API 说明
 ### Android
