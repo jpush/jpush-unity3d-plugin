@@ -340,6 +340,7 @@ namespace JPush
         void Start()
         {
             _registerNetworkDidReceiveMessage();
+			_registerNetworkDidReceivePushNotification();
         }
 
         //---------------------------- tags / alias ----------------------------//
@@ -437,6 +438,12 @@ namespace JPush
             String content = (String) jd["content"];
             _printLocalLog("content:" + content);
         }
+
+		void networkDidReceivePushNotificationCallBack(String parameter){
+			JsonData jd = JsonMapper.ToObject(parameter);
+			String content = (String) jd["content"];
+			_printLocalLog("content:" + content);
+		}
 
         //---------------------------- badge ----------------------------//
 
@@ -551,6 +558,9 @@ namespace JPush
 
         [DllImport("__Internal")]
         public static extern void _registerNetworkDidReceiveMessage();
+
+		[DllImport("__Internal")]
+		public static extern void _registerNetworkDidReceivePushNotification();
 
         //--- badge ---//
 

@@ -166,6 +166,14 @@ extern "C" {
                             object:nil];
     }
 
+    void _registerNetworkDidReceivePushNotification(){
+        NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+        [defaultCenter addObserver:[JPushUnityInstnce sharedInstance]
+                          selector:@selector(networkDidRecievePushNotification:)
+                              name:@"JPushPluginReceiveNotification"
+                            object:nil];
+    }
+
 
     //---------------------------- badge ----------------------------//
 
@@ -331,13 +339,24 @@ static JPushUnityInstnce * _sharedService = nil;
 - (void)networkDidRecieveMessage:(NSNotification *)notification {
 
     NSLog(@"已收到消息%@",notification);
-    if (notification.name==kJPFNetworkDidReceiveMessageNotification&&!notification.userInfo){
-        
-        NSData       *data=APNativeJSONData(notification.userInfo);
-        NSString     *jsonStr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    if (notification.name == kJPFNetworkDidReceiveMessageNotification && notification.userInfo){
+
+        NSData       *data = APNativeJSONData(notification.userInfo);
+        NSString     *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UnitySendMessage("JPushBinding","networkDidReceiveMessageCallBack",jsonStr.UTF8String);
     }
 }
+
+- (void)networkDidRecievePushNotification:(NSNotification *)notification {
+    NSLog(@"已收到通知%@",notification);
+    if ([notification.name isEqual:@"JPushPluginReceiveNotification"] && notification.object){
+        
+        NSData       *data = APNativeJSONData(notification.object);
+        NSString     *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        UnitySendMessage("JPushBinding","networkDidReceivePushNotificationCallBack",jsonStr.UTF8String);
+    }
+}
+
 
 @end
 
