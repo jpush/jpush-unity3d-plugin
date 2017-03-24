@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.unity3d.player.UnityPlayer;
+import com.unity3d.player.UnityPlayerActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,13 +30,15 @@ import cn.jpush.android.data.JPushLocalNotification;
  * Copyright © 2014  JPUSH. All rights reserved.
  */
 public class JPushBridge {
+
     private static final String TAG = "JPush";
 
-    private static JPushBridge jpushBridge = new JPushBridge();
-    private Activity activity = null;
     public static String gameObjectName = "Main Camera";
     public static String funcName = "";
     public static boolean isQuit = true;
+
+    private static JPushBridge jpushBridge = new JPushBridge();
+    private Activity activity = null;
 
     private Activity getActivity() {
         if (activity == null) {
@@ -64,8 +67,7 @@ public class JPushBridge {
         gameObjectName = gameObject;
         funcName = func;
         JPushInterface.init(getActivity());
-        UnityPlayer.UnitySendMessage(gameObjectName, funcName,
-                "initJPush:" + gameObject + "---" + func);
+        UnityPlayer.UnitySendMessage(gameObjectName, funcName, "initJPush:" + gameObject + "-" + func);
     }
 
     public void stopJPush(String gameObject, String func) {
@@ -100,6 +102,14 @@ public class JPushBridge {
         String resultStr = String.valueOf(resultTags);
         UnityPlayer.UnitySendMessage(gameObject, func, "filterValidTags");
         return resultStr.substring(0, resultStr.length() - 1);
+    }
+
+    public void initCrashHandler(String gameObjectName, String func) {
+        JPushInterface.initCrashHandler(getActivity().getApplicationContext());
+    }
+
+    public void stopCrashHandler(String gameObjectName, String func) {
+        JPushInterface.stopCrashHandler(getActivity().getApplicationContext());
     }
 
     public void setTags(String gameObject, String func, String unity_tags) {
@@ -157,10 +167,8 @@ public class JPushBridge {
             tagsSet.add(tag);
         }
         Set<String> resultTagSet = JPushInterface.filterValidTags(tagsSet);
-        JPushInterface.setAliasAndTags(getActivity(), alias, resultTagSet,
-                mAliasAndTagsCallback);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setAliasAndTags: "
-                + alias + "; " + tags);
+        JPushInterface.setAliasAndTags(getActivity(), alias, resultTagSet, mAliasAndTagsCallback);
+        UnityPlayer.UnitySendMessage(gameObject, func, "setAliasAndTags: " + alias + "; " + tags);
     }
 
     private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
@@ -354,6 +362,8 @@ public class JPushBridge {
                                                  String layoutName, String statusBarDrawableName,
                                                  String layoutIconDrawableName) {
         int layoutId = getResourceId(layoutName, "layout");
+        Log.i(TAG, "layoutName: " + layoutName + " - layoutId: " + layoutId);
+
         int iconId = getResourceId("icon", "id");
         int titleId = getResourceId("title", "id");
         int textId = getResourceId("text", "id");
@@ -414,8 +424,7 @@ public class JPushBridge {
         if (TextUtils.isEmpty(resourceName)) {
             return 0;
         }
-        return getActivity().getResources().getIdentifier(
-                resourceName, type, getActivity().getPackageName());
+        Context context = getActivity().getApplicationContext();
+        return context.getResources().getIdentifier(resourceName, type, context.getPackageName());
     }
-
 }
