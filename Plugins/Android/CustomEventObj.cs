@@ -31,7 +31,5 @@ namespace JPush {
 		{
 			type = eventType;
 		}
-
 	}
-
 }
