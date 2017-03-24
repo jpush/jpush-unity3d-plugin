@@ -322,6 +322,26 @@ namespace JPush
 				layoutName, statusBarDrawableName, layoutIconDrawableName);
 		}
 
+		public static void initCrashHandler() 
+		{
+			_plugin.Call("initCrashHandler", _gameObject, _func);
+		}
+
+		public static void initCrashHandler(string gameObject, string func) 
+		{
+			_plugin.Call("initCrashHandler", gameObject, func);
+		}
+
+		public static void stopCrashHandler()
+		{
+			_plugin.Call("stopCrashHandler", _gameObject, _func);
+		}
+
+		public static void stopCrashHandler(string gameObject, string func)
+		{
+			_plugin.Call("stopCrashHandler", gameObject, func);
+		}
+
 		//在应用退出前调用
 		public static void isQuit()
 		{
@@ -330,8 +350,6 @@ namespace JPush
 		}
 
 		#endif
-
-
 
         #if UNITY_IPHONE
 
@@ -619,8 +637,6 @@ namespace JPush
         [DllImport("__Internal")]
         public static extern void _printLocalLog(String log);
 
-
         #endif
     }
-
 }
