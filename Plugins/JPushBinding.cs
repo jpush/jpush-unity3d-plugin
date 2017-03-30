@@ -202,26 +202,32 @@ namespace JPush
 		}
 
 		public static void addLocalNotification(int builderId, string content,
-				string title, int notiId, int broadcastTime, string extrasStr)
+				string title, int nId, int broadcastTime, string extrasStr)
 		{
 			addLocalNotification(_gameObject, _func, builderId, content, title,
-				notiId, broadcastTime, extrasStr);
+				nId, broadcastTime, extrasStr);
 		}
 
 		public static void addLocalNotification(string gameObject, string func,
-				int builderId, string content, string title, int notiId,
+				int builderId, string content, string title, int nId,
 				int broadcastTime, string extrasStr)
 		{
-			Debug.Log("unity---addLocalNotification");
 			_plugin.Call("addLocalNotification", gameObject, func, builderId,
-				content, title, notiId, broadcastTime, extrasStr);
+				content, title, nId, broadcastTime, extrasStr);
 		}
 
-		public static void addLocalNotification(int builderId, string content,
-				string title, int notiId, int year, int month, int day, int hour,
-				int minute, int second, string extrasStr)
+		public static void addLocalNotificationByDate(string gameObject, string func, 
+				int builderId, string content, string title, int nId,
+				int year, int month, int day, int hour, int minute, int second, string extrasStr)
 		{
-			_plugin.Call("addLocalNotification", builderId, content, title, notiId,
+			_plugin.Call("addLocalNotificationByDate", gameObject, func, builderId, content, title, nId,
+				year, month, day, hour, minute, second, extrasStr);
+		}
+
+		public static void addLocalNotificationByDate(int builderId, string content, string title, int nId,
+				int year, int month, int day, int hour, int minute, int second, string extrasStr)
+		{
+			_plugin.Call("addLocalNotificationByDate", _gameObject, _func, builderId, content, title, nId,
 				year, month, day, hour, minute, second, extrasStr);
 		}
 
@@ -230,8 +236,7 @@ namespace JPush
 			removeLocalNotification(_gameObject, _func, notiId);
 		}
 
-		public static void removeLocalNotification(string gameObject, string func,
-				int notiId)
+		public static void removeLocalNotification(string gameObject, string func, int notiId)
 		{
 			Debug.Log("unity---removeLocalNotification");
 			_plugin.Call("removeLocalNotification", gameObject, func, notiId);
