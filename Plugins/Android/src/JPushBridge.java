@@ -8,7 +8,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.unity3d.player.UnityPlayer;
-import com.unity3d.player.UnityPlayerActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -267,13 +266,13 @@ public class JPushBridge {
     }
 
     public void addLocalNotification(String gameObject, String func, int builderId, String content,
-                                     String title, int notiId, int broadcastTime, String extrasStr) {
+                                     String title, int notId, int broadcastTime, String extrasStr) {
         try {
             JPushLocalNotification ln = new JPushLocalNotification();
             ln.setBuilderId(builderId);
             ln.setContent(content);
             ln.setTitle(title);
-            ln.setNotificationId(notiId);
+            ln.setNotificationId(notId);
             ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime * 1000);
 
             if (!TextUtils.isEmpty(extrasStr)) {
@@ -285,6 +284,24 @@ public class JPushBridge {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addLocalNotificationByDate(String gameObject, String func, int builderId, String content,
+                                     String title, int notId, int year, int month, int day,
+                                     int hour, int minute, int second, String extrasStr) {
+        JPushLocalNotification localNotification = new JPushLocalNotification();
+        localNotification.setBuilderId(builderId);
+        localNotification.setContent(content);
+        localNotification.setTitle(title);
+        localNotification.setNotificationId(notId);
+        localNotification.setBroadcastTime(year, month, day, hour, minute, second);
+
+        if (!TextUtils.isEmpty(extrasStr)) {
+            localNotification.setExtras(extrasStr);
+        }
+
+        JPushInterface.addLocalNotification(getActivity().getApplicationContext(), localNotification);
+        UnityPlayer.UnitySendMessage(gameObject, func, "addLocalNotificationByDate");
     }
 
     public void removeLocalNotification(String gameObject, String func, int notificationId) {
@@ -397,7 +414,7 @@ public class JPushBridge {
         UnityPlayer.UnitySendMessage(gameObject, func, "setLatestNotificationNum");
     }
 
-    // 校验Tag Alias 只能是数字,英文字母和中文
+    // 校验 tag, alias 只能是数字,英文字母和中文
     private boolean isValidTagAndAlias(String s) {
         Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-]*$");
         Matcher m = p.matcher(s);
