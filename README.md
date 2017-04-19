@@ -1,7 +1,7 @@
 # JPush Unity Plugin
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpush/jpush-unity3d-plugin)
-[![release](https://img.shields.io/badge/release-3.0.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![release](https://img.shields.io/badge/release-3.0.3-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 [![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
 
@@ -38,7 +38,7 @@
 
         #import "JPUSHService.h"
         #import <UserNotifications/UserNotifications.h>
-        
+
         // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
         #import <AdSupport/AdSupport.h>
 
@@ -46,7 +46,7 @@
 
         - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
         {
-           
+
         	if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
         #ifdef NSFoundationVersionNumber_iOS_9_x_Max
             JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
@@ -54,7 +54,7 @@
             [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
         #endif
         }
-        
+
         #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
             if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
        	 	//可以添加自定义categories
@@ -77,7 +77,7 @@
                    apsForProduction: YES: 发布环境；NO: 开发环境。
              */
             [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO];
-    
+
             /*
                 使用 IDFA 启动 SDK（不能与上述方法同时使用）。
                 参数说明：
@@ -88,7 +88,7 @@
              */
             NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
             [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO advertisingIdentifier:advertisingId];
-    
+
         	return YES;
         }
 
