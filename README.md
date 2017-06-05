@@ -150,5 +150,5 @@ iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面�
 
 
 ## 更多
-- [JPush 官网文档](http://docs.jiguang.cn/guideline/jmessage_guide/)。
-- 有问题可访问[极光社区](http://community.jpush.cn/)搜索和提问。
+- [JPush 官网文档](http://docs.jiguang.cn/guideline/jmessage_guide/)
+<!-- - 有问题可访问[极光社区](http://community.jpush.cn/)搜索和提问。 -->
