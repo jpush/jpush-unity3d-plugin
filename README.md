@@ -36,99 +36,97 @@
 
 - 在 UnityAppController.mm 中添加头文件 JPUSHService.h。
 
-        #import "JPUSHService.h"
-        #import <UserNotifications/UserNotifications.h>
+  ```Objective-C
+  #import "JPUSHService.h"
+  #import <UserNotifications/UserNotifications.h>
 
-        // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
-        #import <AdSupport/AdSupport.h>
+  // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
+  #import <AdSupport/AdSupport.h>
+  ```
 
 - 在 UnityAppController.mm 的下列方法中添加以下代码：
 
-        - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-        {
+  ```Objective-C
+  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-        	if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
-        #ifdef NSFoundationVersionNumber_iOS_9_x_Max
-            JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
-        	     entity.types = UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound;
-            [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
-        #endif
-        }
+      if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
+          #ifdef NSFoundationVersionNumber_iOS_9_x_Max
+          JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    	    entity.types = UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound;
+          [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+          #endif
+      }
 
-        #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
-            if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-       	 	//可以添加自定义categories
-    			[JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
-    	    } else {
-    	    //categories 必须为nil
-    			[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |  UIRemoteNotificationTypeAlert) categories:nil];
-    	    }
-    	#else
-      	 	 //categories 必须为nil
-    			 [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |UIRemoteNotificationTypeAlert) categories:nil];
-    	#endif
+      #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
+      if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+   	 	// 可以添加自定义 categories
+			[JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
+	    } else {
+	    // categories 必须为 nil
+			[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |  UIRemoteNotificationTypeAlert) categories:nil];
+	    }
+	    #else
+  	 	// categories 必须为 nil
+			[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |UIRemoteNotificationTypeAlert) categories:nil];
+	    #endif
 
+    	/*
+        不使用 IDFA 启动 SDK。
+        参数说明：
+           appKey: 极光官网控制台应用标识。
+           channel: 频道，暂无可填任意。
+           apsForProduction: YES: 发布环境；NO: 开发环境。
+      */
+      [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO];
 
-        	/*
-               不使用 IDFA 启动 SDK。
-               参数说明：
-                   appKey: 极光官网控制台应用标识。
-                   channel: 频道，暂无可填任意。
-                   apsForProduction: YES: 发布环境；NO: 开发环境。
-             */
-            [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO];
+      /*
+        使用 IDFA 启动 SDK（不能与上述方法同时使用）。
+        参数说明：
+            appKey: 极光官网控制台应用标识。
+            channel: 频道，暂无可填任意。
+            apsForProduction: YES: 发布环境；NO: 开发环境。
+            advertisingIdentifier: IDFA广告标识符。根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
+       */
+       NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+       [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
 
-            /*
-                使用 IDFA 启动 SDK（不能与上述方法同时使用）。
-                参数说明：
-                    appKey: 极光官网控制台应用标识。
-                    channel: 频道，暂无可填任意。
-                    apsForProduction: YES: 发布环境；NO: 开发环境。
-                    advertisingIdentifier: IDFA广告标识符。
-             */
-            NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-            [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO advertisingIdentifier:advertisingId];
-
-        	return YES;
-        }
-
-在 [JPUSHService setupWithOption:appKey:channel:apsForProduction:advertisingIdentifier:] 方法中：
-- appkey: 填写自己应用的 AppKey。
-- apsForProduction: 根据所用 Apple 证书的不同填写。
-    - YES: 发布环境。
-    - NO: 开发环境。
-- advertisingIdentifier: 根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
-
- - (void)application:(UIApplication *)application 	didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  // Required.
-  [JPUSHService registerDeviceToken:deviceToken];
-  }
-
-  - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    // Required.
-    [JPUSHService handleRemoteNotification:userInfo];
+    	 return YES;
     }
 
- // iOS 10 Support
- - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
-      // Required
-     NSDictionary * userInfo = notification.request.content.userInfo;
+    - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+        // Required.
+        [JPUSHService registerDeviceToken:deviceToken];
+    }
+
+    - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+        // Required.
+        [JPUSHService handleRemoteNotification:userInfo];
+    }
+
+    // iOS 10 Support
+    - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
+        // Required
+        NSDictionary * userInfo = notification.request.content.userInfo;
   		 if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
       		 [JPUSHService handleRemoteNotification:userInfo];
-   	}
-     [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
-   	completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound); // 需要执行这个方法，选择是否提醒用户，有Badge、Sound、Alert三种类型可以选择设置
- }
+   	   }
 
- // iOS 10 Support
- - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
-      // Required
-     NSDictionary * userInfo = response.notification.request.content.userInfo;
-  		 if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-      	 [JPUSHService handleRemoteNotification:userInfo];
-     }
-  		 completionHandler();  // 系统要求执行这个方法
- }
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
+
+      // 需要执行这个方法，选择是否提醒用户，有 Badge、Sound、Alert 三种类型可以选择设置
+   	  completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);     
+    }
+
+    // iOS 10 Support
+    - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+        // Required
+        NSDictionary * userInfo = response.notification.request.content.userInfo;
+        if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+            [JPUSHService handleRemoteNotification:userInfo];
+        }
+  	    completionHandler();  // 系统要求执行这个方法
+    }
+  ```
 
 ## API 说明
 ### Android
