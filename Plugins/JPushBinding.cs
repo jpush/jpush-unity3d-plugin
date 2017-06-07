@@ -216,7 +216,7 @@ namespace JPush
 				content, title, nId, broadcastTime, extrasStr);
 		}
 
-		public static void addLocalNotificationByDate(string gameObject, string func, 
+		public static void addLocalNotificationByDate(string gameObject, string func,
 				int builderId, string content, string title, int nId,
 				int year, int month, int day, int hour, int minute, int second, string extrasStr)
 		{
@@ -327,12 +327,12 @@ namespace JPush
 				layoutName, statusBarDrawableName, layoutIconDrawableName);
 		}
 
-		public static void initCrashHandler() 
+		public static void initCrashHandler()
 		{
 			_plugin.Call("initCrashHandler", _gameObject, _func);
 		}
 
-		public static void initCrashHandler(string gameObject, string func) 
+		public static void initCrashHandler(string gameObject, string func)
 		{
 			_plugin.Call("initCrashHandler", gameObject, func);
 		}
@@ -462,11 +462,11 @@ namespace JPush
             _printLocalLog("content:" + content);
         }
 
-		void networkDidReceivePushNotificationCallBack(String parameter){
-			JsonData jd = JsonMapper.ToObject(parameter);
-			String content = (String) jd["content"];
-			_printLocalLog("content:" + content);
-		}
+    		void networkDidReceivePushNotificationCallBack(String parameter){
+    		    JsonData jd = JsonMapper.ToObject(parameter);
+    		    String content = (String) jd["content"];
+    			  _printLocalLog("content:" + content);
+    		}
 
         //---------------------------- badge ----------------------------//
 
