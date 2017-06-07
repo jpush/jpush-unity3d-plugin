@@ -323,10 +323,8 @@ static JPushUnityInstnce * _sharedService = nil;
 }
 
 - (void)tagsAliasCallback:(int)iResCode tags:(NSSet*)tags alias:(NSString*)alias {
-
     NSLog(@"rescode: %d, \ntags: %@, \nalias: %@\n", iResCode, tags , alias);
     NSArray *tagsArray=[tags allObjects];
-
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     [dict setValue:[[NSNumber alloc] initWithInt:iResCode] forKey:@"rescode"];
     [dict setValue:alias forKey:@"alias"];
@@ -337,10 +335,8 @@ static JPushUnityInstnce * _sharedService = nil;
 }
 
 - (void)networkDidRecieveMessage:(NSNotification *)notification {
-
     NSLog(@"已收到消息%@",notification);
     if (notification.name == kJPFNetworkDidReceiveMessageNotification && notification.userInfo){
-
         NSData       *data = APNativeJSONData(notification.userInfo);
         NSString     *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UnitySendMessage("JPushBinding","networkDidReceiveMessageCallBack",jsonStr.UTF8String);
@@ -350,14 +346,10 @@ static JPushUnityInstnce * _sharedService = nil;
 - (void)networkDidRecievePushNotification:(NSNotification *)notification {
     NSLog(@"已收到通知%@",notification);
     if ([notification.name isEqual:@"JPushPluginReceiveNotification"] && notification.object){
-        
+
         NSData       *data = APNativeJSONData(notification.object);
         NSString     *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         UnitySendMessage("JPushBinding","networkDidReceivePushNotificationCallBack",jsonStr.UTF8String);
     }
 }
-
-
 @end
-
-
