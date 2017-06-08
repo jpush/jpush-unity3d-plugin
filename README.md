@@ -142,6 +142,7 @@ iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面�
 亦可参照以下文档中与 `JPushBinding.cs` 中相同方法名的方法说明：
 
 > [JPush Phonegap Plugin Common API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/Common_detail_api.md)
+>
 > [JPush Phonegap Plugin iOS API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/iOS_API.md)
 
 
