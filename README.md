@@ -1,14 +1,14 @@
 # JPush Unity Plugin
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpush/jpush-unity3d-plugin)
-[![release](https://img.shields.io/badge/release-3.0.3-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![release](https://img.shields.io/badge/release-3.0.6-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 [![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
 
 ## 集成
-运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage。
+运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage
 
 ### Android
 - 替换 AndroidManifest.xml 里的包名。
@@ -59,15 +59,15 @@
 
       #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
       if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-   	 	// 可以添加自定义 categories
-			[JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
+        // 可以添加自定义 categories
+        [JPUSHService registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
 	    } else {
-	    // categories 必须为 nil
-			[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |  UIRemoteNotificationTypeAlert) categories:nil];
+        // categories 必须为 nil
+        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |  UIRemoteNotificationTypeAlert) categories:nil];
 	    }
 	    #else
-  	 	// categories 必须为 nil
-			[JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |UIRemoteNotificationTypeAlert) categories:nil];
+      // categories 必须为 nil
+      [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound |UIRemoteNotificationTypeAlert) categories:nil];
 	    #endif
 
     	/*
@@ -90,7 +90,7 @@
        NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
        [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
 
-    	 return YES;
+       return YES;
     }
 
     - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -132,19 +132,17 @@
 ### Android
 在 Plugins\Android\src 目录下是一些 Java 文件，可以将其引入到 Android 工程中对其进行扩展，重新生成 Jar 包替换掉工程中 Assets\Plugins\Android 目录下的 JPush_Bridge.jar 文件。
 
-> [Android SDK API](/Doc/AndroidAPI.md)。
+> [Android SDK API](/Doc/AndroidAPI.md)
 
 ### iOS
 iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面的即为可调用的 iOS API。
 
-> [iOS SDK API](http://docs.jpush.io/client/ios_api/)。
+> [iOS SDK API](https://docs.jiguang.cn/jpush/client/iOS/ios_api/)
 
 亦可参照以下文档中与 `JPushBinding.cs` 中相同方法名的方法说明：
 
 > [JPush Phonegap Plugin Common API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/Common_detail_api.md)
-
 > [JPush Phonegap Plugin iOS API doc](https://github.com/jpush/jpush-phonegap-plugin/blob/master/doc/iOS_API.md)
-
 
 
 ## 更多
