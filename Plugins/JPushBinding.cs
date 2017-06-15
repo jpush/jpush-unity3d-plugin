@@ -464,8 +464,6 @@ namespace JPush
 
     		void networkDidReceivePushNotificationCallBack(String parameter){
     		    JsonData jd = JsonMapper.ToObject(parameter);
-    		    String content = (String) jd["content"];
-    			  _printLocalLog("content:" + content);
     		}
 
         //---------------------------- badge ----------------------------//
