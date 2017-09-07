@@ -36,7 +36,7 @@ public class JPushBridge {
     public static String funcName = "";
     public static boolean isQuit = true;
 
-    private static JPushBridge jpushBridge = new JPushBridge();
+    private static JPushBridge jpushBridge;
     private Activity activity = null;
 
     private Activity getActivity() {
@@ -79,9 +79,12 @@ public class JPushBridge {
         UnityPlayer.UnitySendMessage(gameObject, func, "resumeJPush");
     }
 
-    public String getRegistrationId(String gameObject, String func) {
-        UnityPlayer.UnitySendMessage(gameObject, func, "getRegistrationId");
-        return JPushInterface.getRegistrationID(getActivity());
+    public static boolean isPushStopped() {
+        return JPushInterface.isPushStopped(UnityPlayer.currentActivity.getApplicationContext());
+    }
+
+    public static String getRegistrationId() {
+        return JPushInterface.getRegistrationID(UnityPlayer.currentActivity.getApplicationContext());
     }
 
     public String filterValidTags(String gameObject, String func, String tags) {

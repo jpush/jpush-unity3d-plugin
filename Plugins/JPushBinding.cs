@@ -53,8 +53,6 @@ namespace JPush
 		 */
 		public static void initJPush(string gameObject, string func)
 		{
-			Debug.Log("unity---initJPush");
-
 			_gameObject = gameObject;
 			_func = func;
 			_plugin.Call("initJPush", gameObject, func);
@@ -68,7 +66,6 @@ namespace JPush
 
 		public static void stopJPush(string gameObject, string func)
 		{
-			Debug.Log("unity---stopJPush");
 			_plugin.Call("stopJPush", gameObject, func);
 		}
 
@@ -80,7 +77,6 @@ namespace JPush
 
 		public static void resumeJPush(string gameObject, string func)
 		{
-			Debug.Log("unity---resumeJPush");
 			_plugin.Call("resumeJPush", gameObject, func);
 		}
 
@@ -91,18 +87,12 @@ namespace JPush
 
 		public static bool isPushStopped(string gameObject, string func)
 		{
-			Debug.Log("unity---isPushStopped");
 			return _plugin.Call<bool>("isPushStopped", gameObject, func);
 		}
 
 		public static string getRegistrationId()
 		{
-			return getRegistrationId(_gameObject, _func);
-		}
-
-		public static string getRegistrationId(string gameObject, string func) {
-			Debug.Log("unity---getRegistrationId");
-			return _plugin.Call<string>("getRegistrationId", gameObject, func);
+			return _plugin.CallStatic<string>("getRegistrationId");
 		}
 
 		public static string filterValidTags(string tags)
@@ -123,7 +113,6 @@ namespace JPush
 
 		public static void setTags(string gameObject, string func, string tags)
 		{
-			Debug.Log("unity---setTags");
 			_plugin.Call("setTags", gameObject, func, tags);
 		}
 
@@ -135,7 +124,6 @@ namespace JPush
 
 		public static void setAlias(string gameObject, string func, string alias)
 		{
-			Debug.Log("unity---setAlias");
 			_plugin.Call("setAlias", gameObject, func, alias);
 		}
 
@@ -144,9 +132,8 @@ namespace JPush
 			setAliasAndTags(_gameObject, _func, alias, tags);
 		}
 
-		public static void setAliasAndTags(string gameObject, string func,
-				string alias, string tags) {
-			Debug.Log("unity---setAliasAndTags");
+		public static void setAliasAndTags(string gameObject, string func, string alias, string tags)
+	  {
 			_plugin.Call("setAliasAndTags", gameObject, func, alias, tags);
 		}
 
@@ -164,7 +151,6 @@ namespace JPush
 		public static void setPushTime(string gameObject, string func, string days,
 	 			int start_time, int end_time)
 		{
-			Debug.Log("unity---setPushTime");
 		   _plugin.Call("setPushTime", gameObject, func, days, start_time, end_time);
 		}
 
@@ -175,18 +161,15 @@ namespace JPush
 		* @param: endHour: 静默时段结束时间 - 小时（范围：0 - 23）
 		* @param: endMinute: 静默时段结束时间 -  分钟（范围：0 - 59）
 		*/
-		public static void setSilenceTime(int startHour, int startMinute,
-				int endHour, int endMinute) {
-			setSilenceTime(_gameObject, _func, startHour, startMinute, endHour,
-				endMinute);
+		public static void setSilenceTime(int startHour, int startMinute, int endHour, int endMinute) 
+		{
+			setSilenceTime(_gameObject, _func, startHour, startMinute, endHour, endMinute);
 		}
 
 		public static void setSilenceTime(string gameObject, string func,
 				int startHour, int startMinute, int endHour, int endMinute)
 		{
-			Debug.Log("unity---setSilenceTime");
-			_plugin.Call("setSilenceTime",gameObject, func, startHour, startMinute, endHour,
-				endMinute);
+			_plugin.Call("setSilenceTime",gameObject, func, startHour, startMinute, endHour, endMinute);
 		}
 
 		public static void setLatestNotificationNumber(int num)
@@ -194,10 +177,8 @@ namespace JPush
 			setLatestNotificationNumber(_gameObject, _func, num);
 		}
 
-		public static void setLatestNotificationNumber(string gameObject,
-				string func, int num)
+		public static void setLatestNotificationNumber(string gameObject, string func, int num)
 		{
-			Debug.Log("unity---setLatestNotificationNumber");
 			_plugin.Call("setLatestNotificationNumber", gameObject, func, num);
 		}
 
@@ -238,7 +219,6 @@ namespace JPush
 
 		public static void removeLocalNotification(string gameObject, string func, int notiId)
 		{
-			Debug.Log("unity---removeLocalNotification");
 			_plugin.Call("removeLocalNotification", gameObject, func, notiId);
 		}
 
@@ -249,7 +229,6 @@ namespace JPush
 
 		public static void clearLocalNotifications(string gameObject, string func)
 		{
-			Debug.Log("unity---clearLocalNotifications");
 			_plugin.Call("clearLocalNotifications", gameObject, func);
 		}
 
@@ -260,7 +239,6 @@ namespace JPush
 
 		public static void clearAllNotifications(string gameObject, string func)
 		{
-			Debug.Log("unity---clearAllNotifications");
 			_plugin.Call("clearAllNotifications", gameObject, func);
 		}
 
@@ -272,7 +250,6 @@ namespace JPush
 		public static void clearNotificationById(string gameObject, string func,
 				int notiId)
 		{
-			Debug.Log("unity---clearNotificationById");
 			_plugin.Call("clearNotificationById", gameObject, func, notiId);
 		}
 
@@ -286,7 +263,6 @@ namespace JPush
 
 		public static void requestPermission(string gameObject, string func)
 		{
-			Debug.Log("unity---requestPermission");
 			_plugin.Call("requestPermission", gameObject, func);
 		}
 
@@ -295,10 +271,8 @@ namespace JPush
 			setBasicPushNotificationBuilder(_gameObject, _func);
 		}
 
-		public static void setBasicPushNotificationBuilder(string gameObject,
-				string func)
+		public static void setBasicPushNotificationBuilder(string gameObject, string func)
 		{
-			Debug.Log("unity---setBasicPushNotificationBuilder");
 			// 需要根据自己业务情况修改后再调用。
 			int builderId = 1;
 			int notiDefaults = notificationDefaults | DEFAULT_ALL;
@@ -312,10 +286,8 @@ namespace JPush
 			setCustomPushNotificationBuilder(_gameObject, _func);
 		}
 
-		public static void setCustomPushNotificationBuilder(string gameObject,
-				string func)
+		public static void setCustomPushNotificationBuilder(string gameObject, string func)
 		{
-			Debug.Log("unity---setCustomPushNotificationBuilder");
 			// 需要根据自己业务情况修改后再调用。
 			int builderId = 1;
 			string layoutName = "yourNotificationLayoutName";
@@ -350,7 +322,6 @@ namespace JPush
 		//在应用退出前调用
 		public static void isQuit()
 		{
-			Debug.Log("unity---isQuit");
 			_plugin.Call("isQuit");
 		}
 
@@ -363,7 +334,7 @@ namespace JPush
         void Start()
         {
             _registerNetworkDidReceiveMessage();
-			_registerNetworkDidReceivePushNotification();
+						_registerNetworkDidReceivePushNotification();
         }
 
         //---------------------------- tags / alias ----------------------------//
@@ -405,7 +376,7 @@ namespace JPush
             _printLocalLog(jsonData);
 
             JsonData jd = JsonMapper.ToObject(jsonData);
-            int respoenCode = (int)jd["rescode"];
+            int responseCode = (int)jd["rescode"];
             String alias = (String)jd["alias"];
             JsonData jdItems = jd["tags"];
             int itemCnt = jdItems.Count;
@@ -418,7 +389,7 @@ namespace JPush
 
             if(_action!=null)
             {
-                _action(respoenCode, set, alias);
+                _action(responseCode, set, alias);
             }
         }
 
@@ -580,8 +551,8 @@ namespace JPush
         [DllImport("__Internal")]
         public static extern void _registerNetworkDidReceiveMessage();
 
-		[DllImport("__Internal")]
-		public static extern void _registerNetworkDidReceivePushNotification();
+				[DllImport("__Internal")]
+				public static extern void _registerNetworkDidReceivePushNotification();
 
         //--- badge ---//
 

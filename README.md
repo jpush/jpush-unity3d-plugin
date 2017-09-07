@@ -1,9 +1,7 @@
 # JPush Unity Plugin
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jpush/jpush-unity3d-plugin)
-[![release](https://img.shields.io/badge/release-3.0.6-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
-[![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-lightgrey.svg)](https://github.com/jpush/jpush-unity3d-plugin)
-[![weibo](https://img.shields.io/badge/weibo-JPush-blue.svg)](http://weibo.com/jpush?refer_flag=1001030101_&is_all=1)
+[![release](https://img.shields.io/badge/release-3.0.7-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-green.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
 
@@ -19,7 +17,7 @@
 ### iOS
 - 在 Unity 游戏场景中，新建一个空的 Gameobject，将其名称修改为 JPushBinding，挂载 JPushBinding.cs。
 - 生成 iOS 工程，并打开该工程。
-- 添加必要的框架。
+- 添加必要的框架：
 
         CoreFoundation.framework
         CFNetwork.framework
@@ -148,4 +146,4 @@ iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面�
 
 ## 更多
 - [JPush 官网文档](http://docs.jiguang.cn/guideline/jmessage_guide/)
-<!-- - 有问题可访问[极光社区](http://community.jpush.cn/)搜索和提问。 -->
+- 有问题可访问[极光社区](http://community.jpush.cn/)搜索和提问。
