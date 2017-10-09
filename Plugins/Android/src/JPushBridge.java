@@ -1,16 +1,14 @@
-package com.example.unity3d_jpush_demo;
+package cn.jiguang.unity.push;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.unity3d.player.UnityPlayer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -21,73 +19,50 @@ import java.util.regex.Pattern;
 import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
 import cn.jpush.android.data.JPushLocalNotification;
 
 
-/**
- * Copyright © 2014  JPUSH. All rights reserved.
- */
 public class JPushBridge {
 
-    private static final String TAG = "JPush";
-
-    public static String gameObjectName = "Main Camera";
-    public static String funcName = "";
-    public static boolean isQuit = true;
-
     private static JPushBridge jpushBridge;
-    private Activity activity = null;
 
-    private Activity getActivity() {
-        if (activity == null) {
-            activity = UnityPlayer.currentActivity;
-        }
-        return activity;
-    }
+    private Context mContext;
+    static String gameObject;
 
     public static JPushBridge getInstance() {
         if (jpushBridge == null) {
             jpushBridge = new JPushBridge();
         }
-        isQuit = false;
         return jpushBridge;
-    }
-
-    public void isQuit() {
-        isQuit = true;
     }
 
     public void setDebug(boolean enable) {
         JPushInterface.setDebugMode(enable);
     }
 
-    public void initJPush(String gameObject, String func) {
-        gameObjectName = gameObject;
-        funcName = func;
-        JPushInterface.init(getActivity());
-        UnityPlayer.UnitySendMessage(gameObjectName, funcName, "initJPush:" + gameObject + "-" + func);
+    public void initJPush(String gameObject) {
+        JPushBridge.gameObject = gameObject;
+        mContext = UnityPlayer.currentActivity.getApplicationContext();
+        JPushInterface.init(mContext);
     }
 
-    public void stopJPush(String gameObject, String func) {
-        JPushInterface.stopPush(getActivity());
-        UnityPlayer.UnitySendMessage(gameObject, func, "stopJPush");
+    public void stopJPush() {
+        JPushInterface.stopPush(mContext);
     }
 
-    public void resumeJPush(String gameObject, String func) {
-        JPushInterface.resumePush(getActivity());
-        UnityPlayer.UnitySendMessage(gameObject, func, "resumeJPush");
+    public void resumeJPush() {
+        JPushInterface.resumePush(mContext);
     }
 
-    public static boolean isPushStopped() {
-        return JPushInterface.isPushStopped(UnityPlayer.currentActivity.getApplicationContext());
+    public boolean isPushStopped() {
+        return JPushInterface.isPushStopped(mContext);
     }
 
-    public static String getRegistrationId() {
-        return JPushInterface.getRegistrationID(UnityPlayer.currentActivity.getApplicationContext());
+    public String getRegistrationId() {
+        return JPushInterface.getRegistrationID(mContext);
     }
 
-    public String filterValidTags(String gameObject, String func, String tags) {
+    public String filterValidTags(String tags) {
         String[] sArray = tags.split(",");
         final Set<String> tagSet = new LinkedHashSet<String>();
         for (String tag : sArray) {
@@ -102,133 +77,49 @@ public class JPushBridge {
             resultTags.append(tag).append(",");
         }
         String resultStr = String.valueOf(resultTags);
-        UnityPlayer.UnitySendMessage(gameObject, func, "filterValidTags");
         return resultStr.substring(0, resultStr.length() - 1);
     }
 
-    public void initCrashHandler(String gameObjectName, String func) {
-        JPushInterface.initCrashHandler(getActivity().getApplicationContext());
+    public void initCrashHandler() {
+        JPushInterface.initCrashHandler(mContext);
     }
 
-    public void stopCrashHandler(String gameObjectName, String func) {
-        JPushInterface.stopCrashHandler(getActivity().getApplicationContext());
+    public void stopCrashHandler() {
+        JPushInterface.stopCrashHandler(mContext);
     }
 
-    public void setTags(String gameObject, String func, String unity_tags) {
-        if (TextUtils.isEmpty(unity_tags)) {
+    public void setTags(int sequence, String tagsJsonStr) {
+        if (TextUtils.isEmpty(tagsJsonStr)) {
             return;
         }
 
-        String[] sArray = unity_tags.split(",");
         final Set<String> tagSet = new LinkedHashSet<String>();
-        for (String tag : sArray) {
-            if (!isValidTagAndAlias(tag)) {
-                return;
+
+        try {
+            JSONArray tagsJsonArr = new JSONArray(tagsJsonStr);
+            for (int i = 0; i < tagsJsonArr.length(); i++) {
+                tagSet.add(tagsJsonArr.getString(i));
             }
-            tagSet.add(tag);
+
+            JPushInterface.setTags(mContext, sequence, tagSet);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                JPushInterface.setTags(getActivity(), tagSet, mTagsCallback);
-            }
-        });
-        UnityPlayer.UnitySendMessage(gameObject, func, "setTags:" + unity_tags);
     }
 
-    public void setAlias(String gameObject, String func, String unity_alias) {
-        if (TextUtils.isEmpty(unity_alias)) {
-            return;
-        }
-        if (!isValidTagAndAlias(unity_alias)) {
-            return;
-        }
-        final String alias = unity_alias;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                JPushInterface.setAlias(getActivity(), alias, mAliasCallback);
-            }
-        });
-        UnityPlayer.UnitySendMessage(gameObject, func, "setAlias:" + unity_alias);
+    public void setAlias(int sequence, String alias) {
+        JPushInterface.setAlias(mContext, sequence, alias);
     }
 
-    public void setAliasAndTags(String gameObject, String func, final String alias,
-                                String tags) {
-        if (TextUtils.isEmpty(alias)) {
-            setTags(gameObject, func, tags);
-            return;
-        }
-        if (TextUtils.isEmpty(tags)) {
-            setAlias(gameObject, func, alias);
-            return;
-        }
-        String[] sArray = tags.split(",");
-        Set<String> tagsSet = new LinkedHashSet<String>();
-        for (String tag : sArray) {
-            tagsSet.add(tag);
-        }
-        Set<String> resultTagSet = JPushInterface.filterValidTags(tagsSet);
-        JPushInterface.setAliasAndTags(getActivity(), alias, resultTagSet, mAliasAndTagsCallback);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setAliasAndTags: " + alias + "; " + tags);
+    public void deleteAlias(int sequence) {
+        JPushInterface.deleteAlias(mContext, sequence);
     }
 
-    private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
-        @Override
-        public void gotResult(int code, String alias, Set<String> tags) {
-            String logs;
-            switch (code) {
-                case 0:
-                    logs = "Set alias success";
-                    break;
-                case 6002:
-                    logs = "Failed to set alias due to timeout. Try again after 60s.";
-                    break;
-                default:
-                    logs = "Failed with errorCode = " + code;
-            }
-            Log.i("JPushBridge", logs);
-        }
-    };
+    public void getAlias(int sequence) {
+        JPushInterface.getAlias(mContext, sequence);
+    }
 
-    private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
-        @Override
-        public void gotResult(int code, String alias, Set<String> tags) {
-            String logs;
-            switch (code) {
-                case 0:
-                    logs = "Set tags success";
-                    break;
-                case 6002:
-                    logs = "Failed to set tags due to timeout. Try again after 60s.";
-                    break;
-                default:
-                    logs = "Failed with errorCode = " + code;
-            }
-            Log.i("JPushBridge", logs);
-        }
-    };
-
-    private final TagAliasCallback mAliasAndTagsCallback = new TagAliasCallback() {
-        @Override
-        public void gotResult(int code, String alias, Set<String> tags) {
-            String logs;
-            switch (code) {
-                case 0:
-                    logs = "Set success";
-                    break;
-                case 6002:
-                    logs = "Failed to set due to timeout. Try again after 60s.";
-                    break;
-                default:
-                    logs = "Failed with errorCode = " + code;
-            }
-            Log.i("JPushBridge", logs);
-        }
-    };
-
-    public void setPushTime(String gameObject, String func, String days,
-                            int startHour, int endHour) {
+    public void setPushTime(String days, int startHour, int endHour) {
         Set<Integer> daysSet = days == null ? null : new HashSet<Integer>();
 
         if (!TextUtils.isEmpty(days)) {
@@ -240,58 +131,49 @@ public class JPushBridge {
                 daysSet.add(Integer.parseInt(str));
             }
         }
-        JPushInterface.setPushTime(getActivity(), daysSet, startHour, endHour);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setPushTime");
+        JPushInterface.setPushTime(mContext, daysSet, startHour, endHour);
     }
 
     /**
      * 设置通知静默时间。
      *
-     * @param gameObject
-     * @param func
      * @param startHour   静音时段的开始时间 - 小时(范围：0 - 23)
      * @param startMinute 静音时段的开始时间 - 分钟(范围：0 - 59)
      * @param endHour     静音时段的结束时间 - 小时(范围：0 - 23)
      * @param endMinute   静音时段的结束时间 - 分钟(范围：0 - 59)
-     * @throws Exception
      */
-    public void setSilenceTime(String gameObject, String func, int startHour,
-                               int startMinute, int endHour, int endMinute) throws Exception {
+    public void setSilenceTime(int startHour, int startMinute, int endHour, int endMinute)
+            throws Exception {
         if (startHour < 0 || startHour > 23 || startMinute < 0 || startMinute > 59) {
             throw new IllegalArgumentException("开始时间不正确");
         }
+
         if (endHour < 0 || endHour > 23 || endMinute < 0 || endMinute > 59) {
             throw new IllegalArgumentException("结束时间不正确");
         }
-        JPushInterface.setSilenceTime(getActivity().getApplicationContext(),
-                startHour, startMinute, endHour, endMinute);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setSilenceTime");
+
+        JPushInterface.setSilenceTime(mContext, startHour, startMinute, endHour, endMinute);
     }
 
-    public void addLocalNotification(String gameObject, String func, int builderId, String content,
-                                     String title, int notId, int broadcastTime, String extrasStr) {
-        try {
-            JPushLocalNotification ln = new JPushLocalNotification();
-            ln.setBuilderId(builderId);
-            ln.setContent(content);
-            ln.setTitle(title);
-            ln.setNotificationId(notId);
-            ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime * 1000);
+    public void addLocalNotification(int builderId, String content, String title, int notId,
+                                     int broadcastTime, String extrasStr) {
+        JPushLocalNotification ln = new JPushLocalNotification();
+        ln.setBuilderId(builderId);
+        ln.setContent(content);
+        ln.setTitle(title);
+        ln.setNotificationId(notId);
+        ln.setBroadcastTime(System.currentTimeMillis() + broadcastTime * 1000);
 
-            if (!TextUtils.isEmpty(extrasStr)) {
-                ln.setExtras(new JSONObject(extrasStr).toString());
-            }
-
-            JPushInterface.addLocalNotification(getActivity().getApplicationContext(), ln);
-            UnityPlayer.UnitySendMessage(gameObject, func, "addLocalNotification");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (!TextUtils.isEmpty(extrasStr)) {
+            ln.setExtras(extrasStr);
         }
+
+        JPushInterface.addLocalNotification(mContext, ln);
     }
 
-    public void addLocalNotificationByDate(String gameObject, String func, int builderId, String content,
-                                     String title, int notId, int year, int month, int day,
-                                     int hour, int minute, int second, String extrasStr) {
+    public void addLocalNotificationByDate(int builderId, String content, String title, int notId,
+                                           int year, int month, int day,
+                                           int hour, int minute, int second, String extrasStr) {
         JPushLocalNotification localNotification = new JPushLocalNotification();
         localNotification.setBuilderId(builderId);
         localNotification.setContent(content);
@@ -303,87 +185,73 @@ public class JPushBridge {
             localNotification.setExtras(extrasStr);
         }
 
-        JPushInterface.addLocalNotification(getActivity().getApplicationContext(), localNotification);
-        UnityPlayer.UnitySendMessage(gameObject, func, "addLocalNotificationByDate");
+        JPushInterface.addLocalNotification(mContext, localNotification);
     }
 
-    public void removeLocalNotification(String gameObject, String func, int notificationId) {
-        JPushInterface.removeLocalNotification(getActivity().getApplicationContext(),
-                notificationId);
-        UnityPlayer.UnitySendMessage(gameObject, func, "removeLocalNotification");
+    public void removeLocalNotification(int notificationId) {
+        JPushInterface.removeLocalNotification(mContext, notificationId);
     }
 
-    public void clearLocalNotifications(String gameObject, String func) {
-        JPushInterface.clearLocalNotifications(getActivity().getApplicationContext());
-        UnityPlayer.UnitySendMessage(gameObject, func, "clearLocalNotifications");
+    public void clearLocalNotifications() {
+        JPushInterface.clearLocalNotifications(mContext);
     }
 
-    public void clearAllNotifications(String gameObject, String func) {
-        JPushInterface.clearAllNotifications(getActivity().getApplicationContext());
-        UnityPlayer.UnitySendMessage(gameObject, func, "clearAllNotifications");
+    public void clearAllNotifications() {
+        JPushInterface.clearAllNotifications(mContext);
     }
 
-    public void clearNotificationById(String gameObject, String func, int notiId) {
-        JPushInterface.clearNotificationById(getActivity().getApplicationContext(),
-                notiId);
-        UnityPlayer.UnitySendMessage(gameObject, func, "clearNotificationById");
+    public void clearNotificationById(int notificationId) {
+        JPushInterface.clearNotificationById(mContext, notificationId);
     }
 
-    public void requestPermission(String gameObject, String func) {
-        getActivity().runOnUiThread(new Runnable() {
+    public void requestPermission() {
+        UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                JPushInterface.requestPermission(getActivity());
+                JPushInterface.requestPermission(mContext);
             }
         });
-        UnityPlayer.UnitySendMessage(gameObject, func, "requestPermission");
     }
 
     /**
      * 设置自定义通知栏样式。
      * 具体可参考：http://docs.jpush.io/client/android_tutorials/#_11
      *
-     * @param gameObject
-     * @param func
      * @param builderId             样式 Id，代表这种通知样式，服务器推送时需要制定。
-     * @param notificationDefault
-     * @param notificationFlags
      * @param statusBarDrawableName 通知图片名称，需要先放在 Android 资源目录中。
      */
-    public void setBasicPushNotificationBuilder(String gameObject, String func, int builderId,
-                                                int notificationDefault, int notificationFlags,
-                                                String statusBarDrawableName) {
-        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(getActivity());
+    public void setBasicPushNotificationBuilder(int builderId, int notificationDefault,
+                                                int notificationFlags, String statusBarDrawableName) {
+        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(mContext);
+
         if (notificationDefault != -1) {
             builder.notificationDefaults = notificationDefault;
         }
+
         if (notificationFlags != 16) {
             builder.notificationFlags = notificationFlags;
         }
+
         if (!TextUtils.isEmpty(statusBarDrawableName)) {
             builder.statusBarDrawable = getResourceId(statusBarDrawableName, "drawable");
         }
+
         JPushInterface.setPushNotificationBuilder(builderId, builder);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setBasicPushNotificationBuilder");
     }
 
     /**
      * 进一步自定义通知栏，所有资源名称都需要能在资源目录中找到。
      * 具体可参考：http://docs.jpush.io/client/android_tutorials/#_11
      *
-     * @param gameObject
-     * @param func
      * @param builderId              通知栏样式编号
      * @param layoutName             通知布局样式名称: R.layout.layoutName
      * @param statusBarDrawableName  顶层状态栏小图标
      * @param layoutIconDrawableName 下拉状态栏时的图标
      */
-    public void setCustomPushNotificationBuilder(String gameObject, String func, int builderId,
-                                                 String layoutName, String statusBarDrawableName,
+    public void setCustomPushNotificationBuilder(int builderId, String layoutName,
+                                                 String statusBarDrawableName,
                                                  String layoutIconDrawableName) {
         int layoutId = getResourceId(layoutName, "layout");
-        Log.i(TAG, "layoutName: " + layoutName + " - layoutId: " + layoutId);
-
         int iconId = getResourceId("icon", "id");
         int titleId = getResourceId("title", "id");
         int textId = getResourceId("text", "id");
@@ -391,33 +259,30 @@ public class JPushBridge {
         int statusBarDrawableId = getResourceId(statusBarDrawableName, "drawable");
         int layoutIconDrawableId = getResourceId(layoutIconDrawableName, "drawable");
 
-        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(
-                getActivity(), layoutId, iconId, titleId, textId);
+        CustomPushNotificationBuilder builder = new CustomPushNotificationBuilder(mContext,
+                layoutId, iconId, titleId, textId);
 
         if (statusBarDrawableId != 0) {
             builder.statusBarDrawable = statusBarDrawableId;
         }
+
         if (layoutIconDrawableId != 0) {
             builder.layoutIconDrawable = layoutIconDrawableId;
         }
 
         JPushInterface.setPushNotificationBuilder(builderId, builder);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setCustomPushNotificationBuilder");
     }
 
     /**
-     * 设置最近保留的通知条数
+     * 设置最近保留的通知条数。
      *
-     * @param gameObject
-     * @param func
-     * @param num        保留的通知条数
+     * @param num 保留的通知条数。
      */
-    public void setLatestNotificationNumber(String gameObject, String func, int num) {
-        JPushInterface.setLatestNotificationNumber(getActivity().getApplicationContext(), num);
-        UnityPlayer.UnitySendMessage(gameObject, func, "setLatestNotificationNum");
+    public void setLatestNotificationNumber(int num) {
+        JPushInterface.setLatestNotificationNumber(mContext, num);
     }
 
-    // 校验 tag, alias 只能是数字,英文字母和中文
+    // 校验 tag, alias 只能是数字,英文字母和中文。
     private boolean isValidTagAndAlias(String s) {
         Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-]*$");
         Matcher m = p.matcher(s);
@@ -444,7 +309,6 @@ public class JPushBridge {
         if (TextUtils.isEmpty(resourceName)) {
             return 0;
         }
-        Context context = getActivity().getApplicationContext();
-        return context.getResources().getIdentifier(resourceName, type, context.getPackageName());
+        return mContext.getResources().getIdentifier(resourceName, type, mContext.getPackageName());
     }
 }
