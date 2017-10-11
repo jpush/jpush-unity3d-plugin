@@ -23,27 +23,24 @@ public class MyReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "onGetRegistrationId", regId);
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnGetRegistrationId", regId);
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
             String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "recvMessage", msg2str(message, extras));
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveMessage", msg2str(message, extras));
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
-            // 默认在通知栏中显示。
             String content = bundle.getString(JPushInterface.EXTRA_ALERT);
             String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
             String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "recvNotification",
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveNotification",
                     noti2str(title, content, extras));
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            JPushInterface.reportNotificationOpened(context,
-                    bundle.getString(JPushInterface.EXTRA_MSG_ID));
+            JPushInterface.reportNotificationOpened(context, bundle.getString(JPushInterface.EXTRA_MSG_ID));
 
-            Intent launch = context.getPackageManager().
-                    getLaunchIntentForPackage(context.getPackageName());
+            Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
             launch.addCategory(Intent.CATEGORY_LAUNCHER);
             launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(launch);
@@ -51,7 +48,7 @@ public class MyReceiver extends BroadcastReceiver {
             String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
             String content = bundle.getString(JPushInterface.EXTRA_ALERT);
             String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "openNotification",
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnOpenNotification",
                     noti2str(title, content, extras));
         }
     }

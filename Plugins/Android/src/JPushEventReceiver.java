@@ -14,7 +14,6 @@ import java.util.Set;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.service.JPushMessageReceiver;
 
-
 public class JPushEventReceiver extends JPushMessageReceiver {
 
     @Override
@@ -47,7 +46,7 @@ public class JPushEventReceiver extends JPushMessageReceiver {
             }
         }
 
-        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "onTagOperateResult", resultJson.toString());
+        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnJPushTagOperateResult", resultJson.toString());
     }
 
     @Override
@@ -73,7 +72,7 @@ public class JPushEventReceiver extends JPushMessageReceiver {
             }
         }
 
-        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "onTagOperateResult", resultJson.toString());
+        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnJPushTagOperateResult", resultJson.toString());
     }
 
     @Override
@@ -90,7 +89,7 @@ public class JPushEventReceiver extends JPushMessageReceiver {
             e.printStackTrace();
         }
 
-        if (jPushMessage.getErrorCode() == 0) { // success
+        if (jPushMessage.getErrorCode() == 0) {
             try {
                 if (!TextUtils.isEmpty(jPushMessage.getAlias())) {
                     resultJson.put("alias", jPushMessage.getAlias());
@@ -100,6 +99,6 @@ public class JPushEventReceiver extends JPushMessageReceiver {
             }
         }
 
-        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "onAliasOperateResult", resultJson.toString());
+        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnJPushAliasOperateResult", resultJson.toString());
     }
 }

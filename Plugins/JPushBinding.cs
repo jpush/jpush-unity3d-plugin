@@ -2,257 +2,267 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 #if UNITY_IPHONE
-using System.Collections.Generic;
 using LitJson;
 #endif
 
 namespace JPush
 {
-	public class JPushBinding : MonoBehaviour
-	{
-		#if UNITY_ANDROID
-		private static AndroidJavaObject _plugin;
-		public static string _gameObject = "";
-
-		private static int notificationDefaults = -1;
-		private static int notificationFlags = 16;
-
-		private static readonly int DEFAULT_ALL = -1;
-		private static readonly int DEFAULT_SOUND = 1;
-		private static readonly int DEFAULT_VIBRATE = 2;
-		private static readonly int DEFAULT_LIGHTS = 4;
-
-		private static readonly int FLAG_SHOW_LIGHTS = 1;
-		private static readonly int FLAG_ONGOING_EVENT = 2;
-		private static readonly int FLAG_INSISTENT = 4;
-		private static readonly int FLAG_ONLY_ALERT_ONCE = 8;
-		private static readonly int FLAG_AUTO_CANCEL = 16;
-		private static readonly int FLAG_NO_CLEAR = 32;
-		private static readonly int FLAG_FOREGROUND_SERVICE = 64;
-
-		static JPushBinding()
-		{
-			using(AndroidJavaClass jpushClass = new AndroidJavaClass("cn.jiguang.unity.push"))
-			{
-				_plugin = jpushClass.CallStatic<AndroidJavaObject>("getInstance");
-			}
-		}
-
-		public static void setDebug(bool debug)
-		{
-			_plugin.Call("setDebug", debug);
-		}
-
-		/**
-		 * 参数gameObject 代表游戏对象
-		 * 参数func 代表回调的方法名
-		 */
-		public static void initJPush(string gameObject)
-		{
-			_gameObject = gameObject;
-			_plugin.Call("initJPush", gameObject);
-		}
-
-		// 停止 JPush 推送服务。
-		public static void stopJPush()
-		{
-			_plugin.Call("stopJPush");
-		}
-
-		// 唤醒 JPush 推送服务，使用了 stopJPush 必须调用此方法才能恢复。
-		public static void resumeJPush()
-		{
-			_plugin.Call("resumeJPush");
-		}
-
-    // 判断当前 JPush 服务是否停止。
-		public static bool isPushStopped()
-		{
-			return _plugin.Call<bool>("isPushStopped");
-		}
-
-		public static string getRegistrationId()
-		{
-			return _plugin.Call<string>("getRegistrationId");
-		}
-
-		public static string filterValidTags(string tags)
-		{
-			return _plugin.Call<string>("filterValidTags", tags);
-		}
-
-		// 设置设备标签。
-    // tags 为多个 tag 组成的字符串(tag 为大小写字母,数字,下划线,中文;多个间用逗号分隔)。
-		public static void setTags(int sequence, List<string> tags)
-		{
-      // TODO: 将 tags 转成 json 字符串。
-
-			_plugin.Call("setTags", sequence, tags);
-		}
-
-    public static void addTags(int sequence, List<string> tags)
+    public class JPushBinding : MonoBehaviour
     {
-			_plugin.Call("addTags", sequence, tags);
-    }
+        #if UNITY_ANDROID
+        private static AndroidJavaObject _plugin;
+        public static string _gameObject = "";
 
-		//设置设备别名.参数 Alias为大小写字母,数字,下划线
-		public static void setAlias(int sequence, string alias)
-		{
-			_plugin.Call("setAlias", sequence, alias);
-		}
+        private static int notificationDefaults = -1;
+        private static int notificationFlags = 16;
 
-    public static void deleteAlias(int sequence)
-    {
-      _plugin.Call("deleteAlias", sequence);
-    }
+        private static readonly int DEFAULT_ALL = -1;
+        private static readonly int DEFAULT_SOUND = 1;
+        private static readonly int DEFAULT_VIBRATE = 2;
+        private static readonly int DEFAULT_LIGHTS = 4;
 
-    public static void getAlias(int sequence)
-    {
-      _plugin.Call("getAlias", sequence);
-    }
+        private static readonly int FLAG_SHOW_LIGHTS = 1;
+        private static readonly int FLAG_ONGOING_EVENT = 2;
+        private static readonly int FLAG_INSISTENT = 4;
+        private static readonly int FLAG_ONLY_ALERT_ONCE = 8;
+        private static readonly int FLAG_AUTO_CANCEL = 16;
+        private static readonly int FLAG_NO_CLEAR = 32;
+        private static readonly int FLAG_FOREGROUND_SERVICE = 64;
 
-		/**
+        static JPushBinding()
+        {
+            using (AndroidJavaClass jpushClass = new AndroidJavaClass("cn.jiguang.unity.push"))
+            {
+                _plugin = jpushClass.CallStatic<AndroidJavaObject>("getInstance");
+            }
+        }
+
+        public static void InitPush(string gameObject)
+        {
+            _gameObject = gameObject;
+            _plugin.Call("initPush", gameObject);
+        }
+
+        public static void SetDebug(bool debug)
+        {
+            _plugin.Call("setDebug", debug);
+        }
+
+        // 停止 JPush 推送服务。
+        public static void StopPush()
+        {
+            _plugin.Call("stopPush");
+        }
+
+        // 唤醒 JPush 推送服务，使用了 stopJPush 必须调用此方法才能恢复。
+        public static void ResumePush()
+        {
+            _plugin.Call("resumePush");
+        }
+
+        // 判断当前 JPush 服务是否停止。
+        public static bool IsPushStopped()
+        {
+            return _plugin.Call<bool>("isPushStopped");
+        }
+
+        public static string GetRegistrationId()
+        {
+            return _plugin.Call<string>("getRegistrationId");
+        }
+
+        // 设置设备标签。
+        // tags 为多个 tag 组成的字符串(tag 为大小写字母,数字,下划线,中文;多个间用逗号分隔)。
+        public static void SetTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonUtility.ToJson(tags);
+            _plugin.Call("setTags", sequence, tagsJsonStr);
+        }
+
+        public static void AddTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonUtility.ToJson(tags);
+            _plugin.Call("addTags", sequence, tagsJsonStr);
+        }
+
+        public static void DeleteTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonUtility.ToJson(tags);
+            _plugin.Call("deleteTags", sequence, tagsJsonStr);
+        }
+
+        public static void CleanTags(int sequence)
+        {
+            _plugin.Call("cleanTags", sequence);
+        }
+
+        public static void GetAllTags(int sequence)
+        {
+            _plugin.Call("getAllTags", sequence);
+        }
+
+        public static void CheckTagBindState(int sequence, string tag)
+        {
+            _plugin.Call("checkTagBindState", sequence, tag);
+        }
+
+        public static void SetAlias(int sequence, string alias)
+        {
+            _plugin.Call("setAlias", sequence, alias);
+        }
+
+        public static void DeleteAlias(int sequence)
+        {
+            _plugin.Call("deleteAlias", sequence);
+        }
+
+        public static void GetAlias(int sequence)
+        {
+            _plugin.Call("getAlias", sequence);
+        }
+
+        /**
 		 * 设置允许推送时间。
 		 * 参数 days: 为 0-6 之间由","连接而成的字符串
 		 * 参数 startHour: 为 0-23 的字符串
 		 * 参数 endHour: 为 0-23 的字符串
 		 */
-		public static void setPushTime(string days, int startHour, int endHour)
-		{
-		   _plugin.Call("setPushTime", days, start_time, end_time);
-		}
+        public static void SetPushTime(string days, int startHour, int endHour)
+        {
+            _plugin.Call("setPushTime", days, startHour, endHour);
+        }
 
-		/**
+        /**
 		* 设置通知静默时间。
 		* @param: startHour: 静默时段开始时间 - 小时（范围：0 - 23）
 		* @param: startMinute: 静默时段开始时间 - 分钟（范围：0 - 59）
 		* @param: endHour: 静默时段结束时间 - 小时（范围：0 - 23）
 		* @param: endMinute: 静默时段结束时间 -  分钟（范围：0 - 59）
 		*/
-		public static void setSilenceTime(int startHour, int startMinute, int endHour, int endMinute) 
-		{
-			_plugin.Call("setSilenceTime", startHour, startMinute, endHour, endMinute);
-		}
+        public static void SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)
+        {
+            _plugin.Call("setSilenceTime", startHour, startMinute, endHour, endMinute);
+        }
 
-		public static void setLatestNotificationNumber(int num)
-		{
-			_plugin.Call("setLatestNotificationNumber", num);
-		}
+        public static void SetLatestNotificationNumber(int num)
+        {
+            _plugin.Call("setLatestNotificationNumber", num);
+        }
 
-		public static void addLocalNotification(int builderId, string content, string title, int nId,
-				int broadcastTime, string extrasStr)
-		{
-			_plugin.Call("addLocalNotification", builderId, content, title, nId, broadcastTime, extrasStr);
-		}
+        public static void AddLocalNotification(int builderId, string content, string title, int nId,
+                int broadcastTime, string extrasStr)
+        {
+            _plugin.Call("addLocalNotification", builderId, content, title, nId, broadcastTime, extrasStr);
+        }
 
-		public static void addLocalNotificationByDate(int builderId, string content, string title, int nId,
-				int year, int month, int day, int hour, int minute, int second, string extrasStr)
-		{
-			_plugin.Call("addLocalNotificationByDate", builderId, content, title, nId,
-				year, month, day, hour, minute, second, extrasStr);
-		}
+        public static void AddLocalNotificationByDate(int builderId, string content, string title, int nId,
+                int year, int month, int day, int hour, int minute, int second, string extrasStr)
+        {
+            _plugin.Call("addLocalNotificationByDate", builderId, content, title, nId,
+                year, month, day, hour, minute, second, extrasStr);
+        }
 
-		public static void removeLocalNotification(int notificationId)
-		{
-			_plugin.Call("removeLocalNotification", notificationId);
-		}
+        public static void RemoveLocalNotification(int notificationId)
+        {
+            _plugin.Call("removeLocalNotification", notificationId);
+        }
 
-		public static void clearLocalNotifications()
-		{
-			_plugin.Call("clearLocalNotifications");
-		}
+        public static void ClearLocalNotifications()
+        {
+            _plugin.Call("clearLocalNotifications");
+        }
 
-		public static void clearAllNotifications()
-		{
-			_plugin.Call("clearAllNotifications");
-		}
+        public static void ClearAllNotifications()
+        {
+            _plugin.Call("clearAllNotifications");
+        }
 
-		public static void clearNotificationById(int notificationId)
-		{
-			_plugin.Call("clearNotificationById", notificationId);
-		}
+        public static void ClearNotificationById(int notificationId)
+        {
+            _plugin.Call("clearNotificationById", notificationId);
+        }
 
-		/**
+        /**
 		*	 用于 Android 6.0 及以上系统申请权限。
 		*/
-		public static void requestPermission()
-		{
-			_plugin.Call("requestPermission");
-		}
+        public static void RequestPermission()
+        {
+            _plugin.Call("requestPermission");
+        }
 
-		public static void setBasicPushNotificationBuilder()
-		{
-			// 需要根据自己业务情况修改后再调用。
-			int builderId = 1;
-			int notiDefaults = notificationDefaults | DEFAULT_ALL;
-			int notiFlags = notificationFlags | FLAG_AUTO_CANCEL;
-			_plugin.Call("setBasicPushNotificationBuilder", builderId, notiDefaults, notiFlags, null);
-		}
+        public static void SetBasicPushNotificationBuilder()
+        {
+            // 需要根据自己业务情况修改后再调用。
+            int builderId = 1;
+            int notiDefaults = notificationDefaults | DEFAULT_ALL;
+            int notiFlags = notificationFlags | FLAG_AUTO_CANCEL;
+            _plugin.Call("setBasicPushNotificationBuilder", builderId, notiDefaults, notiFlags, null);
+        }
 
-		public static void setCustomPushNotificationBuilder()
-		{
-			// 需要根据自己业务情况修改后再调用。
-			int builderId = 1;
-			string layoutName = "yourNotificationLayoutName";
+        public static void SetCustomPushNotificationBuilder()
+        {
+            // 需要根据自己业务情况修改后再调用。
+            int builderId = 1;
+            string layoutName = "yourNotificationLayoutName";
 
-			// 指定最顶层状态栏小图标
-			string statusBarDrawableName = "yourStatusBarDrawableName";
+            // 指定最顶层状态栏小图标
+            string statusBarDrawableName = "yourStatusBarDrawableName";
 
-			// 指定下拉状态栏时显示的通知图标
-			string layoutIconDrawableName = "yourLayoutIconDrawableName";
+            // 指定下拉状态栏时显示的通知图标
+            string layoutIconDrawableName = "yourLayoutIconDrawableName";
 
-			_plugin.Call("setCustomPushNotificationBuilder", builderId, layoutName, statusBarDrawableName,
-          layoutIconDrawableName);
-		}
+            _plugin.Call("setCustomPushNotificationBuilder", builderId, layoutName, statusBarDrawableName, layoutIconDrawableName);
+        }
 
-		public static void initCrashHandler()
-		{
-			_plugin.Call("initCrashHandler");
-		}
+        public static void InitCrashHandler()
+        {
+            _plugin.Call("initCrashHandler");
+        }
 
-		public static void stopCrashHandler()
-		{
-			_plugin.Call("stopCrashHandler");
-		}
+        public static void StopCrashHandler()
+        {
+            _plugin.Call("stopCrashHandler");
+        }
 
-		#endif
+        #endif
 
-      #if UNITY_IPHONE
+        #if UNITY_IPHONE
 
-      public static Action<int, HashSet<string>, string> _action;
+        public static Action<int, HashSet<string>, string> _action;
 
-      void Start()
-      {
-          _registerNetworkDidReceiveMessage();
-          _registerNetworkDidReceivePushNotification();
-      }
+        void Start()
+        {
+            _registerNetworkDidReceiveMessage();
+            _registerNetworkDidReceivePushNotification();
+        }
 
-      //---------------------------- tags / alias ----------------------------//
+        //---------------------------- tags / alias ----------------------------//
 
-      public static void SetTagsWithAlias(HashSet<String> tags, String alias, Action<int,HashSet<string>,string> callBack)
-      {
-          String[] arrayTags = new String[tags.Count];
-          tags.CopyTo(arrayTags);
-          Dictionary<String, object> data = new Dictionary<String, object>();
-          data["tags"] = arrayTags;
-          data["alias"] = alias;
+        public static void SetTagsWithAlias(HashSet<String> tags, String alias, Action<int,HashSet<string>,string> callBack)
+        {
+            String[] arrayTags = new String[tags.Count];
+            tags.CopyTo(arrayTags);
+            Dictionary<String, object> data = new Dictionary<String, object>();
+            data["tags"] = arrayTags;
+            data["alias"] = alias;
 
-          String s = LitJson.JsonMapper.ToJson(data);
-          _action = callBack;
-          _setTagsAlias(s);
-      }
+            String s = LitJson.JsonMapper.ToJson(data);
+            _action = callBack;
+            _setTagsAlias(s);
+        }
 
-      public static void SetTags(HashSet<String> tags)
-      {
-          String[] arrayTags = new String[tags.Count];
-          tags.CopyTo(arrayTags);
-          Dictionary<String, object> data = new Dictionary<String, object>();
-          data["tags"] = arrayTags;
-          String s = LitJson.JsonMapper.ToJson(data);
-          _setTags(s);
-      }
+        public static void SetTags(HashSet<String> tags)
+          {
+              String[] arrayTags = new String[tags.Count];
+              tags.CopyTo(arrayTags);
+              Dictionary<String, object> data = new Dictionary<String, object>();
+              data["tags"] = arrayTags;
+              String s = LitJson.JsonMapper.ToJson(data);
+              _setTags(s);
+          }
 
       public static void SetAlias(String alias)
       {
@@ -502,6 +512,6 @@ namespace JPush
       [DllImport("__Internal")]
       public static extern void _printLocalLog(String log);
 
-      #endif
+        #endif
     }
 }

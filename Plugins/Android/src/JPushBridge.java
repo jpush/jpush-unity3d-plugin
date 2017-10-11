@@ -1,19 +1,17 @@
 package cn.jiguang.unity.push;
 
 import android.content.Context;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.jpush.android.api.BasicPushNotificationBuilder;
@@ -40,17 +38,17 @@ public class JPushBridge {
         JPushInterface.setDebugMode(enable);
     }
 
-    public void initJPush(String gameObject) {
+    public void initPush(String gameObject) {
         JPushBridge.gameObject = gameObject;
         mContext = UnityPlayer.currentActivity.getApplicationContext();
         JPushInterface.init(mContext);
     }
 
-    public void stopJPush() {
+    public void stopPush() {
         JPushInterface.stopPush(mContext);
     }
 
-    public void resumeJPush() {
+    public void resumePush() {
         JPushInterface.resumePush(mContext);
     }
 
@@ -60,24 +58,6 @@ public class JPushBridge {
 
     public String getRegistrationId() {
         return JPushInterface.getRegistrationID(mContext);
-    }
-
-    public String filterValidTags(String tags) {
-        String[] sArray = tags.split(",");
-        final Set<String> tagSet = new LinkedHashSet<String>();
-        for (String tag : sArray) {
-            if (!isValidTagAndAlias(tag)) {
-                return "";
-            }
-            tagSet.add(tag);
-        }
-        Set<String> resultTagsSet = JPushInterface.filterValidTags(tagSet);
-        StringBuilder resultTags = new StringBuilder();
-        for (String tag : resultTagsSet) {
-            resultTags.append(tag).append(",");
-        }
-        String resultStr = String.valueOf(resultTags);
-        return resultStr.substring(0, resultStr.length() - 1);
     }
 
     public void initCrashHandler() {
@@ -93,18 +73,62 @@ public class JPushBridge {
             return;
         }
 
-        final Set<String> tagSet = new LinkedHashSet<String>();
+        Set<String> tagSet = new LinkedHashSet<String>();
 
         try {
-            JSONArray tagsJsonArr = new JSONArray(tagsJsonStr);
+            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
+            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
+
             for (int i = 0; i < tagsJsonArr.length(); i++) {
                 tagSet.add(tagsJsonArr.getString(i));
             }
-
-            JPushInterface.setTags(mContext, sequence, tagSet);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        JPushInterface.setTags(mContext, sequence, tagSet);
+    }
+
+    public void addTags(int sequence, String tagsJsonStr) {
+        if (TextUtils.isEmpty(tagsJsonStr)) {
+            return;
+        }
+
+        Set<String> tagSet = new LinkedHashSet<String>();
+
+        try {
+            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
+            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
+
+            for (int i = 0; i < tagsJsonArr.length(); i++) {
+                tagSet.add(tagsJsonArr.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JPushInterface.addTags(mContext, sequence, tagSet);
+    }
+
+    public void deleteTags(int sequence, String tagsJsonStr) {
+        if (TextUtils.isEmpty(tagsJsonStr)) {
+            return;
+        }
+
+        Set<String> tagSet = new LinkedHashSet<String>();
+
+        try {
+            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
+            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
+
+            for (int i = 0; i < tagsJsonArr.length(); i++) {
+                tagSet.add(tagsJsonArr.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JPushInterface.deleteTags(mContext, sequence, tagSet);
     }
 
     public void setAlias(int sequence, String alias) {
@@ -280,24 +304,6 @@ public class JPushBridge {
      */
     public void setLatestNotificationNumber(int num) {
         JPushInterface.setLatestNotificationNumber(mContext, num);
-    }
-
-    // 校验 tag, alias 只能是数字,英文字母和中文。
-    private boolean isValidTagAndAlias(String s) {
-        Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-]*$");
-        Matcher m = p.matcher(s);
-        return m.matches();
-    }
-
-    private void showToast(final String toast, final Context context) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }
-        }).start();
     }
 
     private boolean isNumeric(String str) {
