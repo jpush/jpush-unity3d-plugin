@@ -4,17 +4,13 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-#if UNITY_IPHONE
-using LitJson;
-#endif
-
 namespace JPush
 {
     public class JPushBinding : MonoBehaviour
     {
         #if UNITY_ANDROID
+
         private static AndroidJavaObject _plugin;
-        public static string _gameObject = "";
 
         private static int notificationDefaults = -1;
         private static int notificationFlags = 16;
@@ -34,94 +30,246 @@ namespace JPush
 
         static JPushBinding()
         {
-            using (AndroidJavaClass jpushClass = new AndroidJavaClass("cn.jiguang.unity.push"))
+            using (AndroidJavaClass jpushClass = new AndroidJavaClass("cn.jiguang.unity.push.JPushBridge"))
             {
                 _plugin = jpushClass.CallStatic<AndroidJavaObject>("getInstance");
             }
         }
 
-        public static void InitPush(string gameObject)
+        #endif
+
+        /// <summary>
+        /// 初始化 JPush。
+        /// </summary>
+        /// <param name="gameObject">游戏对象名。</param>
+        public static void Init(string gameObject)
         {
-            _gameObject = gameObject;
-            _plugin.Call("initPush", gameObject);
+            #if UNITY_ANDROID
+                _plugin.Call("initPush", gameObject);
+
+            #elif UNITY_IOS
+                _init(gameObject);
+
+            #endif
         }
 
-        public static void SetDebug(bool debug)
+        /// <summary>
+        /// 设置是否开启 Debug 模式。
+        /// <para>Debug 模式将会输出更多的日志信息，建议在发布时关闭。</para>
+        /// </summary>
+        /// <param name="enable">true: 开启；false: 关闭。</param>
+        public static void SetDebug(bool enable)
         {
-            _plugin.Call("setDebug", debug);
+            #if UNITY_ANDROID
+                _plugin.Call("setDebug", enable);
+
+            #elif UNITY_IOS
+                _setDebug(enable);
+
+            #endif
         }
 
-        // 停止 JPush 推送服务。
+        /// <summary>
+        /// 获取当前设备的 Registration Id。
+        /// </summary>
+        /// <returns>设备的 Registration Id。</returns>
+        public static string GetRegistrationId()
+        {
+            #if UNITY_ANDROID
+                return _plugin.Call<string>("getRegistrationId");
+
+            #elif UNITY_IOS
+                return _getRegistrationId();
+
+            #endif
+        }
+
+        /// <summary>
+        /// 为设备设置标签（tag）。
+        /// <para>注意：这个接口是覆盖逻辑，而不是增量逻辑。即新的调用会覆盖之前的设置。</para>
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        /// <param name="tags">
+        ///     标签列表。
+        ///     <para>每次调用至少设置一个 tag，覆盖之前的设置，不是新增。</para>
+        ///     <para>有效的标签组成：字母（区分大小写）、数字、下划线、汉字、特殊字符 @!#$&*+=.|。</para>
+        ///     <para>限制：每个 tag 命名长度限制为 40 字节，最多支持设置 1000 个 tag，且单次操作总长度不得超过 5000 字节（判断长度需采用 UTF-8 编码）。</para>
+        /// </param>
+        public static void SetTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonHelper.ToJson<string>(tags);
+
+            #if UNITY_ANDROID
+                _plugin.Call("setTags", sequence, tagsJsonStr);
+
+            #elif UNITY_IOS
+                _setTags(sequence, tagsJsonStr);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 为设备新增标签（tag）。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        /// <param name="tags">
+        ///     标签列表。
+        ///     <para>每次调用至少设置一个 tag，覆盖之前的设置，不是新增。</para>
+        ///     <para>有效的标签组成：字母（区分大小写）、数字、下划线、汉字、特殊字符 @!#$&*+=.|。</para>
+        ///     <para>限制：每个 tag 命名长度限制为 40 字节，最多支持设置 1000 个 tag，且单次操作总长度不得超过 5000 字节（判断长度需采用 UTF-8 编码）。</para>
+        /// </param>
+        public static void AddTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonUtility.ToJson(tags);
+
+            #if UNITY_ANDROID
+                _plugin.Call("addTags", sequence, tagsJsonStr);
+
+            #elif UNITY_IOS
+                _addTags(sequence, tagsJsonStr);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 删除标签（tag）。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        /// <param name="tags">
+        ///     标签列表。
+        ///     <para>每次调用至少设置一个 tag，覆盖之前的设置，不是新增。</para>
+        ///     <para>有效的标签组成：字母（区分大小写）、数字、下划线、汉字、特殊字符 @!#$&*+=.|。</para>
+        ///     <para>限制：每个 tag 命名长度限制为 40 字节，最多支持设置 1000 个 tag，且单次操作总长度不得超过 5000 字节（判断长度需采用 UTF-8 编码）。</para>
+        /// </param>
+        public static void DeleteTags(int sequence, List<string> tags)
+        {
+            string tagsJsonStr = JsonUtility.ToJson(tags);
+
+            #if UNITY_ANDROID
+                _plugin.Call("deleteTags", sequence, tagsJsonStr);
+
+            #elif UNITY_IOS
+                _deleteTags(sequence, tagsJsonStr);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 清空当前设备设置的标签（tag）。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        public static void CleanTags(int sequence)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("cleanTags", sequence);
+
+            #elif UNITY_IOS
+                _cleanTags(sequence);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 获取当前设备设置的所有标签（tag）。
+        /// <para>需要实现 OnJPushTagOperateResult 方法获得操作结果。</para>
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        public static void GetAllTags(int sequence)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("getAllTags", sequence);
+
+            #elif UNITY_IOS
+                _getAllTags(sequence);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 查询指定标签的绑定状态。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        /// <param name="tag">待查询的标签。</param>
+        public static void CheckTagBindState(int sequence, string tag)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("checkTagBindState", sequence, tag);
+
+            #elif UNITY_IOS
+                _checkTagBindState(sequence, tag);
+
+            #endif
+        }
+
+        /// <summary>
+        /// 设置别名。
+        /// <para>注意：这个接口是覆盖逻辑，而不是增量逻辑。即新的调用会覆盖之前的设置。</para>
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
+        /// <param name="alias">
+        ///     别名。
+        ///     <para>有效的别名组成：字母（区分大小写）、数字、下划线、汉字、特殊字符@!#$&*+=.|。</para>
+        ///     <para>限制：alias 命名长度限制为 40 字节（判断长度需采用 UTF-8 编码）。</para>
+        /// </param>
+        public static void SetAlias(int sequence, string alias)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("setAlias", sequence, alias);
+
+            #elif UNITY_IOS
+                _setAlias(sequence, alias);
+
+            #endif
+        }
+
+        public static void DeleteAlias(int sequence)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("deleteAlias", sequence);
+
+            #elif UNITY_IOS
+                _deleteAlias(sequence);
+
+            #endif
+        }
+
+        public static void GetAlias(int sequence)
+        {
+            #if UNITY_ANDROID
+                _plugin.Call("getAlias", sequence);
+
+            #elif UNITY_IOS
+                _getAlias(sequence);
+
+            #endif
+        }
+
+        #if UNITY_ANDROID
+
+        /// <summary>
+        /// 停止 JPush 推送服务。 
+        /// </summary>
         public static void StopPush()
         {
             _plugin.Call("stopPush");
         }
 
-        // 唤醒 JPush 推送服务，使用了 stopJPush 必须调用此方法才能恢复。
+        /// <summary>
+        /// 唤醒 JPush 推送服务，使用了 StopPush 必须调用此方法才能恢复。
+        /// </summary>
         public static void ResumePush()
         {
             _plugin.Call("resumePush");
         }
 
-        // 判断当前 JPush 服务是否停止。
+        // 
+        /// <summary>
+        /// 判断当前 JPush 服务是否停止。
+        /// </summary>
+        /// <returns>true: 已停止；false: 未停止。</returns>
         public static bool IsPushStopped()
         {
             return _plugin.Call<bool>("isPushStopped");
-        }
-
-        public static string GetRegistrationId()
-        {
-            return _plugin.Call<string>("getRegistrationId");
-        }
-
-        // 设置设备标签。
-        // tags 为多个 tag 组成的字符串(tag 为大小写字母,数字,下划线,中文;多个间用逗号分隔)。
-        public static void SetTags(int sequence, List<string> tags)
-        {
-            string tagsJsonStr = JsonUtility.ToJson(tags);
-            _plugin.Call("setTags", sequence, tagsJsonStr);
-        }
-
-        public static void AddTags(int sequence, List<string> tags)
-        {
-            string tagsJsonStr = JsonUtility.ToJson(tags);
-            _plugin.Call("addTags", sequence, tagsJsonStr);
-        }
-
-        public static void DeleteTags(int sequence, List<string> tags)
-        {
-            string tagsJsonStr = JsonUtility.ToJson(tags);
-            _plugin.Call("deleteTags", sequence, tagsJsonStr);
-        }
-
-        public static void CleanTags(int sequence)
-        {
-            _plugin.Call("cleanTags", sequence);
-        }
-
-        public static void GetAllTags(int sequence)
-        {
-            _plugin.Call("getAllTags", sequence);
-        }
-
-        public static void CheckTagBindState(int sequence, string tag)
-        {
-            _plugin.Call("checkTagBindState", sequence, tag);
-        }
-
-        public static void SetAlias(int sequence, string alias)
-        {
-            _plugin.Call("setAlias", sequence, alias);
-        }
-
-        public static void DeleteAlias(int sequence)
-        {
-            _plugin.Call("deleteAlias", sequence);
-        }
-
-        public static void GetAlias(int sequence)
-        {
-            _plugin.Call("getAlias", sequence);
         }
 
         /**
@@ -229,288 +377,119 @@ namespace JPush
 
         #endif
 
-        #if UNITY_IPHONE
-
-        public static Action<int, HashSet<string>, string> _action;
-
-        void Start()
+        #if UNITY_IOS
+        public static string FilterValidTags(List<string> tags)
         {
-            _registerNetworkDidReceiveMessage();
-            _registerNetworkDidReceivePushNotification();
+            string tagsJsonStr = JsonHelper.ToJson(tags);
+            return _filterValidTags(tagsJsonStr);
         }
 
-        //---------------------------- tags / alias ----------------------------//
-
-        public static void SetTagsWithAlias(HashSet<String> tags, String alias, Action<int,HashSet<string>,string> callBack)
+        public static void SetBadge(int badge)
         {
-            String[] arrayTags = new String[tags.Count];
-            tags.CopyTo(arrayTags);
-            Dictionary<String, object> data = new Dictionary<String, object>();
-            data["tags"] = arrayTags;
-            data["alias"] = alias;
-
-            String s = LitJson.JsonMapper.ToJson(data);
-            _action = callBack;
-            _setTagsAlias(s);
+            _setBadge(badge);
         }
 
-        public static void SetTags(HashSet<String> tags)
-          {
-              String[] arrayTags = new String[tags.Count];
-              tags.CopyTo(arrayTags);
-              Dictionary<String, object> data = new Dictionary<String, object>();
-              data["tags"] = arrayTags;
-              String s = LitJson.JsonMapper.ToJson(data);
-              _setTags(s);
-          }
-
-      public static void SetAlias(String alias)
-      {
-          JsonData jd = new JsonData();
-          jd["alias"] = alias;
-          String s = JsonMapper.ToJson(jd);
-          _setAlias(s);
-      }
-
-      void tagsWihtAliasCallBack(String jsonData)
-      {
-          _printLocalLog(jsonData);
-
-          JsonData jd = JsonMapper.ToObject(jsonData);
-          int responseCode = (int)jd["rescode"];
-          String alias = (String)jd["alias"];
-          JsonData jdItems = jd["tags"];
-          int itemCnt = jdItems.Count;
-          HashSet<string> set = new HashSet<string>();
-
-          for(int i = 0; i < itemCnt; i++)
-          {
-              set.Add((String)jdItems[i]);
-          }
-
-          if(_action!=null)
-          {
-              _action(responseCode, set, alias);
-          }
-      }
-
-      public static HashSet<String> FilterTags(HashSet<String> tags)
-      {
-          String[] arrayTags = new String[tags.Count];
-          tags.CopyTo(arrayTags);
-
-          Dictionary<String, object> data = new Dictionary<String, object>();
-          data ["tags"] = arrayTags;
-          String s = JsonMapper.ToJson(data);
-          String filterTags = _filterValidTags(s);
-
-          _printLocalLog(filterTags);
-
-          JsonData jd = JsonMapper.ToObject(filterTags);
-
-          JsonData jdItems = jd["tags"];
-          int itemCnt = jdItems.Count;
-          HashSet<string> set = new HashSet<string>();
-
-          for(int i=0;i<itemCnt;i++)
-          {
-              set.Add((String)jdItems[i]);
-          }
-
-          return set;
-      }
-
-      //---------------------------- registrationID ----------------------------//
-
-      public static String RegistrationID(){
-          return _registrationID();
-      }
-
-      //---------------------------- notification / message ----------------------------//
-
-      void networkDidReceiveMessageCallBack(String parameter){
-          JsonData jd = JsonMapper.ToObject(parameter);
-          String content = (String) jd["content"];
-          _printLocalLog("content:" + content);
-      }
-
-      void networkDidReceivePushNotificationCallBack(String parameter){
-          JsonData jd = JsonMapper.ToObject(parameter);
-      }
-
-      //---------------------------- badge ----------------------------//
-
-      public static void SetBadge(int badge){
-          _setBadge(badge);
-      }
-
-      public static void ResetBadge(){
-          _resetBadge();
-      }
-
-      public static void SetApplicationIconBadgeNumber(int badge){
-          _setApplicationIconBadgeNumber(badge);
-      }
-
-      public static int GetApplicationIconBadgeNumber(){
-          return _getApplicationIconBadgeNumber();
-      }
+        public static void ResetBadge()
+        {
+            _resetBadge();
+        }
 
-      //---------------------------- 页面统计 ----------------------------//
+        public static void SetApplicationIconBadgeNumber(int badge)
+        {
+            _setApplicationIconBadgeNumber(badge);
+        }
 
-      public static void StartLogPageView(String pageName){
-          JsonData jd = new JsonData();
-          jd["pageName"] = pageName;
-          String s = JsonMapper.ToJson(jd);
-          _startLogPageView(s);
-      }
+        public static int GetApplicationIconBadgeNumber()
+        {
+            return _getApplicationIconBadgeNumber();
+        }
 
-      public static void StopLogPageView(String pageName){
-          JsonData jd = new JsonData();
-          jd["pageName"] = pageName;
-          String s = JsonMapper.ToJson(jd);
-          _stopLogPageView(s);
-      }
+        public static void StartLogPageView(string pageName)
+        {
+            _startLogPageView(pageName);
+        }
 
-      public static void BeginLogPageView(String pageName, int duration){
-          JsonData jd = new JsonData();
-          jd["pageName"] = pageName;
-          String s = JsonMapper.ToJson(jd);
-          _beginLogPageView(s, duration);
-      }
+        public static void StopLogPageView(string pageName)
+        {
+            _stopLogPageView(pageName);
+        }
 
-      //---------------------------- 开关日志 ----------------------------//
+        public static void BeginLogPageView(string pageName, int duration)
+        {
+            _beginLogPageView(pageName, duration);
+        }
 
-      public static void SetDebugMode() {
-          _setDebugMode();
-      }
+        [DllImport("__Internal")]
+        private static extern void _init(string gameObject);
 
-      public static void SetLogOFF(){
-          _setLogOFF();
-      }
+        [DllImport("__Internal")]
+        private static extern void _setDebug(bool enable);
 
-      public static void CrashLogON(){
-          _crashLogON();
-      }
+        [DllImport("__Internal")]
+        private static extern string _getRegistrationId();
 
-      //---------------------------- 本地推送 ----------------------------//
+        [DllImport("__Internal")]
+        private static extern void _setTags(int sequence, string tags);
 
-      public static void SetLocalNotification(int delay, String alertBody, int badge, String idKey){
-          JsonData jd = new JsonData();
-          jd["alertBody"] = alertBody;
-          jd ["idKey"] = idKey;
-          String s = JsonMapper.ToJson(jd);
-          _setLocalNotification(delay, badge, s);
-      }
+        [DllImport("__Internal")]
+        private static extern void _addTags(int sequence, string tags);
 
-      public static void DeleteLocalNotificationWithIdentifierKey(String idKey){
-          JsonData jd = new JsonData();
-          jd["idKey"] = idKey;
-          String s = JsonMapper.ToJson(jd);
-          _deleteLocalNotificationWithIdentifierKey(s);
-      }
+        [DllImport("__Internal")]
+        private static extern void _deleteTags(int sequence, string tags);
 
-      public static void ClearAllLocalNotifications(){
-          _clearAllLocalNotifications();
-      }
+        [DllImport("__Internal")]
+        private static extern void _clearTags(int sequence);
 
-      //---------------------------- 地理位置上报 ----------------------------//
+        [DllImport("__Internal")]
+        private static extern void _getAllTags(int sequence);
 
-      public static void SetLocation(String latitude, String longitude){
-          JsonData jd = new JsonData();
-          jd["latitude"] = latitude;
-          jd["longitude"] = longitude;
-          String s = JsonMapper.ToJson(jd);
-          _setLocation(s);
-      }
+        [DllImport("__Internal")]
+        private static extern void _checkTagBindState(int sequence, string tag);
 
+        [DllImport("__Internal")]
+        private static extern string _filterValidTags(string tags);
 
+        [DllImport("__Internal")]
+        private static extern void _setAlias(int sequence, string alias);
 
-      //---------------------------- DllImport ----------------------------//
+        [DllImport("__Internal")]
+        private static extern void _deleteAlias(int sequence);
 
-      //--- tags / alias ---//
+        [DllImport("__Internal")]
+        private static extern void _getAlias(int sequence);
 
-      [DllImport("__Internal")]
-      public static extern void _setTagsAlias(String tagsWithAlias);
+        [DllImport("__Internal")]
+        private static extern void _setBadge(int badge);
 
-      [DllImport("__Internal")]
-      public static extern void _setTags(String tags);
+        [DllImport("__Internal")]
+        private static extern void _resetBadge();
 
-      [DllImport("__Internal")]
-      public static extern void _setAlias(String alias);
+        [DllImport("__Internal")]
+        private static extern void _setApplicationIconBadgeNumber(int badge);
 
-      [DllImport("__Internal")]
-      public static extern String _filterValidTags(String tags);
+        [DllImport("__Internal")]
+        private static extern int _getApplicationIconBadgeNumber();
 
-      //--- rid ---//
+        [DllImport("__Internal")]
+        private static extern void _startLogPageView(string pageName);
 
-      [DllImport("__Internal")]
-      public static extern String _registrationID();
+        [DllImport("__Internal")]
+        private static extern void _stopLogPageView(string pageName);
 
-      //--- notification / message ---//
+        [DllImport("__Internal")]
+        private static extern void _beginLogPageView(string pageName, int duration);
 
-      [DllImport("__Internal")]
-      public static extern void _registerNetworkDidReceiveMessage();
+        [DllImport("__Internal")]
+        private static extern void _addNotification();
 
-      [DllImport("__Internal")]
-      public static extern void _registerNetworkDidReceivePushNotification();
+        [DllImport("__Internal")]
+        private static extern void _removeNotification();
 
-      //--- badge ---//
+        [DllImport("__Internal")]
+        private static extern void _findNotification();
 
-      [DllImport("__Internal")]
-      public static extern void _setBadge(int badge);
-
-      [DllImport("__Internal")]
-      public static extern void _resetBadge();
-
-      [DllImport("__Internal")]
-      public static extern void _setApplicationIconBadgeNumber(int badge);
-
-      [DllImport("__Internal")]
-      public static extern int _getApplicationIconBadgeNumber();
-
-      //--- 页面统计 ---//
-
-      [DllImport("__Internal")]
-      public static extern void _startLogPageView(String pageName);
-
-      [DllImport("__Internal")]
-      public static extern void _stopLogPageView(String pageName);
-
-      [DllImport("__Internal")]
-      public static extern void _beginLogPageView(String pageName, int duration);
-
-      //--- 开关日志 ---//
-
-      [DllImport("__Internal")]
-      public static extern void _setDebugMode();
-
-      [DllImport("__Internal")]
-      public static extern void _setLogOFF();
-
-      [DllImport("__Internal")]
-      public static extern void _crashLogON();
-
-      //--- 本地推送 ---//
-
-      [DllImport("__Internal")]
-      public static extern void _setLocalNotification(int delay, int badge, String alertBodyAdnIdKey);
-
-      [DllImport("__Internal")]
-      public static extern void _deleteLocalNotificationWithIdentifierKey(String idKey);
-
-      [DllImport("__Internal")]
-      public static extern void _clearAllLocalNotifications();
-
-      //--- 地理位置上报 ---//
-
-      [DllImport("__Internal")]
-      public static extern void _setLocation(String latitudeAndlongitude);
-
-      //--- log ---//
-
-      [DllImport("__Internal")]
-      public static extern void _printLocalLog(String log);
+        [DllImport("__Internal")]
+        private static extern void _setLocation(string latitudeAndlongitude);
 
         #endif
     }
