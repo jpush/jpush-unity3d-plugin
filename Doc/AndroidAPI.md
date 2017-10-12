@@ -18,62 +18,60 @@
 - [本地通知](#本地通知)
 
 ## 初始化推送服务
-### API - initJPush
+
+### API - InitJPush
 
 只有在初始化了之后，才能调用下面的一系列 API。
 
-#### 接口定义
-
-	public static void initJPush(string gameObject, string func)
-
 #### 代码示例：
 
-    void onStart()
-    {
-		gameObject.name = "Main Camera";  // 示例
-        JPushBinding.initJPush(gameObject.name, "");
-    }
-
+```csharp
+void onStart()
+{
+    gameObject.name = "Main Camera";
+    JPushBinding.InitJPush(gameObject.name);
+}
+```
 
 ## 停止推送服务
-### API - stopJPush
+
+### API - StopJPush
+
 调用了该 API 后，JPush 推送服务完全被停止。具体表现为：
 
 - JPush Service 不在后台运行；
 - 收不到推送消息；
-- 极光推送所有的其他 API 调用都无效,不能通过 initJPush 恢复，需要调用 resumePush 恢复。
-
-#### 接口定义
-
-	public static void stopJPush()
+- 极光推送所有的其他 API 调用都无效,不能通过 InitJPush 恢复，需要调用 ResumePush 恢复。
 
 #### 代码示例
 
-    JPushBinding.stopJPush();
+```csharp
+JPushBinding.StopJPush();
+```
 
 ## 恢复推送服务
-### API - resumeJPush
+
+### API - ResumePush
+
 调用了此 API 后，极光推送完全恢复正常工作。
 
-#### 接口定义
-
-	public static void resumeJPush()
-
 #### 代码示例
 
-    JPushBinding.resumeJPush();
+```csharp
+JPushBinding.ResumeJPush();
+```
 
 ## 检查推送服务是否停止
+
 ### API - isPushStopped
+
 调用此 API 来判断当前 Push Service 是否停止。
-
-#### 接口定义
-
-	public static bool isPushStopped()
 
 #### 代码示例
 
-	bool isStopped = JPushBinding.isPushStopped();
+```csharp
+bool isStopped = JPushBinding.IsPushStopped();
+```
 
 #### 返回值说明
 - true: 调用了 stopJPush() 之后，返回 true；
