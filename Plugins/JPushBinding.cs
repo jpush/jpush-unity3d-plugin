@@ -262,7 +262,6 @@ namespace JPush
             _plugin.Call("resumePush");
         }
 
-        // 
         /// <summary>
         /// 判断当前 JPush 服务是否停止。
         /// </summary>
@@ -272,24 +271,24 @@ namespace JPush
             return _plugin.Call<bool>("isPushStopped");
         }
 
-        /**
-		 * 设置允许推送时间。
-		 * 参数 days: 为 0-6 之间由","连接而成的字符串
-		 * 参数 startHour: 为 0-23 的字符串
-		 * 参数 endHour: 为 0-23 的字符串
-		 */
+        /// <summary>
+        /// 设置允许推送时间。
+        /// </summary>
+        /// <parm name="days">为 0~6 之间由","连接而成的字符串。</parm>
+        /// <parm name="startHour">0~23</parm>
+        /// <parm name="endHour">0~23</parm>
         public static void SetPushTime(string days, int startHour, int endHour)
         {
             _plugin.Call("setPushTime", days, startHour, endHour);
         }
 
-        /**
-		* 设置通知静默时间。
-		* @param: startHour: 静默时段开始时间 - 小时（范围：0 - 23）
-		* @param: startMinute: 静默时段开始时间 - 分钟（范围：0 - 59）
-		* @param: endHour: 静默时段结束时间 - 小时（范围：0 - 23）
-		* @param: endMinute: 静默时段结束时间 -  分钟（范围：0 - 59）
-		*/
+        /// <summary>
+        /// 设置通知静默时间。
+        /// </summary>
+        /// <parm name="startHour">0~23</parm>
+        /// <parm name="startMinute">0~59</parm>
+        /// <parm name="endHour">0~23</parm>
+        /// <parm name="endMinute">0~23</parm>
         public static void SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)
         {
             _plugin.Call("setSilenceTime", startHour, startMinute, endHour, endMinute);
@@ -333,9 +332,9 @@ namespace JPush
             _plugin.Call("clearNotificationById", notificationId);
         }
 
-        /**
-		*	 用于 Android 6.0 及以上系统申请权限。
-		*/
+        /// <summary>
+        /// 用于 Android 6.0 及以上系统申请权限。
+        /// </summary>
         public static void RequestPermission()
         {
             _plugin.Call("requestPermission");
@@ -378,6 +377,7 @@ namespace JPush
         #endif
 
         #if UNITY_IOS
+
         public static void SetBadge(int badge)
         {
             _setBadge(badge);
@@ -480,5 +480,5 @@ namespace JPush
         private static extern void _findNotification();
 
         #endif
-    }
+	}
 }
