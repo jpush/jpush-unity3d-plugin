@@ -7,16 +7,13 @@ using System;
 
 public class PluginsDemo : MonoBehaviour
 {
-    #if UNITY_ANDROID
     string str_unity = "";
-    bool B_MESSAGE = false;
-    static string str_message = "";
 
     // Use this for initialization
     void Start()
     {
         gameObject.name = "Main Camera";
-        JPushBinding.InitPush(gameObject.name);
+        JPushBinding.Init(gameObject.name);
         JPushBinding.SetDebug(true);
     }
 
@@ -34,6 +31,7 @@ public class PluginsDemo : MonoBehaviour
         str_unity = GUILayout.TextField(str_unity, GUILayout.Width(Screen.width - 80),
         GUILayout.Height(200));
 
+        #if UNITY_ANDROID
         if (GUILayout.Button("stopPush", GUILayout.Height(80)))
         {
             JPushBinding.StopPush();
@@ -43,6 +41,7 @@ public class PluginsDemo : MonoBehaviour
         {
             JPushBinding.ResumePush();
         }
+        #endif
 
         if (GUILayout.Button("setTags", GUILayout.Height(80)))
         {
@@ -54,20 +53,17 @@ public class PluginsDemo : MonoBehaviour
             JPushBinding.SetAlias(2, str_unity);
         }
 
+        #if UNITY_ANDROID
         if (GUILayout.Button("addLocalNotification", GUILayout.Height(80)))
         {
             JPushBinding.AddLocalNotification(0, "content", "title", 1, 0, null);
         }
+        #endif
 
         if (GUILayout.Button("getRegistrationId", GUILayout.Height(80)))
         {
             string registrationId = JPushBinding.GetRegistrationId();
             Debug.Log("------>registrationId: " + registrationId);
-        }
-
-        if (GUILayout.Button("showMessage", GUILayout.Height(80)))
-        {
-            str_unity = str_message;
         }
     }
 
@@ -85,9 +81,7 @@ public class PluginsDemo : MonoBehaviour
     void onReceiveMessage(string jsonStr)
     {
         Debug.Log("recv----message-----" + jsonStr);
-        B_MESSAGE = true;
-        str_message = jsonStr;
-        str_unity = "有新消息";
+        str_unity = jsonStr;
     }
 
     /**
@@ -132,80 +126,4 @@ public class PluginsDemo : MonoBehaviour
         Debug.Log("JPush alias operate result: " + result);
         str_unity = result;
     }
-
-    #endif
-
-    #if UNITY_IPHONE
-
-    public string rid = "RegistrationID:";
-    public string tag1 = "tag1";
-    public string tag2 = "tag2";
-    public string alias = "alias";
-    public string tagAliasResult = "";
-    public string notification = "";
-    public string message = "";
-
-    void Start ()
-    {
-
-    }
-
-    void OnGUI ()
-    {
-        GUIStyle textFieldStyle = GUI.skin.textField;
-        textFieldStyle.fontSize = 40;
-        textFieldStyle.fixedWidth = 600;
-        textFieldStyle.fixedHeight = 150;
-        textFieldStyle.alignment = TextAnchor.MiddleCenter;
-
-        GUIStyle buttonStyle = GUI.skin.button;
-        buttonStyle.fontSize = 40;
-        buttonStyle.fixedWidth = 600;
-        buttonStyle.fixedHeight = 150;
-
-        GUIStyle labelStyle = new GUIStyle (textFieldStyle);
-        labelStyle.fontSize = 28;
-        labelStyle.fixedHeight = 100;
-        labelStyle.alignment = TextAnchor.MiddleLeft;
-
-        rid = GUILayout.TextField (rid + "\n" + JPush.JPushBinding.RegistrationID(), labelStyle);
-        tag1 = GUILayout.TextField(tag1);
-        tag2 = GUILayout.TextField(tag2);
-        alias = GUILayout.TextField(alias);
-
-        if (GUILayout.Button ("set tag/lias"))
-        {
-            JPush.JPushBinding._printLocalLog("set tag/alias");
-            HashSet<String> tags = new HashSet<String>();
-            tags.Add(tag1);
-            tags.Add(tag2);
-            JPush.JPushBinding.SetTagsWithAlias(tags,alias,(m,n,p)=>{
-                tagAliasResult = "iResCode:" + m.ToString();
-                tagAliasResult = tagAliasResult + "\ntags:" + n;
-                tagAliasResult = tagAliasResult + "\nalias:" + p;
-                JPush.JPushBinding._printLocalLog("callback");
-            });
-
-        }
-
-        if(tagAliasResult != ""){
-            GUILayout.Label(tagAliasResult, labelStyle);
-        }
-
-        if(notification != ""){
-            GUILayout.Label(notification, labelStyle);
-        }
-        
-        if (message != "") {
-            GUILayout.Label(notification, labelStyle);
-        }	
-        
-    }
-    
-    void OnUpdate()
-    {
-        
-    }
-
-    #endif
 }
