@@ -378,12 +378,6 @@ namespace JPush
         #endif
 
         #if UNITY_IOS
-        public static string FilterValidTags(List<string> tags)
-        {
-            string tagsJsonStr = JsonHelper.ToJson(tags);
-            return _filterValidTags(tagsJsonStr);
-        }
-
         public static void SetBadge(int badge)
         {
             _setBadge(badge);
@@ -438,16 +432,13 @@ namespace JPush
         private static extern void _deleteTags(int sequence, string tags);
 
         [DllImport("__Internal")]
-        private static extern void _clearTags(int sequence);
+        private static extern void _cleanTags(int sequence);
 
         [DllImport("__Internal")]
         private static extern void _getAllTags(int sequence);
 
         [DllImport("__Internal")]
         private static extern void _checkTagBindState(int sequence, string tag);
-
-        [DllImport("__Internal")]
-        private static extern string _filterValidTags(string tags);
 
         [DllImport("__Internal")]
         private static extern void _setAlias(int sequence, string alias);
@@ -487,9 +478,6 @@ namespace JPush
 
         [DllImport("__Internal")]
         private static extern void _findNotification();
-
-        [DllImport("__Internal")]
-        private static extern void _setLocation(string latitudeAndlongitude);
 
         #endif
     }
