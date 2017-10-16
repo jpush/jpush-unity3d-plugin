@@ -5,6 +5,8 @@
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
 
+目前 v3.0.7 有一些问题，建议先使用 v3.0.6 版本。
+
 ## 集成
 运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage
 
