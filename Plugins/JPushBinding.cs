@@ -4,6 +4,10 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
+#if UNITY_IPHONE
+using LitJson;
+#endif
+
 namespace JPush
 {
     public class JPushBinding : MonoBehaviour
@@ -413,6 +417,25 @@ namespace JPush
             _beginLogPageView(pageName, duration);
         }
 
+        public static void SetLocalNotification(int delay, string alertBody, int badge, string idKey) {
+            JsonData jd = new JsonData();
+            jd["alertBody"] = alertBody;
+            jd["idKey"] = idKey;
+            string jsonStr = JsonMapper.ToJson(jd);
+            _setLocalNotification(delay, badge, jsonStr);
+        }
+
+        public static void DeleteLocalNotificationWithIdentifierKey(string idKey) {
+            JsonData jd = new JsonData();
+            jd["idKey"] = idKey;
+            string jsonStr = JsonMapper.ToJson(jd);
+            _deleteLocalNotificationWithIdentifierKey(jsonStr);
+        }
+
+        public static void ClearAllLocalNotifications() {
+            _clearAllLocalNotifications();
+        }
+
         [DllImport("__Internal")]
         private static extern void _init(string gameObject);
 
@@ -471,13 +494,13 @@ namespace JPush
         private static extern void _beginLogPageView(string pageName, int duration);
 
         [DllImport("__Internal")]
-        private static extern void _addNotification();
+        public static extern void _setLocalNotification(int delay, int badge, string alertBodyAndIdKey);
 
         [DllImport("__Internal")]
-        private static extern void _removeNotification();
+        public static extern void _deleteLocalNotificationWithIdentifierKey(string idKey);
 
         [DllImport("__Internal")]
-        private static extern void _findNotification();
+        public static extern void _clearAllLocalNotifications();
 
         #endif
 	}

@@ -282,60 +282,41 @@ extern "C" {
     }
     
     // 页面统计 - end
-    
-    // 本地通知 - start
-    
-    void _addNotification(char * notificationJsonStr) {
-        NSString *nsNotification = CreateNSString(notificationJsonStr);
-        NSData *data =[nsNotification dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *dict = APNativeJSONObject(data);
-        
-        NSDictionary *notiContent = dict[@"content"];
-        NSDictionary *notiTrigger = dict[@"trigger"];
-        
-        JPushNotificationContent *content = [[JPushNotificationContent alloc] init];
-        JPushNotificationTrigger *trigger = [[JPushNotificationTrigger alloc] init];
-        
-        // 设置通知内容 - start
-        if (notiContent[@"title"]) {
-            content.title = notiContent[@"title"];
-        }
-        
-        if (notiContent[@"subtitle"]) {
-            content.subtitle = notiContent[@"subtitle"];
-        }
-        
-        if (notiContent[@"body"]) {
-            content.body = notiContent[@"body"];
-        }
-        
-        if (notiContent[@"badge"]) {
-            content.badge = notiContent[@"badge"];
-        }
-        
-        if (notiContent[@"sound"]) {
-            content.sound = notiContent[@"sound"];
-        }
-        
-        if (notiContent[@"categoryIdentifier"]) {
-            content.categoryIdentifier = notiContent[@"categoryIdentifier"];
-        }
-        // 设置通知内容 - end
-        
-        // 设置触发时间 - start
-        if (notiTrigger[@"timeInterval"]) {
-            // TODO
-//            trigger.timeInterval = [notiTrigger ];
-        }
-        
-        if (notiTrigger[@"repeat"]) {
-//            trigger.repeat =
-        }
-        // 设置触发时间 - end
-    }
-    
-    // 本地通知 - end
 
+    // 本地通知旧接口 - start
+
+       void _setLocalNotification(int delay, int badge, char *alertBodyAndIdKey){
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:_integerValue(delay)];
+
+        NSString *nsalertBodyAndIdKey = CreateNSString(alertBodyAndIdKey);
+        if (![nsalertBodyAndIdKey length]) {
+            return ;
+        }
+        NSData       *data =[nsalertBodyAndIdKey dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendAlertBody = dict[@"alertBody"];
+        NSString     *sendIdkey = dict[@"idKey"];
+
+        [JPUSHService setLocalNotification:date alertBody:sendAlertBody badge:badge alertAction:nil identifierKey:sendIdkey userInfo:nil soundName:nil];
+    }
+
+    void _deleteLocalNotificationWithIdentifierKey(char *idKey){
+        NSString *nsIdKey = CreateNSString(idKey);
+        if (![nsIdKey length]) {
+            return ;
+        }
+        NSData       *data =[nsIdKey dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSString     *sendIdkey = dict[@"idKey"];
+
+        [JPUSHService deleteLocalNotificationWithIdentifierKey:sendIdkey];
+    }
+
+    void _clearAllLocalNotifications(){
+        [JPUSHService clearAllLocalNotifications];
+    }
+
+    // 本地通知旧接口 - end
     
 #if defined(__cplusplus)
 }
@@ -363,7 +344,7 @@ static JPushUnityInstnce * _sharedService = nil;
     if (notification.name == kJPFNetworkDidReceiveMessageNotification && notification.userInfo){
         NSData *data = APNativeJSONData(notification.userInfo);
         NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        UnitySendMessage(gameObject_, "networkDidReceiveMessageCallBack",jsonStr.UTF8String);
+        UnitySendMessage(gameObject_, "OnReceiveMessage", jsonStr.UTF8String);
     }
 }
 
@@ -371,7 +352,7 @@ static JPushUnityInstnce * _sharedService = nil;
     if ([notification.name isEqual:@"JPushPluginReceiveNotification"] && notification.object){
         NSData *data = APNativeJSONData(notification.object);
         NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        UnitySendMessage(gameObject_, "networkDidReceivePushNotificationCallBack",jsonStr.UTF8String);
+        UnitySendMessage(gameObject_, "OnReceiveNotification", jsonStr.UTF8String);
     }
 }
 @end
