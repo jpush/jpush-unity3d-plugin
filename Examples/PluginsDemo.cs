@@ -78,7 +78,7 @@ public class PluginsDemo : MonoBehaviour
      }
      */
     // 开发者自己处理由 JPush 推送下来的消息。
-    void onReceiveMessage(string jsonStr)
+    void OnReceiveMessage(string jsonStr)
     {
         Debug.Log("recv----message-----" + jsonStr);
         str_unity = jsonStr;
@@ -95,13 +95,13 @@ public class PluginsDemo : MonoBehaviour
      * }
      */
     // 获取的是 json 格式数据，开发者根据自己的需要进行处理。
-    void onReceiveNotification(string jsonStr)
+    void OnReceiveNotification(string jsonStr)
     {
         Debug.Log("recv---notification---" + jsonStr);
     }
 
     //开发者自己处理点击通知栏中的通知
-    void openNotification(string jsonStr)
+    void OnOpenNotification(string jsonStr)
     {
         Debug.Log("recv---openNotification---" + jsonStr);
         str_unity = jsonStr;
