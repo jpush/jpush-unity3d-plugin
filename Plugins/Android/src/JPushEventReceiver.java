@@ -39,7 +39,7 @@ public class JPushEventReceiver extends JPushMessageReceiver {
 
             try {
                 if (tagsJsonArr.length() != 0) {
-                    resultJson.put("tags", tagsJsonArr);
+                    resultJson.put("tag", tagsJsonArr);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
