@@ -131,6 +131,10 @@ public class JPushBridge {
         JPushInterface.deleteTags(mContext, sequence, tagSet);
     }
 
+    public void cleanTags(int sequence) {
+      JPushInterface.cleanTags(mContext, sequence);
+    }
+
     public void setAlias(int sequence, String alias) {
         JPushInterface.setAlias(mContext, sequence, alias);
     }
