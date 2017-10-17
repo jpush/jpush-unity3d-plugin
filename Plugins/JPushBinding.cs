@@ -432,9 +432,9 @@ namespace JPush
             _beginLogPageView(pageName, duration);
         }
 
-        public static void SetLocalNotification(int delay, string alertBody, int badge, string idKey) {
+        public static void SetLocalNotification(int delay, string content, int badge, string idKey) {
             JsonData jd = new JsonData();
-            jd["alertBody"] = alertBody;
+            jd["alertBody"] = content;
             jd["idKey"] = idKey;
             string jsonStr = JsonMapper.ToJson(jd);
             _setLocalNotification(delay, badge, jsonStr);
