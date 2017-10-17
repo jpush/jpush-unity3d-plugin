@@ -49,10 +49,10 @@ namespace JPush
         public static void Init(string gameObject)
         {
             #if UNITY_ANDROID
-                _plugin.Call("initPush", gameObject);
+            _plugin.Call("initPush", gameObject);
 
             #elif UNITY_IOS
-                _init(gameObject);
+            _init(gameObject);
 
             #endif
         }
@@ -65,10 +65,10 @@ namespace JPush
         public static void SetDebug(bool enable)
         {
             #if UNITY_ANDROID
-                _plugin.Call("setDebug", enable);
+            _plugin.Call("setDebug", enable);
 
             #elif UNITY_IOS
-                _setDebug(enable);
+            _setDebug(enable);
 
             #endif
         }
@@ -80,10 +80,13 @@ namespace JPush
         public static string GetRegistrationId()
         {
             #if UNITY_ANDROID
-                return _plugin.Call<string>("getRegistrationId");
+            return _plugin.Call<string>("getRegistrationId");
 
             #elif UNITY_IOS
-                return _getRegistrationId();
+            return _getRegistrationId();
+
+            #else
+            return "";
 
             #endif
         }
@@ -104,10 +107,10 @@ namespace JPush
             string tagsJsonStr = JsonHelper.ToJson<string>(tags);
 
             #if UNITY_ANDROID
-                _plugin.Call("setTags", sequence, tagsJsonStr);
+            _plugin.Call("setTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-                _setTags(sequence, tagsJsonStr);
+            _setTags(sequence, tagsJsonStr);
 
             #endif
         }
@@ -127,10 +130,10 @@ namespace JPush
             string tagsJsonStr = JsonUtility.ToJson(tags);
 
             #if UNITY_ANDROID
-                _plugin.Call("addTags", sequence, tagsJsonStr);
+            _plugin.Call("addTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-                _addTags(sequence, tagsJsonStr);
+            _addTags(sequence, tagsJsonStr);
 
             #endif
         }
@@ -150,10 +153,10 @@ namespace JPush
             string tagsJsonStr = JsonUtility.ToJson(tags);
 
             #if UNITY_ANDROID
-                _plugin.Call("deleteTags", sequence, tagsJsonStr);
+            _plugin.Call("deleteTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-                _deleteTags(sequence, tagsJsonStr);
+            _deleteTags(sequence, tagsJsonStr);
 
             #endif
         }
@@ -165,10 +168,10 @@ namespace JPush
         public static void CleanTags(int sequence)
         {
             #if UNITY_ANDROID
-                _plugin.Call("cleanTags", sequence);
+            _plugin.Call("cleanTags", sequence);
 
             #elif UNITY_IOS
-                _cleanTags(sequence);
+            _cleanTags(sequence);
 
             #endif
         }
@@ -181,10 +184,10 @@ namespace JPush
         public static void GetAllTags(int sequence)
         {
             #if UNITY_ANDROID
-                _plugin.Call("getAllTags", sequence);
+            _plugin.Call("getAllTags", sequence);
 
             #elif UNITY_IOS
-                _getAllTags(sequence);
+            _getAllTags(sequence);
 
             #endif
         }
@@ -197,10 +200,10 @@ namespace JPush
         public static void CheckTagBindState(int sequence, string tag)
         {
             #if UNITY_ANDROID
-                _plugin.Call("checkTagBindState", sequence, tag);
+            _plugin.Call("checkTagBindState", sequence, tag);
 
             #elif UNITY_IOS
-                _checkTagBindState(sequence, tag);
+            _checkTagBindState(sequence, tag);
 
             #endif
         }
@@ -218,32 +221,40 @@ namespace JPush
         public static void SetAlias(int sequence, string alias)
         {
             #if UNITY_ANDROID
-                _plugin.Call("setAlias", sequence, alias);
+            _plugin.Call("setAlias", sequence, alias);
 
             #elif UNITY_IOS
-                _setAlias(sequence, alias);
+            _setAlias(sequence, alias);
 
             #endif
         }
 
+        /// <summary>
+        /// 删除别名。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
         public static void DeleteAlias(int sequence)
         {
             #if UNITY_ANDROID
-                _plugin.Call("deleteAlias", sequence);
+            _plugin.Call("deleteAlias", sequence);
 
             #elif UNITY_IOS
-                _deleteAlias(sequence);
+            _deleteAlias(sequence);
 
             #endif
         }
 
+        /// <summary>
+        /// 获取当前设备设置的别名。
+        /// </summary>
+        /// <param name="sequence">用户自定义的操作序列号。同操作结果一起返回，用来标识一次操作的唯一性。</param>
         public static void GetAlias(int sequence)
         {
             #if UNITY_ANDROID
-                _plugin.Call("getAlias", sequence);
+            _plugin.Call("getAlias", sequence);
 
             #elif UNITY_IOS
-                _getAlias(sequence);
+            _getAlias(sequence);
 
             #endif
         }
@@ -298,6 +309,10 @@ namespace JPush
             _plugin.Call("setSilenceTime", startHour, startMinute, endHour, endMinute);
         }
 
+        /// <summary>
+        /// 设置保留最近通知条数。
+        /// </summary>
+        /// <param name="num">要保留的最近通知条数。</param>
         public static void SetLatestNotificationNumber(int num)
         {
             _plugin.Call("setLatestNotificationNumber", num);
@@ -503,5 +518,5 @@ namespace JPush
         public static extern void _clearAllLocalNotifications();
 
         #endif
-	}
+    }
 }
