@@ -20,7 +20,7 @@
 
 - enable:
   - true: 开启 debug 模式，将会输出更多的 JPush 相关日志。
-  - false: 关闭 debug 模式，建议在发布时关闭。
+  - false: 关闭 debug 模式，建议在发布时关闭。
 
 ### GetRegistrationId()
 
@@ -86,7 +86,7 @@
 #### 参数说明
 
 - sequence: 作为一次操作的唯一标识，会在 `OnJPushTagOperateResult` 回调中一并返回。
-- tag: 待查询的标签。
+- tag: 待查询的标签。
 
 ### SetAlias(int sequence, string alias)
 
@@ -100,6 +100,22 @@
 - alias: 要设置的别名。
   - 有效的别名组成：字母（区分大小写）、数字、下划线、汉字、特殊字符（@!#$&*+=.|）。
   - 限制：alias 命名长度限制为 40 字节（判断长度需采用 UTF-8 编码）。
+
+### DeleteAlias(int sequence)
+
+删除当前设备设置的别名。
+
+#### 参数说明
+
+- sequence: 作为一次操作的唯一标识，会在 `OnJPushTagOperateResult` 回调中一并返回。
+
+### GetAlias(int sequence)
+
+获取当前设备设置的别名。
+
+#### 参数说明
+
+- sequence: 作为一次操作的唯一标识，会在 `OnJPushTagOperateResult` 回调中一并返回。
 
 ## 事件监听
 
@@ -129,7 +145,7 @@ Android 的通知内容格式为：
 {
   "title": "通知标题",
   "content": "通知内容",
-  "extras": {   // 自定义键值对
+  "extras": {   // 自定义键值对
     "key1": "value1",
     "key2": "value2"
 }
@@ -154,7 +170,7 @@ Android 的通知内容格式为：
 ```json
 {
   "message": "自定义消息内容",
-  "extras": {   // 自定义键值对
+  "extras": {   // 自定义键值对
     "key1": "value1",
     "key2": "value2"
   }
@@ -171,8 +187,8 @@ JPush 的标签相关操作回调。
 
 ```json
 {
-  "sequence": 1, // 调用标签或别名方法时传入的。
-  "code": 0,     // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
+  "sequence": 1,            // 调用标签或别名方法时传入的。
+  "code": 0,                // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
   "tag": ["tag1", "tag2"],  // 传入或查询得到的标签，当没有标签时，没有该字段。
   "isBind": true            // 是否已绑定。只有调用 CheckTagBindState 方法时才有该字段。
 }

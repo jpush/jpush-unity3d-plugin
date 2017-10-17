@@ -1,6 +1,6 @@
 # JPush Unity Plugin
 
-[![release](https://img.shields.io/badge/release-3.0.7-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![release](https://img.shields.io/badge/release-3.1.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-green.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
@@ -20,7 +20,6 @@
 
 1. 生成 iOS 工程，并打开该工程。
 2. 添加必要的框架：
-
   - CoreFoundation.framework
   - CFNetwork.framework
   - SystemConfiguration.framework
@@ -134,13 +133,13 @@
 
 在 Plugins\Android\src 目录下是一些 Java 文件，可以将其引入到 Android 工程中对其进行扩展，重新生成 Jar 包替换掉工程中 Assets\Plugins\Android 目录下的 JPush_Bridge.jar 文件。
 
-[Android SDK API](/Doc/AndroidAPI.md)
+[Android API](/Doc/AndroidAPI.md)
 
 ### iOS
 
 iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面的即为可调用的 iOS API。
 
-[iOS SDK API](https://docs.jiguang.cn/jpush/client/iOS/ios_api/)
+[iOS API](/Doc/iOSAPI.md)
 
 ## 更多
 
