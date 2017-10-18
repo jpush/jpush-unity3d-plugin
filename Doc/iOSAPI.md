@@ -81,9 +81,25 @@ JPushBinding.StopLogPageView("login"); // 记录退出 login 页面。
 
 ## 本地通知
 
+###SendLocalNotification(JsonData localParams)
+
+注册本地通知（推荐使用这个方法）。
+
+#### 参数说明
+
+- localParams 需包含如下字段
+  - **id** : Number // 通知的 id, 可用于取消通知
+  - **title** : String // 通知标题
+  - **content** : String // 通知内容
+  - **extra** : Object // extra 字段
+  - **fireTime** : Number // 通知触发时间的时间戳（秒）
+  - **badge** : Number // 本地推送触发后应用角标的 badge 值 （iOS Only）
+  - **soundName** : String // 指定推送的音频文件 （iOS Only）
+  - **subtitle** : String // 子标题 （iOS10+ Only）
+
 ### SetLocalNotification(int delay, string content, int badge, string idKey)
 
-注册本地通知。
+注册本地通知（不推荐使用该方法，建议使用 SendLocalNotification）。
 
 #### 参数说明
 

@@ -33,7 +33,7 @@
   - libresolv.tbd
   - UserNotifications.framework
 
-3. 在 UnityAppController.mm 中添加头文件 JPUSHService.h。
+3. 在 UnityAppController.mm 中添加头文件 `JPUSHService.h`  。
 
   ```Objective-C
   #import "JPUSHService.h"
@@ -41,6 +41,9 @@
 
   // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
   #import <AdSupport/AdSupport.h>
+
+  @interface UnityAppController ()<JPUSHRegisterDelegate>
+  @end
   ```
 
 4. 在 UnityAppController.mm 的下列方法中添加以下代码：
@@ -87,7 +90,7 @@
             advertisingIdentifier: IDFA广告标识符。根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
        */
        NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-       [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
+       [JPUSHService setupWithOption:launchOptions appKey:@"替换成你自己的 Appkey" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
 
        return YES;
     }
@@ -112,19 +115,19 @@
 
       [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
 
-      // 需要执行这个方法，选择是否提醒用户，有 Badge、Sound、Alert 三种类型可以选择设置
+      // 需要执行这个方法，选择是否提醒用户（应用在前台的时候），有 Badge、Sound、Alert 三种类型可以选择设置。
       completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
     }
 
     // iOS 10 Support
-    - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
-        // Required
-        NSDictionary * userInfo = response.notification.request.content.userInfo;
-        if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-            [JPUSHService handleRemoteNotification:userInfo];
-        }
-        completionHandler();  // 系统要求执行这个方法
+  - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    NSDictionary * userInfo = response.notification.request.content.userInfo;
+    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+      [JPUSHService handleRemoteNotification:userInfo];
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginOpenNotification" object:userInfo];
     }
+    completionHandler();
+  }
   ```
 
 ## API 说明
