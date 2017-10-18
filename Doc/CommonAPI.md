@@ -121,16 +121,6 @@
 
 监听事件都需要在插件 `init(gameObject)` 方法传入的对应 GameObject 中实现。
 
-### OnGetRegistrationId(string rId)
-
-向极光服务器注册成功，首次得到 Registration Id 时触发。
-
-需要注意该事件只会在首次注册成功时触发，之后如果想要获得 Registration Id，可直接调用 `GetRegistrationId()` 方法。
-
-#### 参数说明
-
-- rId: 该设备的 Registration Id，可作为设备的唯一标识。
-
 ### OnReceiveNotification(string notification)
 
 收到通知。
@@ -164,6 +154,26 @@ iOS 的通知内容格式为：
 #### 参数说明
 
 - msg: 自定义消息内容的 Json 字符串。
+
+Android 的通知内容格式为：
+
+```json
+{
+  "message": "自定义消息内容",
+  "extras": {   // 自定义键值对
+    "key1": "value1",
+    "key2": "value2"
+  }
+}
+```
+
+### OnOpenNotification(string notification)
+
+点击通知栏通知事件。
+
+#### 参数说明
+
+- notification: 通知内容的 Json 字符串。
 
 Android 的通知内容格式为：
 
