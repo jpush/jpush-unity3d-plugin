@@ -127,7 +127,7 @@ namespace JPush
         /// </param>
         public static void AddTags(int sequence, List<string> tags)
         {
-            string tagsJsonStr = JsonUtility.ToJson(tags);
+            string tagsJsonStr = JsonHelper.ToJson(tags);
 
             #if UNITY_ANDROID
             _plugin.Call("addTags", sequence, tagsJsonStr);
@@ -150,7 +150,7 @@ namespace JPush
         /// </param>
         public static void DeleteTags(int sequence, List<string> tags)
         {
-            string tagsJsonStr = JsonUtility.ToJson(tags);
+            string tagsJsonStr = JsonHelper.ToJson(tags);
 
             #if UNITY_ANDROID
             _plugin.Call("deleteTags", sequence, tagsJsonStr);
