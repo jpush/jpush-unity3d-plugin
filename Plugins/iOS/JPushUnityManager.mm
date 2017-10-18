@@ -14,21 +14,18 @@ extern "C" {
 }
 #endif
 
+static NSString *gameObjectName = @"";
 
 @interface JPushUnityInstnce : NSObject {
 @private
 }
-+(JPushUnityInstnce*)instance;
++(JPushUnityInstnce*)sharedInstance;
 @end
 
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-    
-    // private - start
-    const char *gameObject_;
-    
     const char *tagCallbackName_ = "OnJPushTagOperateResult";
     const char *aliasCallbackName_ = "OnJPushAliasOperateResult";
     
@@ -84,10 +81,11 @@ extern "C" {
         [dic setValue:[NSNumber numberWithUnsignedInteger:iResCode] forKey:@"code"];
         
         if (iResCode == 0) {
-            [dic setObject:[iTags allObjects] forKey:@"tags"];
+          dic[@"tags"] = [iTags allObjects];
         }
         
-        UnitySendMessage(gameObject_, tagCallbackName_, messageAsDictionary(dic).UTF8String);
+        UnitySendMessage([gameObjectName UTF8String], tagCallbackName_, messageAsDictionary(dic).UTF8String);
+      
     };
     
     JPUSHAliasOperationCompletion aliasOperationCompletion = ^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
@@ -99,7 +97,7 @@ extern "C" {
             [dic setObject:iAlias forKey:@"alias"];
         }
         
-        UnitySendMessage(gameObject_, aliasCallbackName_, messageAsDictionary(dic).UTF8String);
+        UnitySendMessage([gameObjectName UTF8String], aliasCallbackName_, messageAsDictionary(dic).UTF8String);
     };
     
     NSInteger integerValue(int intValue) {
@@ -114,19 +112,23 @@ extern "C" {
     // private - end
 
     void _init(char *gameObject) {
-        gameObject_ = gameObject;
-        
+      gameObjectName = [NSString stringWithUTF8String:gameObject];
         NSNotificationCenter *msgCenter = [NSNotificationCenter defaultCenter];
-        [msgCenter addObserver:[JPushUnityInstnce instance]
+        [[NSNotificationCenter defaultCenter] addObserver:[JPushUnityInstnce sharedInstance]
                           selector:@selector(networkDidRecieveMessage:)
                               name:kJPFNetworkDidReceiveMessageNotification
                             object:nil];
-        
-        NSNotificationCenter *notiCenter = [NSNotificationCenter defaultCenter];
-        [notiCenter addObserver:[JPushUnityInstnce instance]
+      
+        [[NSNotificationCenter defaultCenter] addObserver:[JPushUnityInstnce sharedInstance]
                           selector:@selector(networkDidRecievePushNotification:)
                               name:@"JPushPluginReceiveNotification"
                             object:nil];
+      
+        [[NSNotificationCenter defaultCenter] addObserver:[JPushUnityInstnce sharedInstance]
+                                               selector:@selector(networkOpenPushNotification:)
+                                                   name:@"JPushPluginOpenNotification"
+                                                 object:nil];
+      
     }
     
     void _setDebug(bool enable) {
@@ -200,7 +202,7 @@ extern "C" {
                 [dic setObject:[NSNumber numberWithBool:isBind] forKey:@"isBind"];
             }
             
-            UnitySendMessage(gameObject_, tagCallbackName_, messageAsDictionary(dic).UTF8String);
+            UnitySendMessage([gameObjectName UTF8String], tagCallbackName_, messageAsDictionary(dic).UTF8String);
         } seq:(NSInteger)sequence];
     }
 
@@ -285,8 +287,8 @@ extern "C" {
 
     // 本地通知旧接口 - start
 
-       void _setLocalNotification(int delay, int badge, char *alertBodyAndIdKey){
-        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:_integerValue(delay)];
+     void _setLocalNotification(int delay, int badge, char *alertBodyAndIdKey){
+        NSDate *date = [NSDate dateWithTimeIntervalSinceNow:integerValue(delay)];
 
         NSString *nsalertBodyAndIdKey = CreateNSString(alertBodyAndIdKey);
         if (![nsalertBodyAndIdKey length]) {
@@ -299,6 +301,76 @@ extern "C" {
 
         [JPUSHService setLocalNotification:date alertBody:sendAlertBody badge:badge alertAction:nil identifierKey:sendIdkey userInfo:nil soundName:nil];
     }
+  
+  void _sendLocalNotification(char *params) {
+    NSString *nsalertBodyAndIdKey = CreateNSString(params);
+    if (![nsalertBodyAndIdKey length]) {
+      return ;
+    }
+    NSData       *data =[nsalertBodyAndIdKey dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *dict = APNativeJSONObject(data);
+    
+    JPushNotificationContent *content = [[JPushNotificationContent alloc] init];
+    if (dict[@"title"]) {
+      content.title = dict[@"title"];
+    }
+    
+    if (dict[@"subtitle"]) {
+      content.subtitle = dict[@"subtitle"];
+    }
+    
+    if (dict[@"content"]) {
+      content.body = dict[@"content"];
+    }
+    
+    if (dict[@"badge"]) {
+      content.badge = dict[@"badge"];
+    }
+    
+    if (dict[@"action"]) {
+      content.action = dict[@"action"];
+    }
+    
+    if (dict[@"extra"]) {
+      content.userInfo = dict[@"extra"];
+    }
+    
+    if (dict[@"sound"]) {
+      content.sound = dict[@"sound"];
+    }
+    
+    JPushNotificationTrigger *trigger = [[JPushNotificationTrigger alloc] init];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+      if (dict[@"fireTime"]) {
+        NSNumber *date = dict[@"fireTime"];
+        NSTimeInterval currentInterval = [[NSDate date] timeIntervalSince1970];
+        NSTimeInterval interval = [date doubleValue] - currentInterval;
+        interval = interval>0?interval:0;
+        trigger.timeInterval = interval;
+        
+      }
+    }
+    
+    else {
+      if (dict[@"fireTime"]) {
+        NSNumber *date = dict[@"fireTime"];
+        trigger.fireDate = [NSDate dateWithTimeIntervalSince1970: [date doubleValue]];
+      }
+    }
+    JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
+    request.content = content;
+    request.trigger = trigger;
+    
+    if (dict[@"id"]) {
+      NSNumber *identify = dict[@"id"];
+      request.requestIdentifier = [identify stringValue];
+    }
+    request.completionHandler = ^(id result) {
+      NSLog(@"result");
+    };
+    
+    [JPUSHService addNotification:request];
+  }
 
     void _deleteLocalNotificationWithIdentifierKey(char *idKey){
         NSString *nsIdKey = CreateNSString(idKey);
@@ -328,6 +400,7 @@ extern "C" {
 @end
 
 #pragma mark - Unity instance
+
 @implementation JPushUnityInstnce
 
 static JPushUnityInstnce * _sharedService = nil;
@@ -344,7 +417,7 @@ static JPushUnityInstnce * _sharedService = nil;
     if (notification.name == kJPFNetworkDidReceiveMessageNotification && notification.userInfo){
         NSData *data = APNativeJSONData(notification.userInfo);
         NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        UnitySendMessage(gameObject_, "OnReceiveMessage", jsonStr.UTF8String);
+        UnitySendMessage([gameObjectName UTF8String], "OnReceiveMessage", jsonStr.UTF8String);
     }
 }
 
@@ -352,7 +425,15 @@ static JPushUnityInstnce * _sharedService = nil;
     if ([notification.name isEqual:@"JPushPluginReceiveNotification"] && notification.object){
         NSData *data = APNativeJSONData(notification.object);
         NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        UnitySendMessage(gameObject_, "OnReceiveNotification", jsonStr.UTF8String);
+        UnitySendMessage([gameObjectName UTF8String], "OnReceiveNotification", jsonStr.UTF8String);
     }
+}
+
+- (void)networkOpenPushNotification:(NSNotification *)notification {
+  if ([notification.name isEqual:@"JPushPluginOpenNotification"] && notification.object){
+    NSData *data = APNativeJSONData(notification.object);
+    NSString *jsonStr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    UnitySendMessage([gameObjectName UTF8String], "OnOpenNotification", jsonStr.UTF8String);
+  }
 }
 @end

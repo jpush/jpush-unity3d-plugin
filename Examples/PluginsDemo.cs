@@ -3,12 +3,17 @@ using System.Collections;
 using JPush;
 using System.Collections.Generic;
 using System;
+//using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
+#if UNITY_IPHONE
+using LitJson;
+#endif
 
 public class PluginsDemo : MonoBehaviour
 {
     string str_unity = "";
-
+	int callbackId = 0;
     // Use this for initialization
     void Start()
     {
@@ -45,12 +50,18 @@ public class PluginsDemo : MonoBehaviour
 
         if (GUILayout.Button("setTags", GUILayout.Height(80)))
         {
-            JPushBinding.SetTags(1, new List<string>() { str_unity });
+			Debug.Log ("))))))))(((((((((((( send local notification");
+			List<string> tags = new List<string> ();
+			tags.Add("111");
+			tags.Add("222");
+			JPushBinding.SetTags(callbackId++, tags);
+//            JPushBinding.SetTags(1, new List<string>() { str_unity });
+
         }
 
         if (GUILayout.Button("setAlias", GUILayout.Height(80)))
         {
-            JPushBinding.SetAlias(2, str_unity);
+            JPushBinding.SetAlias(2, "replaceYourAlias");
         }
 
         #if UNITY_ANDROID
@@ -65,6 +76,73 @@ public class PluginsDemo : MonoBehaviour
             string registrationId = JPushBinding.GetRegistrationId();
             Debug.Log("------>registrationId: " + registrationId);
         }
+
+		if (GUILayout.Button("addTags", GUILayout.Height(80)))
+		{
+			List<string> tags = new List<string> (){"addtag1", "addtag2"};
+//			tags.Add("addtag1");
+//			tags.Add("addtag2");
+
+			JPushBinding.AddTags(callbackId++, tags);
+//			Debug.Log("add tags: " + JsonUtility.ToJson(tags));
+		}
+
+		if (GUILayout.Button("deleteTags", GUILayout.Height(80)))
+		{
+			List<string> tags = new List<string> ();
+			tags.Add("addtag1");
+			tags.Add("addtag2");
+
+			JPushBinding.DeleteTags (callbackId++, tags);
+			Debug.Log("delete tags ");
+		}
+
+		if (GUILayout.Button("cleanTags", GUILayout.Height(80)))
+		{
+			JPushBinding.CleanTags(callbackId++);
+			Debug.Log("clean tags ");
+		}
+
+		if (GUILayout.Button("get all tags", GUILayout.Height(80)))
+		{
+			JPushBinding.GetAllTags(callbackId++);
+			Debug.Log("clean tags ");//getAllTags
+		}
+
+		if (GUILayout.Button("getAlias", GUILayout.Height(80)))
+		{
+			JPushBinding.GetAlias(callbackId++);
+			Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
+		}
+
+		if (GUILayout.Button("check tag is binding", GUILayout.Height(80)))
+		{
+			JPushBinding.CheckTagBindState(callbackId++,"addtag1");
+			Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
+		}
+
+		if (GUILayout.Button("Trigger local notification after 3 seconds", GUILayout.Height(80)))
+		{
+			Debug.Log("Trigger local notification after 3 seconds");
+			#if UNITY_IPHONE
+	
+				JsonData myparams = new JsonData();
+				myparams["title"] = "the title";
+				myparams["id"] = 5;
+				myparams["content"] = "the content";
+				myparams["badge"] = 9;
+				TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+				long ret = Convert.ToInt64(ts.TotalSeconds) + 3;
+				myparams["fireTime"] = ret;
+				myparams["subtitle"] = "the subtitle";
+
+				JPushBinding.SendLocalNotification(myparams);
+			#endif
+		}
+
+
+
     }
 
     /* data format
@@ -126,4 +204,9 @@ public class PluginsDemo : MonoBehaviour
         Debug.Log("JPush alias operate result: " + result);
         str_unity = result;
     }
+
+	void OnGetRegistrationId(string result) {
+		Debug.Log("JPush on get registration Id: " + result);
+		str_unity = "JPush on get registration Id: " + result;		
+	}
 }
