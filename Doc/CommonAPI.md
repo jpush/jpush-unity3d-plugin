@@ -144,7 +144,18 @@ Android 的通知内容格式为：
 iOS 的通知内容格式为：
 
 ```json
-
+{
+  "aps":{
+    "alert":"通知内容",
+    "badge":1,
+    "sound":"default"
+  },
+  "key1":"value1",
+  "key2":"value2",
+  "_j_uid":11433016635,
+  "_j_msgid":20266199577754012,
+  "_j_business":1
+}
 ```
 
 ### OnReceiveMessage(string msg)
@@ -167,6 +178,20 @@ Android 的通知内容格式为：
 }
 ```
 
+iOS 的自定义消息内容格式为：
+
+```json
+{
+  "content":"自定义消息内容"，
+  "extras":{  // 自定义键值对
+    "key1":"value1",
+    "key2":"value2"
+  }
+}
+```
+
+
+
 ### OnOpenNotification(string notification)
 
 点击通知栏通知事件。
@@ -186,6 +211,25 @@ Android 的通知内容格式为：
   }
 }
 ```
+
+iOS 的通知内容格式为：
+
+```json
+{
+  "aps":{
+    "alert":"通知内容",
+    "badge":1,
+    "sound":"default"
+  },
+  "key1":"value1",
+  "key2":"value2",
+  "_j_uid":11433016635,
+  "_j_msgid":20266199577754012,
+  "_j_business":1
+}
+```
+
+
 
 ### OnJPushTagOperateResult(result)
 
