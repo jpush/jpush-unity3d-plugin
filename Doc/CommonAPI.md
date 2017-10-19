@@ -183,14 +183,12 @@ iOS 的自定义消息内容格式为：
 ```json
 {
   "content":"自定义消息内容"，
-  "extras":{  // 自定义键值对
+  "extras": {  // 自定义键值对
     "key1":"value1",
     "key2":"value2"
   }
 }
 ```
-
-
 
 ### OnOpenNotification(string notification)
 
@@ -228,8 +226,6 @@ iOS 的通知内容格式为：
   "_j_business":1
 }
 ```
-
-
 
 ### OnJPushTagOperateResult(result)
 

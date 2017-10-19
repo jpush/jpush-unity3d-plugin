@@ -81,7 +81,7 @@ JPushBinding.StopLogPageView("login"); // 记录退出 login 页面。
 
 ## 本地通知
 
-###SendLocalNotification(JsonData localParams)
+### SendLocalNotification(string localParams)
 
 注册本地通知（推荐使用这个方法）。
 
