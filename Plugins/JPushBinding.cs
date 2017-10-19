@@ -512,6 +512,9 @@ namespace JPush
         public static extern void _setLocalNotification(int delay, int badge, string alertBodyAndIdKey);
 
         [DllImport("__Internal")]
+        public static extern void _sendLocalNotification(string localParams);
+        
+        [DllImport("__Internal")]
         public static extern void _deleteLocalNotificationWithIdentifierKey(string idKey);
 
         [DllImport("__Internal")]
