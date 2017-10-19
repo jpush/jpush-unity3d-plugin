@@ -3,41 +3,23 @@ using System.Collections;
 using JPush;
 using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
+#if UNITY_IPHONE
+using LitJson;
+#endif
 
 public class PluginsDemo : MonoBehaviour
 {
-    #if UNITY_ANDROID
     string str_unity = "";
-    bool B_MESSAGE = false;
-    static string str_message = "";
-
+	  int callbackId = 0;
 
     // Use this for initialization
     void Start()
     {
         gameObject.name = "Main Camera";
-        JPushBinding.setDebug(true);
-        JPushBinding.initJPush(gameObject.name, "");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_INIT_JPUSH, gameObject, "initJPush");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_STOP_JPUSH, gameObject, "stopJPush");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_RESUME_JPUSH, gameObject, "resumeJPush");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_SET_TAGS, gameObject, "setTags");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_SET_ALIAS, gameObject, "setAlias");
-
-        JPushEventManager.instance.addEventListener(
-        CustomEventObj.EVENT_ADD_LOCAL_NOTIFICATION, gameObject,
-        "addLocalNotification");
+        JPushBinding.Init(gameObject.name);
+        JPushBinding.SetDebug(true);
     }
 
     // Update is called once per frame
@@ -45,19 +27,7 @@ public class PluginsDemo : MonoBehaviour
     {
         if(Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Home))
         {
-            beforeQuit();
             Application.Quit();
-        }
-    }
-
-    // remove event listeners
-    void OnDestroy()
-    {
-        print("unity3d---onDestroy");
-        if (gameObject)
-        {
-            // remove all events
-            JPushEventManager.instance.removeAllEventListeners(gameObject);
         }
     }
 
@@ -66,154 +36,115 @@ public class PluginsDemo : MonoBehaviour
         str_unity = GUILayout.TextField(str_unity, GUILayout.Width(Screen.width - 80),
         GUILayout.Height(200));
 
-        if (GUILayout.Button("initJPush", GUILayout.Height(80)))
+        #if UNITY_ANDROID
+        if (GUILayout.Button("stopPush", GUILayout.Height(80)))
         {
-            JPushTriggerManager.triggerInitJPush(CustomEventObj.EVENT_INIT_JPUSH);
+            JPushBinding.StopPush();
         }
 
-        if (GUILayout.Button("stopJPush", GUILayout.Height(80)))
+        if (GUILayout.Button("resumePush", GUILayout.Height(80)))
         {
-            JPushTriggerManager.triggerStopJPush(CustomEventObj.EVENT_STOP_JPUSH);
+            JPushBinding.ResumePush();
         }
-
-        if (GUILayout.Button("resumeJPush", GUILayout.Height(80)))
-        {
-            JPushTriggerManager.triggerResumeJPush(CustomEventObj.EVENT_RESUME_JPUSH);
-        }
+        #endif
 
         if (GUILayout.Button("setTags", GUILayout.Height(80)))
         {
-            JPushTriggerManager.triggerSetTags(CustomEventObj.EVENT_SET_TAGS, str_unity);
+            List<string> tags = new List<string> ();
+            tags.Add("111");
+            tags.Add("222");
+			      JPushBinding.SetTags(callbackId++, tags);
         }
 
         if (GUILayout.Button("setAlias", GUILayout.Height(80)))
         {
-            JPushTriggerManager.triggerSetAlias(CustomEventObj.EVENT_SET_ALIAS, str_unity);
+            JPushBinding.SetAlias(2, "replaceYourAlias");
         }
 
+        #if UNITY_ANDROID
         if (GUILayout.Button("addLocalNotification", GUILayout.Height(80)))
         {
-            JPushBinding.addLocalNotification(0, "content", "title", 1, 0, null);
+            JPushBinding.AddLocalNotification(0, "content", "title", 1, 0, null);
         }
+        #endif
 
         if (GUILayout.Button("getRegistrationId", GUILayout.Height(80)))
         {
-            string registrationId = JPushBinding.getRegistrationId();
+            string registrationId = JPushBinding.GetRegistrationId();
             Debug.Log("------>registrationId: " + registrationId);
         }
 
-        if (GUILayout.Button("showMessage", GUILayout.Height(80)))
+        if (GUILayout.Button("addTags", GUILayout.Height(80)))
         {
-            str_unity = str_message;
-            /*if(B_MESSAGE) {
-             str_unity = str_message;
-             B_MESSAGE = false;
-             } else {
-             //TODO no message
-             str_unity = "no message";
-             }*/
+          List<string> tags = new List<string> (){"addtag1", "addtag2"};
+          JPushBinding.AddTags(callbackId++, tags);
         }
 
-        if (GUILayout.Button("addTrigger---setPushTime", GUILayout.Height(80)))
+        if (GUILayout.Button("deleteTags", GUILayout.Height(80)))
         {
-            // add a event
-            JPushEventManager.instance.addEventListener(
-            CustomEventObj.EVENT_SET_PUSH_TIME, gameObject, "setPushTime");
-            string days = "0,1,2,3,4,5,6";
-            int start_time = 10;
-            int end_time = 18;
-            JPushTriggerManager.triggerSetPushTime(
-            CustomEventObj.EVENT_SET_PUSH_TIME, days, start_time, end_time);
+          List<string> tags = new List<string> ();
+          tags.Add("addtag1");
+          tags.Add("addtag2");
+
+          JPushBinding.DeleteTags(callbackId++, tags);
         }
 
-        if (GUILayout.Button ("removeTrigger---setPushTime", GUILayout.Height(80)))
+        if (GUILayout.Button("cleanTags", GUILayout.Height(80)))
         {
-            // remove a single event
-            JPushEventManager.instance.removeEventListener(
-            CustomEventObj.EVENT_SET_PUSH_TIME, gameObject);
+          JPushBinding.CleanTags(callbackId++);
         }
 
-    }
+        if (GUILayout.Button("get all tags", GUILayout.Height(80)))
+        {
+            JPushBinding.GetAllTags(callbackId++);
+        }
 
-    void initJPush(CustomEventObj evt)
-    {
-        Debug.Log("---triggered initjpush----");
-        JPushBinding.initJPush(gameObject.name, "");
-        //JPushBridge.initJPush();
-    }
+        if (GUILayout.Button("getAlias", GUILayout.Height(80)))
+        {
+            JPushBinding.GetAlias(callbackId++);
+            Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
+        }
 
-    void stopJPush(CustomEventObj evt)
-    {
-        Debug.Log("--triggered stopJPush----");
-        JPushBinding.stopJPush();
-    }
+        if (GUILayout.Button("check tag is binding", GUILayout.Height(80)))
+        {
+            JPushBinding.CheckTagBindState(callbackId++,"addtag1");
+            Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
+        }
 
-    void resumeJPush(CustomEventObj evt)
-    {
-        Debug.Log("---triggered resumeJPush----");
-        JPushBinding.resumeJPush();
-    }
+        #if UNITY_IPHONE
+        if (GUILayout.Button("Trigger local notification after 3 seconds", GUILayout.Height(80)))
+        {
+            JsonData params = new JsonData();
+            params["title"] = "the title";
+            params["id"] = 5;
+            params["content"] = "the content";
+            params["badge"] = 9;
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
-    void setTags(CustomEventObj evt)
-    {
-        Debug.Log("---triggered setTags----");
-        string tags = (string)evt.arguments["tags"];
-        JPushBinding.setTags(tags);
-    }
+            long ret = Convert.ToInt64(ts.TotalSeconds) + 3;
+            params["fireTime"] = ret;
+            params["subtitle"] = "the subtitle";
 
-    void setAlias(CustomEventObj evt)
-    {
-        Debug.Log("---triggered setAlias----");
-        string alias = (string) evt.arguments["alias"];
-        JPushBinding.setAlias(alias);
-    }
-
-    void setPushTime(CustomEventObj evt)
-    {
-        Debug.Log("---triggered setPushTime----");
-        string days = (string) evt.arguments["days"];
-        int start_time = (int) evt.arguments["start_time"];
-        int end_time = (int) evt.arguments["end_time"];
-        JPushBinding.setPushTime(days, start_time, end_time);
-    }
-
-    void addLocalNotification(CustomEventObj evt)
-    {
-        Debug.Log("---triggered addLocalNotification---");
-        int builderId = (int) evt.arguments["builderId"];
-        string content = (string) evt.arguments["content"];
-        string title = (string) evt.arguments["title"];
-        int notiId = (int) evt.arguments["notificationId"];
-        int broadcastTime = (int) evt.arguments["broadcastTime"];
-        string extrasStr = (string) evt.arguments["extras"];
-        JPushBinding.addLocalNotification(builderId, content, title, notiId,
-        broadcastTime, extrasStr);
-    }
-
-    void removeLocalNotification(CustomEventObj evt)
-    {
-        Debug.Log("---triggered removeLocalNotification---");
-        int notiId = (int) evt.arguments["notificationId"];
-        JPushBinding.removeLocalNotification(notiId);
+            JPushBinding.SendLocalNotification(params);
+        }
+        #endif
     }
 
     /* data format
      {
-     "message": "hhh",
-     "extras": {
-     "f": "fff",
-     "q": "qqq",
-     "a": "aaa"
-     }
+        "message": "hhh",
+        "extras": {
+            "f": "fff",
+            "q": "qqq",
+            "a": "aaa"
+        }
      }
      */
-    //开发者自己处理由JPush推送下来的消息
-    void recvMessage(string jsonStr)
+    // 开发者自己处理由 JPush 推送下来的消息。
+    void OnReceiveMessage(string jsonStr)
     {
         Debug.Log("recv----message-----" + jsonStr);
-        B_MESSAGE = true;
-        str_message = jsonStr;
-        str_unity = "有新消息";
+        str_unity = jsonStr;
     }
 
     /**
@@ -227,95 +158,40 @@ public class PluginsDemo : MonoBehaviour
      * }
      */
     // 获取的是 json 格式数据，开发者根据自己的需要进行处理。
-    void recvNotification(string jsonStr)
+    void OnReceiveNotification(string jsonStr)
     {
         Debug.Log("recv---notification---" + jsonStr);
     }
 
     //开发者自己处理点击通知栏中的通知
-    void openNotification(string jsonStr)
+    void OnOpenNotification(string jsonStr)
     {
         Debug.Log("recv---openNotification---" + jsonStr);
         str_unity = jsonStr;
     }
 
-    void beforeQuit()
+    /// <summary>
+    /// JPush 的 tag 操作回调。
+    /// </summary>
+    /// <param name="result">操作结果，为 json 字符串。</param>
+    void OnJPushTagOperateResult(string result)
     {
-        JPushBinding.isQuit();
-    }
-    #endif
-
-    #if UNITY_IPHONE
-
-    public string rid = "RegistrationID:";
-    public string tag1 = "tag1";
-    public string tag2 = "tag2";
-    public string alias = "alias";
-    public string tagAliasResult = "";
-    public string notification = "";
-    public string message = "";
-
-    void Start ()
-    {
-
+        Debug.Log("JPush tag operate result: " + result);
+        str_unity = result;
     }
 
-    void OnGUI ()
+    /// <summary>
+    /// JPush 的 alias 操作回调。
+    /// </summary>
+    /// <param name="result">操作结果，为 json 字符串。</param>
+    void OnJPushAliasOperateResult(string result)
     {
-        GUIStyle textFieldStyle = GUI.skin.textField;
-        textFieldStyle.fontSize = 40;
-        textFieldStyle.fixedWidth = 600;
-        textFieldStyle.fixedHeight = 150;
-        textFieldStyle.alignment = TextAnchor.MiddleCenter;
-
-        GUIStyle buttonStyle = GUI.skin.button;
-        buttonStyle.fontSize = 40;
-        buttonStyle.fixedWidth = 600;
-        buttonStyle.fixedHeight = 150;
-
-        GUIStyle labelStyle = new GUIStyle (textFieldStyle);
-        labelStyle.fontSize = 28;
-        labelStyle.fixedHeight = 100;
-        labelStyle.alignment = TextAnchor.MiddleLeft;
-
-        rid = GUILayout.TextField (rid + "\n" + JPush.JPushBinding.RegistrationID(), labelStyle);
-        tag1 = GUILayout.TextField(tag1);
-        tag2 = GUILayout.TextField(tag2);
-        alias = GUILayout.TextField(alias);
-
-        if (GUILayout.Button ("set tag/lias"))
-        {
-            JPush.JPushBinding._printLocalLog("set tag/alias");
-            HashSet<String> tags = new HashSet<String>();
-            tags.Add(tag1);
-            tags.Add(tag2);
-            JPush.JPushBinding.SetTagsWithAlias(tags,alias,(m,n,p)=>{
-                tagAliasResult = "iResCode:" + m.ToString();
-                tagAliasResult = tagAliasResult + "\ntags:" + n;
-                tagAliasResult = tagAliasResult + "\nalias:" + p;
-                JPush.JPushBinding._printLocalLog("callback");
-            });
-
-        }
-
-        if(tagAliasResult != ""){
-            GUILayout.Label(tagAliasResult, labelStyle);
-        }
-
-        if(notification != ""){
-            GUILayout.Label(notification, labelStyle);
-        }
-        
-        if (message != "") {
-            GUILayout.Label(notification, labelStyle);
-        }	
-        
+        Debug.Log("JPush alias operate result: " + result);
+        str_unity = result;
     }
-    
-    void OnUpdate()
-    {
-        
+
+    void OnGetRegistrationId(string result) {
+      Debug.Log("JPush on get registration Id: " + result);
+      str_unity = "JPush on get registration Id: " + result;		
     }
-    #endif
-    
 }
