@@ -434,9 +434,9 @@ namespace JPush
 
         // 本地通知 -start
 
-        public static void SendLocalNotification(string jsonParams)
+        public static void SendLocalNotification(string localParams)
         {
-            _sendLocalNotification(string localParams);
+            _sendLocalNotification(localParams);
         }
 
         public static void SetLocalNotification(int delay, string content, int badge, string idKey) {
