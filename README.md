@@ -20,36 +20,37 @@
 
 1. 生成 iOS 工程，并打开该工程。
 2. 添加必要的框架：
-  - CoreFoundation.framework
-  - CFNetwork.framework
-  - SystemConfiguration.framework
-  - CoreTelephony.framework
-  - CoreGraphics.framework
-  - Foundation.framework
-  - UIKit.framework
-  - Security.framework
-  - libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
-  - AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
-  - libresolv.tbd
-  - UserNotifications.framework
+
+    - CoreFoundation.framework
+    - CFNetwork.framework
+    - SystemConfiguration.framework
+    - CoreTelephony.framework
+    - CoreGraphics.framework
+    - Foundation.framework
+    - UIKit.framework
+    - Security.framework
+    - libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
+    - AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
+    - libresolv.tbd
+    - UserNotifications.framework
 
 3. 在 UnityAppController.mm 中添加头文件 `JPUSHService.h`  。
 
-  ```Objective-C
-  #import "JPUSHService.h"
-  #import <UserNotifications/UserNotifications.h>
+    ```Objective-C
+    #import "JPUSHService.h"
+    #import <UserNotifications/UserNotifications.h>
 
-  // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
-  #import <AdSupport/AdSupport.h>
+    // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
+    #import <AdSupport/AdSupport.h>
 
-  @interface UnityAppController ()<JPUSHRegisterDelegate>
-  @end
-  ```
+    @interface UnityAppController ()<JPUSHRegisterDelegate>
+    @end
+    ```
 
 4. 在 UnityAppController.mm 的下列方法中添加以下代码：
 
-  ```Objective-C
-  - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    ```Objective-C
+    - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
       if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
           #ifdef NSFoundationVersionNumber_iOS_9_x_Max
@@ -75,9 +76,9 @@
       /*
         不使用 IDFA 启动 SDK。
         参数说明：
-           appKey: 极光官网控制台应用标识。
-           channel: 频道，暂无可填任意。
-           apsForProduction: YES: 发布环境；NO: 开发环境。
+            appKey: 极光官网控制台应用标识。
+            channel: 频道，暂无可填任意。
+            apsForProduction: YES: 发布环境；NO: 开发环境。
       */
       [JPUSHService setupWithOption:launchOptions appKey:@"abcacdf406411fa656ee11c3" channel:@"" apsForProduction:NO];
 
@@ -88,36 +89,35 @@
             channel: 频道，暂无可填任意。
             apsForProduction: YES: 发布环境；NO: 开发环境。
             advertisingIdentifier: IDFA广告标识符。根据自身情况选择是否带有 IDFA 的启动方法，并注释另外一个启动方法。
-       */
-       NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-       [JPUSHService setupWithOption:launchOptions appKey:@"替换成你自己的 Appkey" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
+      */
+      NSString *advertisingId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+      [JPUSHService setupWithOption:launchOptions appKey:@"替换成你自己的 Appkey" channel:@"" apsForProduction:NO SadvertisingIdentifier:advertisingId];
 
-       return YES;
+      return YES;
     }
 
     - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-        // Required.
-        [JPUSHService registerDeviceToken:deviceToken];
+      // Required.
+      [JPUSHService registerDeviceToken:deviceToken];
     }
 
     - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-        // Required.
+      // Required.
       [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
-        [JPUSHService handleRemoteNotification:userInfo];
+      [JPUSHService handleRemoteNotification:userInfo];
     }
 
-  - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
-  {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
-  }
+    - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler {
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
+    }
 
     // iOS 10 Support
     - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
-        // Required
-        NSDictionary * userInfo = notification.request.content.userInfo;
-       if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-          [JPUSHService handleRemoteNotification:userInfo];
-       }
+      // Required
+      NSDictionary * userInfo = notification.request.content.userInfo;
+      if([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        [JPUSHService handleRemoteNotification:userInfo];
+      }
 
       [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginReceiveNotification" object:userInfo];
 
@@ -126,15 +126,15 @@
     }
 
     // iOS 10 Support
-  - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
-    NSDictionary * userInfo = response.notification.request.content.userInfo;
-    if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
-      [JPUSHService handleRemoteNotification:userInfo];
-      [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginOpenNotification" object:userInfo];
+    - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+      NSDictionary * userInfo = response.notification.request.content.userInfo;
+      if([response.notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        [JPUSHService handleRemoteNotification:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"JPushPluginOpenNotification" object:userInfo];
+      }
+      completionHandler();
     }
-    completionHandler();
-  }
-  ```
+    ```
 
 ## API 说明
 
@@ -145,8 +145,6 @@
 [Android API](/Doc/AndroidAPI.md)
 
 ### iOS
-
-iOS API 在文件 /Plugins/JPushBinding.cs 中，代码 #if UNITY_IPHONE 后面的即为可调用的 iOS API。
 
 [iOS API](/Doc/iOSAPI.md)
 
