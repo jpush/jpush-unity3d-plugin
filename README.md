@@ -138,6 +138,8 @@
 
 ## API 说明
 
+Android 与 iOS [通用 API](/Doc/CommonAPI.md)。
+
 ### Android
 
 在 Plugins\Android\src 目录下是一些 Java 文件，可以将其引入到 Android 工程中对其进行扩展，重新生成 Jar 包替换掉工程中 Assets\Plugins\Android 目录下的 JPush_Bridge.jar 文件。
