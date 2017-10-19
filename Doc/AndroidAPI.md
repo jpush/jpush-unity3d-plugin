@@ -1,21 +1,31 @@
 # Android API
 
-具体 API 代码在 JPushBinding.cs 文件中。
-
-- [停止推送服务](#停止推送服务)
-- [恢复推送服务](#恢复推送服务)
-- [检查推送服务是否停止](#检查推送服务是否停止)
+- [停止与恢复推送服务](#停止与恢复推送服务)
+  - [StopJPush()](#stopjpush)
+  - [ResumePush()](#resumepush)
+  - [IsPushStopped()](#ispushstopped)
 - [清除通知](#清除通知)
+  - [ClearAllNotifications()](#clearallnotifications)
+  - [ClearNotificationById(int notiId)](#clearnotificationbyidint-notiid)
 - [设置允许推送时间](#设置允许推送时间)
+  - [SetPushTime(string days, int startHour, int endHour)](#setpushtimestring-days-int-starthour-int-endhour)
 - [设置通知静默时间](#设置通知静默时间)
+  - [SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)](#setsilencetimeint-starthour-int-startminute-int-endhour-int-endminute)
 - [申请权限接口（用于 Android 6.0 及以上系统）](#申请权限接口用于-android-60-及以上系统)
+  - [RequestPermission()](#requestpermission)
 - [通知栏样式定制](#通知栏样式定制)
+  - [SetBasicPushNotificationBuilder()](#setbasicpushnotificationbuilder)
+  - [SetCustomPushNotificationBuilder()](#setcustompushnotificationbuilder)
 - [设置保留最近通知条数](#设置保留最近通知条数)
+  - [SetLatestNotificationNumber(int num)](#setlatestnotificationnumberint-num)
 - [本地通知](#本地通知)
+  - [AddLocalNotification(int builderId, string content, string title, int notiId, int broadcastTime, string extrasJsonStr)](#addlocalnotification)
+  - [RemoveLocalNotification(int notiId)](#removelocalnotificationnotiid)
+  - [ClearLocalNotifications()](#clearlocalnotifications)
 
-## 停止推送服务
+## 停止与恢复推送服务
 
-### API - StopJPush
+### StopJPush()
 
 调用了该 API 后，JPush 推送服务完全被停止。具体表现为：
 
@@ -29,9 +39,7 @@
 JPushBinding.StopJPush();
 ```
 
-## 恢复推送服务
-
-### API - ResumePush
+### ResumePush()
 
 调用了此 API 后，极光推送完全恢复正常工作。
 
@@ -41,9 +49,7 @@ JPushBinding.StopJPush();
 JPushBinding.ResumeJPush();
 ```
 
-## 检查推送服务是否停止
-
-### API - IsPushStopped
+### IsPushStopped()
 
 调用此 API 来判断当前 Push Service 是否停止。
 
@@ -60,7 +66,7 @@ bool isStopped = JPushBinding.IsPushStopped();
 
 ## 清除通知
 
-### API - ClearAllNotifications
+### ClearAllNotifications()
 
 此 API 提供清除通知的功能，包括：清除所有 JPush 展现的通知（不包括非 JPush SDK 展现的）。
 
@@ -70,7 +76,7 @@ bool isStopped = JPushBinding.IsPushStopped();
 JPushBinding.ClearAllNotifications();
 ```
 
-### API - ClearNotificationById(int notiId)
+### ClearNotificationById(int notiId)
 
 此 API 用于清除指定的某个通知。
 
@@ -86,7 +92,7 @@ JPushBinding.ClearNotificationById(1);  // 1: 指定通知的 notificationId
 
 ## 设置允许推送时间
 
-### API - SetPushTime(string days, int startHour, int endHour)
+### SetPushTime(string days, int startHour, int endHour)
 
 默认情况下用户在任何时间都允许推送。即任何时候有推送下来，客户端都会收到，并展示。
 
@@ -110,7 +116,7 @@ JPushBinding.SetPushTime("0,1,2,3", 8, 20); // 周日到周三的早上 8 点至
 
 ## 设置通知静默时间
 
-### API - SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)
+### SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)
 
 默认情况下用户在收到推送通知时，客户端可能会有震动，响铃等提示。但用户在睡觉、开会等时间点希望为 "免打扰" 模式，也是静音时段的概念。
 
@@ -131,7 +137,7 @@ JPushBinding.SetSilenceTime(20, 0, 7, 0);   // 设置晚上 8 点至早上 7 点
 
 ## 申请权限接口（用于 Android 6.0 及以上系统）
 
-### API - RequestPermission()
+### RequestPermission()
 
 在 Android 6.0 及以上的系统上，需要去请求一些用到的权限，JPush SDK 用到的一些需要请求如下权限，因为需要这些权限使统计更加精准，功能更加丰富，建议开发者调用。
 
@@ -159,7 +165,7 @@ JPushBinding.RequestPermission();
 - 不同的 Push 通知，Notification 样式不同；
 - 则请使用本通知栏定制 API 提供的能力。
 
-### API - SetBasicPushNotificationBuilder
+### SetBasicPushNotificationBuilder()
 
 用于定制 Android Notification 里的 defaults / flags / icon 等基础样式（行为）。
 
@@ -185,7 +191,7 @@ public static void SetBasicPushNotificationBuilder()
 JPushBinding.SetBasicPushNotificationBuilder();
 ```
 
-### API - SetCustomPushNotificationBuilder
+### SetCustomPushNotificationBuilder()
 
 继承 Basic 进一步让开发者定制 Notification Layout。
 
@@ -212,7 +218,7 @@ JPushBinding.SetCustomPushNotificationBuilder();
 
 ## 设置保留最近通知条数
 
-### API - SetLatestNotificationNumber(int num)
+### SetLatestNotificationNumber(int num)
 
 通过极光推送，推送了很多通知到客户端时，如果用户不去处理，就会有很多保留在那里。
 
@@ -237,15 +243,9 @@ JPushBinding.setLatestNotificationNumber(10);   // 保留最近的 10 条通知�
 > - 本地通知与网络推送的通知是相互独立的，不受保留最近通知条数上限的限制。
 > - 本地通知的定时时间是自发送时算起的，不受中间关机等操作的影响。
 
-### API - AddLocalNotification
+### AddLocalNotification(int builderId, string content, string title, int notiId, int broadcastTime, string extrasJsonStr)
 
 添加一个本地通知。
-
-#### 接口定义
-
-```csharp
-public static void AddLocalNotification(int builderId, string content, string title, int notiId, int broadcastTime, string extrasJsonStr)
-```
 
 #### 参数说明
 
@@ -263,7 +263,7 @@ public static void AddLocalNotification(int builderId, string content, string ti
 JPushBinding.AddLocalNotification(0, "content", "title", 1, 10, null);
 ```
 
-### API - RemoveLocalNotification(notiId)
+### RemoveLocalNotification(int notiId)
 
 移除指定本地通知。
 
@@ -277,7 +277,7 @@ JPushBinding.AddLocalNotification(0, "content", "title", 1, 10, null);
 JPushBinding.RemoveLocalNotification(1);    // 1：特定通知的 Notification ID。
 ```
 
-### API - ClearLocalNotifications
+### ClearLocalNotifications()
 
 清除所有本地通知。
 

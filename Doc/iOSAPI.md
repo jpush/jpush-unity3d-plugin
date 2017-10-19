@@ -1,5 +1,20 @@
 # iOS API
 
+- [角标（badge）](#角标badge)
+  - [SetBadge(int badge)](#setbadgeint-badge)
+  - [ResetBadge()](#resetbadge)
+  - [SetApplicationIconBadgeNumber(int badge)](#setapplicationiconbadgenumberint-badge)
+  - [GetApplicationIconBadgeNumber()](#getapplicationiconbadgenumber)
+- [页面统计](#页面统计)
+  - [StartLogPageView(string pageName)](#startlogpageviewstring-pagename)
+  - [StopLogPageView(string pageName)](#stoplogpageviewstring-pagename)
+  - [BeginLogPageView(string pageName, int duration)](#beginlogpageviewstring-pagename-int-duration)
+- [本地通知](#本地通知)
+  - [SendLocalNotification(string localParams)](#sendlocalnotificationstring-localparams)
+  - [SetLocalNotification(int delay, string content, int badge, string idKey)](#setlocalnotificationint-delay-string-content-int-badge-string-idkey)
+  - [DeleteLocalNotificationWithIdentifierKey(string idKey)](#deletelocalnotificationwithidentifierkeystring-idkey)
+  - [ClearAllLocalNotifications()](#clearalllocalnotifications)
+
 ## 角标（badge）
 
 Badge 是 iOS 用来标记应用程序状态的一个数字，出现在程序图标右上角。
