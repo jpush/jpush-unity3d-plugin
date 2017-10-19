@@ -2,6 +2,27 @@
 
 以下除事件监听之外的方法都基于 `JPushBinding` 对象进行调用。
 
+- [初始化与调试](#初始化与调试)
+  - [Init(string gameObject)](#initstring-gameobject)
+  - [SetDebug(bool enable)](#setdebugbool-enable)
+  - [GetRegistrationId()](#getregistrationid)
+- [标签与别名](#标签与别名)
+  - [SetTags(int sequence, List<string> tags)](#settagsint-sequence-liststring-tags)
+  - [AddTags(int sequence, List<string> tags)](#addtagsint-sequence-liststring-tags)
+  - [DeleteTags(int sequence, List<string> tags)](#deletetagsint-sequence-liststring-tags)
+  - [CleanTags(int sequence)](#cleantagsint-sequence)
+  - [GetAllTags(int sequence)](#getalltagsint-sequence)
+  - [CheckTagBindState(int sequence, string tag)](#checktagbindstateint-sequence-string-tag)
+  - [SetAlias(int sequence, string alias)](#setaliasint-sequence-string-alias)
+  - [DeleteAlias(int sequence)](#deletealiasint-sequence)
+  - [GetAlias(int sequence)](#getaliasint-sequence)
+- [事件监听](#事件监听)
+  - [OnReceiveNotification(string notification)](#onreceivenotificationstring-notification)
+  - [OnReceiveMessage(string msg)](#onreceivemessagestring-msg)
+  - [OnOpenNotification(string notification)](#onopennotificationstring-notification)
+  - [OnJPushTagOperateResult(result)](#onjpushtagoperateresultresult)
+  - [OnJPushAliasOperateResult(result)](#onjpushaliasoperateresultresult)
+
 ## 初始化与调试
 
 ### Init(string gameObject)
@@ -131,7 +152,7 @@
 
 Android 的通知内容格式为：
 
-```json
+```text
 {
   "title": "通知标题",
   "content": "通知内容",
@@ -143,7 +164,7 @@ Android 的通知内容格式为：
 
 iOS 的通知内容格式为：
 
-```json
+```text
 {
   "aps":{
     "alert":"通知内容",
@@ -168,7 +189,7 @@ iOS 的通知内容格式为：
 
 Android 的通知内容格式为：
 
-```json
+```text
 {
   "message": "自定义消息内容",
   "extras": {   // 自定义键值对
@@ -180,12 +201,12 @@ Android 的通知内容格式为：
 
 iOS 的自定义消息内容格式为：
 
-```json
+```text
 {
-  "content":"自定义消息内容"，
+  "content": "自定义消息内容",
   "extras": {  // 自定义键值对
-    "key1":"value1",
-    "key2":"value2"
+    "key1": "value1",
+    "key2": "value2"
   }
 }
 ```
@@ -200,7 +221,7 @@ iOS 的自定义消息内容格式为：
 
 Android 的通知内容格式为：
 
-```json
+```text
 {
   "message": "自定义消息内容",
   "extras": {   // 自定义键值对
@@ -212,7 +233,7 @@ Android 的通知内容格式为：
 
 iOS 的通知内容格式为：
 
-```json
+```text
 {
   "aps":{
     "alert":"通知内容",
@@ -235,7 +256,7 @@ JPush 的标签相关操作回调。
 
 - result: Json 格式字符串。格式为：
 
-```json
+```text
 {
   "sequence": 1,            // 调用标签或别名方法时传入的。
   "code": 0,                // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
@@ -252,7 +273,7 @@ JPush 的别名相关操作回调。
 
 - result: Json 格式字符串。格式为：
 
-```json
+```text
 {
   "sequence": 1, // 调用标签或别名方法时传入的。
   "code": 0,     // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
