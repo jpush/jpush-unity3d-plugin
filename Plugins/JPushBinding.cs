@@ -432,6 +432,13 @@ namespace JPush
             _beginLogPageView(pageName, duration);
         }
 
+        // 本地通知 -start
+
+        public static void SendLocalNotification(string jsonParams)
+        {
+            _sendLocalNotification(string localParams);
+        }
+
         public static void SetLocalNotification(int delay, string content, int badge, string idKey) {
             JsonData jd = new JsonData();
             jd["alertBody"] = content;
@@ -450,6 +457,8 @@ namespace JPush
         public static void ClearAllLocalNotifications() {
             _clearAllLocalNotifications();
         }
+
+        // 本地通知 - end
 
         [DllImport("__Internal")]
         private static extern void _init(string gameObject);
