@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using LitJson;
 #endif
 
+// @version v3.1.0
 namespace JPush
 {
     public class JPushBinding : MonoBehaviour
