@@ -1,6 +1,6 @@
 # JPush Unity Plugin
 
-[![release](https://img.shields.io/badge/release-3.1.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![release](https://img.shields.io/badge/release-3.1.1-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-green.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
