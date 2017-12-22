@@ -31,7 +31,7 @@
 
 #### 参数说明
 
-- gameObject: 游戏对象名。所有回调事件都需要在该 Game Object 中实现。
+- gameObject: 代码脚本被挂载的游戏对象名。
 
 ### SetDebug(bool enable)
 
@@ -223,11 +223,11 @@ Android 的通知内容格式为：
 
 ```text
 {
-  "message": "自定义消息内容",
+  "title": "通知标题",
+  "content": "通知内容",
   "extras": {   // 自定义键值对
     "key1": "value1",
     "key2": "value2"
-  }
 }
 ```
 
