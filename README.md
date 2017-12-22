@@ -38,6 +38,7 @@
 
     ```Objective-C
     #import "JPUSHService.h"
+    #import "JPushEventCache.h"
     #import <UserNotifications/UserNotifications.h>
 
     // 如需使用广告标识符 IDFA 则添加该头文件，否则不添加。
