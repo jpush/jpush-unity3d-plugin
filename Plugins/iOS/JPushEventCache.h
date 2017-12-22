@@ -6,11 +6,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "JPUSHService.h"
 
-@interface JPushEventCache : NSObject
+@interface JPushEventCache : NSObject<JPUSHRegisterDelegate>
 + (JPushEventCache *)sharedInstance;
 
 - (void)sendEvent:(NSDictionary *)notification withKey:(NSString *)key;
 - (void)scheduleNotificationQueue;
+
+- (void)handFinishLaunchOption:(NSDictionary *)launchOptons;
 @end
 
