@@ -1,5 +1,6 @@
 #import "JPushUnityManager.h"
 #import "JPUSHService.h"
+#import "JPushEventCache.h"
 
 #pragma mark - Utility Function
 
@@ -128,7 +129,7 @@ extern "C" {
                                                selector:@selector(networkOpenPushNotification:)
                                                    name:@"JPushPluginOpenNotification"
                                                  object:nil];
-      
+        [[JPushEventCache sharedInstance] scheduleNotificationQueue];
     }
     
     void _setDebug(bool enable) {
