@@ -1,27 +1,13 @@
 # Android API
 
 - [停止与恢复推送服务](#停止与恢复推送服务)
-  - [StopJPush()](#stopjpush)
-  - [ResumePush()](#resumepush)
-  - [IsPushStopped()](#ispushstopped)
 - [清除通知](#清除通知)
-  - [ClearAllNotifications()](#clearallnotifications)
-  - [ClearNotificationById(int notiId)](#clearnotificationbyidint-notiid)
 - [设置允许推送时间](#设置允许推送时间)
-  - [SetPushTime(string days, int startHour, int endHour)](#setpushtimestring-days-int-starthour-int-endhour)
 - [设置通知静默时间](#设置通知静默时间)
-  - [SetSilenceTime(int startHour, int startMinute, int endHour, int endMinute)](#setsilencetimeint-starthour-int-startminute-int-endhour-int-endminute)
 - [申请权限接口（用于 Android 6.0 及以上系统）](#申请权限接口用于-android-60-及以上系统)
-  - [RequestPermission()](#requestpermission)
 - [通知栏样式定制](#通知栏样式定制)
-  - [SetBasicPushNotificationBuilder()](#setbasicpushnotificationbuilder)
-  - [SetCustomPushNotificationBuilder()](#setcustompushnotificationbuilder)
 - [设置保留最近通知条数](#设置保留最近通知条数)
-  - [SetLatestNotificationNumber(int num)](#setlatestnotificationnumberint-num)
 - [本地通知](#本地通知)
-  - [AddLocalNotification(int builderId, string content, string title, int notiId, int broadcastTime, string extrasJsonStr)](#addlocalnotification)
-  - [RemoveLocalNotification(int notiId)](#removelocalnotificationnotiid)
-  - [ClearLocalNotifications()](#clearlocalnotifications)
 
 ## 停止与恢复推送服务
 
