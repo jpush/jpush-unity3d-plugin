@@ -1,6 +1,6 @@
 # JPush Unity Plugin
 
-[![release](https://img.shields.io/badge/release-3.1.4-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
+[![release](https://img.shields.io/badge/release-3.2.0-blue.svg)](https://github.com/jpush/jpush-unity3d-plugin/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%7CAndroid-green.svg)](https://github.com/jpush/jpush-unity3d-plugin)
 
 这是极光官方支持的 JPush Unity 插件（Android &amp; iOS）。
@@ -13,7 +13,7 @@
 
 1. 替换 AndroidManifest.xml 里的包名。
 1. 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
-1. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Idenifier* 设置为应用的包名。
+1. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Identifier* 设置为应用的包名。
 
 ### iOS
 
@@ -98,9 +98,9 @@ Android 与 iOS [通用 API](/Doc/CommonAPI.md)。
 
 ### Android
 
-在 Plugins\Android\src 目录下是一些 Java 文件，可以将其引入到 Android 工程中对其进行扩展，重新生成 Jar 包替换掉工程中 Assets\Plugins\Android 目录下的 JPush_Bridge.jar 文件。
-
 [Android API](/Doc/AndroidAPI.md)
+
+> ./Plugins/Android/jpush-unity-plugin 为插件的 Android 项目，可以使用 Android Studio 打开并进行修改（比如，targetSdkVersion 或者 minSdkVersion），再 build 为 .aar 替换已有的 jpush.aar。
 
 ### iOS
 
