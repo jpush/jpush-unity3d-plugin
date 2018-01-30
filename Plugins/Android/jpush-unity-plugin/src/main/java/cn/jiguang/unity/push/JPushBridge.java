@@ -9,8 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -27,6 +29,11 @@ public class JPushBridge {
     private Context mContext;
     static String gameObject;
 
+    // 缓存
+    static String openNotiStrCache;
+    static List<String> receiveNotiStrCache = new ArrayList<String>();
+    static List<String> receiveMessageStrCache = new ArrayList<String>();
+
     public static JPushBridge getInstance() {
         if (jpushBridge == null) {
             jpushBridge = new JPushBridge();
@@ -42,6 +49,25 @@ public class JPushBridge {
         JPushBridge.gameObject = gameObject;
         mContext = UnityPlayer.currentActivity.getApplicationContext();
         JPushInterface.init(mContext);
+
+        if (!receiveNotiStrCache.isEmpty()) {
+            for (String noti : receiveNotiStrCache) {
+                UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveNotification", noti);
+            }
+            receiveNotiStrCache.clear();
+        }
+
+        if (!TextUtils.isEmpty(openNotiStrCache)) {
+            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnOpenNotification", openNotiStrCache);
+            openNotiStrCache = null;
+        }
+
+        if (!receiveMessageStrCache.isEmpty()) {
+            for (String msg : receiveMessageStrCache) {
+                UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveMessage", msg);
+            }
+            receiveMessageStrCache.clear();
+        }
     }
 
     public void stopPush() {

@@ -14,6 +14,9 @@ import java.util.Set;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.service.JPushMessageReceiver;
 
+/**
+ * 处理 tag/alias 的操作结果。
+ */
 public class JPushEventReceiver extends JPushMessageReceiver {
 
     @Override
