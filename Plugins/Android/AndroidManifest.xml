@@ -32,7 +32,7 @@
       android:label="@string/app_name"
       android:icon="@drawable/app_icon">
 
-    <!-- For test only. 测试的主程序 start -->
+    <!-- For test only. Demo 的主程序 start -->
     <activity
         android:name="cn.jiguang.unity.push.UnityPluginActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -47,7 +47,8 @@
     <activity
         android:name="cn.jpush.android.ui.PushActivity"
         android:configChanges="orientation|keyboardHidden"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        android:theme="@android:style/Theme.NoTitleBar"
+        android:exported="false">
       <intent-filter>
         <action android:name="cn.jpush.android.ui.PushActivity"/>
 
@@ -56,8 +57,8 @@
       </intent-filter>
     </activity>
 
-    <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-    <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+    <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的 JPush 服务相互拉起的功能。 -->
+    <!-- 若不启用该功能可删除该组件，将不拉起其他应用，也不能被其他应用拉起 -->
     <service
         android:name="cn.jpush.android.service.DaemonService"
         android:enabled="true"
@@ -90,9 +91,8 @@
         android:name="cn.jpush.android.service.PushReceiver"
         android:enabled="true">
       <intent-filter android:priority="1000">
-        <!-- Required. 显示通知栏 -->
         <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
-        <category android:name="应用的包名"/>
+        <category android:name="应用的包名" />
       </intent-filter>
       <intent-filter>
         <action android:name="android.intent.action.USER_PRESENT"/>
@@ -103,7 +103,7 @@
         <action android:name="android.intent.action.PACKAGE_ADDED"/>
         <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 
-        <data android:scheme="package"/>
+        <data android:scheme="package" />
       </intent-filter>
     </receiver>
 
@@ -112,33 +112,39 @@
     <!-- Rich push 核心功能 since 2.0.6 -->
     <activity
         android:name="cn.jpush.android.ui.PopWinActivity"
+        android:configChanges="orientation|keyboardHidden"
         android:exported="false"
         android:theme="@style/MyDialogStyle">
-    </activity>
+        <intent-filter>
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="应用的包名" />
+        </intent-filter>
+      </activity>
 
     <receiver
-        android:name="cn.jiguang.unity.push.MyReceiver"
+        android:name="cn.jiguang.unity.push.JPushReceiver"
         android:enabled="true">
-      <intent-filter>
-        <!-- Required. 用户注册 SDK 的 intent -->
-        <action android:name="cn.jpush.android.intent.REGISTRATION"/>
-        <action android:name="cn.jpush.android.intent.UNREGISTRATION"/>
-        <!-- Required. 用户接收 SDK 消息的 intent -->
-        <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
-        <!-- Required. 用户接收 SDK 通知栏信息的 intent -->
-        <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
-        <!-- Required. 用户打开自定义通知栏的 intent -->
-        <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
-        <!-- Optional. 用户接受Rich Push Javascript 回调函数的 intent -->
-        <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK"/>
-        <category android:name="应用的包名"/>
-      </intent-filter>
+        <intent-filter>
+            <!--Required 用户注册 SDK 的 intent-->
+            <action android:name="cn.jpush.android.intent.REGISTRATION" />
+            <!--Required 用户接收 SDK 消息的 intent-->
+            <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+            <!--Required 用户接收 SDK 通知栏信息的 intent-->
+            <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+            <!--Required 用户打开自定义通知栏的 intent-->
+            <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+            <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+            <action android:name="cn.jpush.android.intent.CONNECTION" />
+
+            <category android:name="应用的包名" />
+          </intent-filter>
     </receiver>
 
+    <!-- 用于处理 tag/alias 的操作结果 -->
     <receiver android:name="cn.jiguang.unity.push.JPushEventReceiver">
       <intent-filter>
         <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-        <category android:name="应用的包名"></category>
+        <category android:name="应用的包名" />
       </intent-filter>
     </receiver>
 
@@ -154,12 +160,12 @@
         发到其他市场的 APK 可以设置为 xxx-market。 -->
     <meta-data
         android:name="JPUSH_CHANNEL"
-        android:value="developer-default"/>
+        android:value="developer-default" />
 
-    <!-- 值来自开发者平台取得的 AppKey-->
+    <!-- 值来自开发者平台取得的 AppKey -->
     <meta-data
         android:name="JPUSH_APPKEY"
-        android:value="应用的 AppKey"/>
+        android:value="应用的 AppKey" />
 
   </application>
 </manifest>
