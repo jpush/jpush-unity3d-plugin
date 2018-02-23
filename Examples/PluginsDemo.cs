@@ -3,7 +3,6 @@ using System.Collections;
 using JPush;
 using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
 
 #if UNITY_IPHONE
 using LitJson;
@@ -64,7 +63,8 @@ public class PluginsDemo : MonoBehaviour
         #if UNITY_ANDROID
         if (GUILayout.Button("addLocalNotification", GUILayout.Height(80)))
         {
-            JPushBinding.AddLocalNotification(0, "content", "title", 1, 0, null);
+            // JPushBinding.AddLocalNotification(0, "content", "title", 1, 0, null);
+            JPushBinding.AddLocalNotificationByDate(0, "内容", "标题", 1, 2017, 11, 16, 13, 40, 0, "");
         }
         #endif
 
@@ -76,22 +76,22 @@ public class PluginsDemo : MonoBehaviour
 
         if (GUILayout.Button("addTags", GUILayout.Height(80)))
         {
-          List<string> tags = new List<string> (){"addtag1", "addtag2"};
-          JPushBinding.AddTags(callbackId++, tags);
+            List<string> tags = new List<string>(){"addtag1", "addtag2"};
+            JPushBinding.AddTags(callbackId++, tags);
         }
 
         if (GUILayout.Button("deleteTags", GUILayout.Height(80)))
         {
-          List<string> tags = new List<string> ();
-          tags.Add("addtag1");
-          tags.Add("addtag2");
+            List<string> tags = new List<string>();
+            tags.Add("addtag1");
+            tags.Add("addtag2");
 
-          JPushBinding.DeleteTags(callbackId++, tags);
+            JPushBinding.DeleteTags(callbackId++, tags);
         }
 
         if (GUILayout.Button("cleanTags", GUILayout.Height(80)))
         {
-          JPushBinding.CleanTags(callbackId++);
+            JPushBinding.CleanTags(callbackId++);
         }
 
         if (GUILayout.Button("get all tags", GUILayout.Height(80)))
@@ -111,7 +111,7 @@ public class PluginsDemo : MonoBehaviour
             Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
         }
 
-        #if UNITY_IPHONE
+        #if UNITY_IPHONE || UNITY_IOS
         if (GUILayout.Button("Trigger local notification after 3 seconds", GUILayout.Height(80)))
         {
             JsonData params = new JsonData();
@@ -149,7 +149,7 @@ public class PluginsDemo : MonoBehaviour
 
     /**
      * {
-     *	"title": "notiTitle",
+     *	 "title": "notiTitle",
      *   "content": "content",
      *   "extras": {
      *		"key1": "value1",
@@ -191,7 +191,7 @@ public class PluginsDemo : MonoBehaviour
     }
 
     void OnGetRegistrationId(string result) {
-      Debug.Log("JPush on get registration Id: " + result);
-      str_unity = "JPush on get registration Id: " + result;		
+        Debug.Log("JPush on get registration Id: " + result);
+        str_unity = "JPush on get registration Id: " + result;		
     }
 }
