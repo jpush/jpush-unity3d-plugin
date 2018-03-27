@@ -12,28 +12,41 @@
 ### Android
 
 1. 替换 AndroidManifest.xml 里的包名。
-1. 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
-1. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Identifier* 设置为应用的包名。
+2. 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
+3. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Identifier* 设置为应用的包名。
 
 ### iOS
 
 1. 生成 iOS 工程，并打开该工程。
-1. 添加必要的框架：
+2. 添加必要的框架：
 
     - CoreFoundation.framework
-    - CFNetwork.framework
-    - SystemConfiguration.framework
-    - CoreTelephony.framework
-    - CoreGraphics.framework
-    - Foundation.framework
-    - UIKit.framework
-    - Security.framework
-    - libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
-    - AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
-    - libresolv.tbd
-    - UserNotifications.framework
 
-1. 在 UnityAppController.mm 中添加头文件 `JPUSHService.h`  。
+    - CFNetwork.framework
+
+    - SystemConfiguration.framework
+
+    - CoreTelephony.framework
+
+    - CoreGraphics.framework
+
+    - Foundation.framework
+
+    - UIKit.framework
+
+    - Security.framework
+
+    - libz.tbd            // Xcode7 之前为 libz.dylib 之后为 libz.tbd。
+
+    - AdSupport.framework // 如需使用广告标识符 IDFA 则添加该库，否则不添加。
+
+    - libresolv.tbd (JPush 2.2.0及以上版本需要, Xcode7以下版本是libresolv.dylib)
+
+    - UserNotifications.framework (Xcode8及以上)
+
+      ​
+
+3. 在 UnityAppController.mm 中添加头文件 `JPUSHService.h`  。
 
     ```Objective-C
     #import "JPUSHService.h"
@@ -47,7 +60,7 @@
     @end
     ```
 
-1. 在 UnityAppController.mm 的下列方法中添加以下代码：
+4. 在 UnityAppController.mm 的下列方法中添加以下代码：
 
     ```Objective-C
     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
