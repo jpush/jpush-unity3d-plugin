@@ -125,7 +125,7 @@ public class PluginsDemo : MonoBehaviour
             params["fireTime"] = ret;
             params["subtitle"] = "the subtitle";
 
-            JPushBinding.SendLocalNotification(params);
+            JPushBinding.SendLocalNotification(params.ToJson());
         }
         #endif
     }
