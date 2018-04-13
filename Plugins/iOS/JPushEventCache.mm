@@ -83,7 +83,7 @@
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
   // Required
 
-  NSMutableDictionary *userInfo = @[].mutableCopy;
+  NSMutableDictionary *userInfo = @{}.mutableCopy;
   if ([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
     userInfo = [NSMutableDictionary dictionaryWithDictionary: notification.request.content.userInfo];
     [JPUSHService handleRemoteNotification:userInfo];
@@ -106,7 +106,7 @@
 - (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
   
   UNNotification *notification = response.notification;
-  NSMutableDictionary *userInfo = nil;
+  NSMutableDictionary *userInfo = @{}.mutableCopy;
   
   if ([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
     userInfo = [NSMutableDictionary dictionaryWithDictionary: notification.request.content.userInfo];
