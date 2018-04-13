@@ -89,10 +89,10 @@
     [JPUSHService handleRemoteNotification:userInfo];
   } else {
     UNNotificationContent *content = notification.request.content;
-    userInfo = [NSMutableDictionary dictionaryWithDictionary:@{@"content": content.body,
-                                                               @"badge": content.badge,
-                                                               @"extras": content.userInfo
-                                                               }];
+    userInfo[@"content"] = content.body;
+    userInfo[@"badge"] = content.badge;
+    userInfo[@"extras"] = content.userInfo;
+    
     userInfo[@"identifier"] = notification.request.identifier;
   }
   [[JPushEventCache sharedInstance] sendEvent: userInfo withKey: @"JPushPluginReceiveNotification"];
@@ -113,10 +113,11 @@
     [JPUSHService handleRemoteNotification:userInfo];
   } else {
     UNNotificationContent *content = notification.request.content;
-    userInfo = [NSMutableDictionary dictionaryWithDictionary:@{@"content": content.body,
-                                                               @"badge": content.badge,
-                                                               @"extras": content.userInfo
-                                                               }];
+    
+    userInfo[@"content"] = content.body;
+    userInfo[@"badge"] = content.badge;
+    userInfo[@"extras"] = content.userInfo;
+
     userInfo[@"identifier"] = notification.request.identifier;
   }
 
