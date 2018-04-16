@@ -269,7 +269,7 @@ public class JPushBridge {
 
     /**
      * 设置自定义通知栏样式。
-     * 具体可参考：http://docs.jpush.io/client/android_tutorials/#_11
+     * 具体可参考：https://docs.jiguang.cn/jpush/client/Android/android_senior/#_11
      *
      * @param builderId             样式 Id，代表这种通知样式，服务器推送时需要制定。
      * @param statusBarDrawableName 通知图片名称，需要先放在 Android 资源目录中。
@@ -295,7 +295,7 @@ public class JPushBridge {
 
     /**
      * 进一步自定义通知栏，所有资源名称都需要能在资源目录中找到。
-     * 具体可参考：http://docs.jpush.io/client/android_tutorials/#_11
+     * 具体可参考：https://docs.jiguang.cn/jpush/client/Android/android_senior/#_11
      *
      * @param builderId              通知栏样式编号
      * @param layoutName             通知布局样式名称: R.layout.layoutName
