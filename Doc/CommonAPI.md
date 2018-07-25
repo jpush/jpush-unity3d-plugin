@@ -92,7 +92,7 @@
 
 ### GetAllTags(int sequence)
 
-获取当前设备的所有标签（Android暂不支持）。
+获取当前设备的所有标签。
 
 #### 参数说明
 
@@ -100,7 +100,7 @@
 
 ### CheckTagBindState(int sequence, string tag)
 
-检查指定标签是否已经绑定（Android暂不支持）。
+检查指定标签是否已经绑定。
 
 `OnJPushTagOperateResult` 回调中会附带 `isBind` 属性。
 
