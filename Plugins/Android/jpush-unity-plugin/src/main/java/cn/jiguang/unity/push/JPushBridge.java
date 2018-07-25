@@ -161,6 +161,14 @@ public class JPushBridge {
       JPushInterface.cleanTags(mContext, sequence);
     }
 
+    public void getAllTags(int sequence) {
+        JPushInterface.getAllTags(mContext, sequence);
+    }
+
+    public void checkTagBindState(int sequence , String tag) {
+        JPushInterface.checkTagBindState(mContext, sequence ,tag);
+    }
+
     public void setAlias(int sequence, String alias) {
         JPushInterface.setAlias(mContext, sequence, alias);
     }

@@ -44,7 +44,6 @@ public class JPushReceiver extends BroadcastReceiver {
             String title = bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
             String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
             String receiveNotiStr = noti2str(title, content, extras);
-            UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveNotification", receiveNotiStr);
 
             Log.i("JPushReceiver", "GameObject: " + JPushBridge.gameObject);
 
