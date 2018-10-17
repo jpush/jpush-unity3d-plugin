@@ -272,3 +272,13 @@ JPushBinding.RemoveLocalNotification(1);    // 1：特定通知的 Notification 
 ```csharp
 JPushBinding.ClearLocalNotifications();
 ```
+
+### GetConnectionState()
+
+获取推送连接状态。
+
+#### 代码示例
+
+```csharp
+bool isConnect = JPushBinding.GetConnectionState();
+```
