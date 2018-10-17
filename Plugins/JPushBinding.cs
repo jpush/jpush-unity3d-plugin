@@ -394,6 +394,11 @@ namespace JPush
             _plugin.Call("stopCrashHandler");
         }
 
+        public static bool GetConnectionState()
+        {
+            return _plugin.Call<bool>("getConnectionState");
+        }
+
         #endif
 
         #if UNITY_IOS

@@ -270,7 +270,7 @@ public class JPushBridge {
         UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                JPushInterface.requestPermission(mContext);
+                JPushInterface.requestPermission(UnityPlayer.currentActivity);
             }
         });
     }
@@ -342,6 +342,10 @@ public class JPushBridge {
      */
     public void setLatestNotificationNumber(int num) {
         JPushInterface.setLatestNotificationNumber(mContext, num);
+    }
+
+    public boolean getConnectionState() {
+        return JPushInterface.getConnectionState(mContext);
     }
 
     private boolean isNumeric(String str) {

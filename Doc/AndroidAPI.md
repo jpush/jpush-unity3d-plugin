@@ -8,6 +8,7 @@
 - [通知栏样式定制](#通知栏样式定制)
 - [设置保留最近通知条数](#设置保留最近通知条数)
 - [本地通知](#本地通知)
+- [获取推送连接状态](#获取推送连接状态)
 
 ## 停止与恢复推送服务
 
@@ -249,6 +250,31 @@ JPushBinding.setLatestNotificationNumber(10);   // 保留最近的 10 条通知�
 JPushBinding.AddLocalNotification(0, "content", "title", 1, 10, null);
 ```
 
+### AddLocalNotificationByDate(int builderId, string content, string title, int notiId,int year, int month, int day, int hour, int minute, int second, string extrasJsonStr)
+
+添加一个本地通知。
+
+#### 参数说明
+
+- builderId：通知的样式 ID，0 代表默认样式。
+- content：通知内容。
+- title：通知标题。
+- notiId：通知 ID。
+- year：广播时间_年。
+- month：广播时间_月。
+- day：广播时间_日。
+- hour：广播时间_时。
+- minute：广播时间_分。
+- second：广播时间_秒。
+- extrasJsonStr：要在通知中附加的额外 Json 信息。
+
+#### 代码示例
+
+```csharp
+// 在 2020/1/5 12:00:00 触发该本地推送。
+JPushBinding.AddLocalNotificationByDate(0, "content", "title", 1, 2020, 1, 5, 12 , 0 , 0 , null);
+```
+
 ### RemoveLocalNotification(int notiId)
 
 移除指定本地通知。
@@ -271,4 +297,16 @@ JPushBinding.RemoveLocalNotification(1);    // 1：特定通知的 Notification 
 
 ```csharp
 JPushBinding.ClearLocalNotifications();
+```
+
+## 获取推送连接状态
+
+### GetConnectionState()
+
+获取推送连接状态。
+
+#### 代码示例
+
+```csharp
+bool isConnect = JPushBinding.GetConnectionState();
 ```
