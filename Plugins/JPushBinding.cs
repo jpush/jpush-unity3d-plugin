@@ -396,7 +396,7 @@ namespace JPush
 
         public static bool GetConnectionState()
         {
-            return _plugin.Call("getConnectionState");
+            return _plugin.Call<bool>("getConnectionState");
         }
 
         #endif
