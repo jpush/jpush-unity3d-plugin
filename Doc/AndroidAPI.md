@@ -8,6 +8,7 @@
 - [通知栏样式定制](#通知栏样式定制)
 - [设置保留最近通知条数](#设置保留最近通知条数)
 - [本地通知](#本地通知)
+- [获取推送连接状态](#获取推送连接状态)
 
 ## 停止与恢复推送服务
 
@@ -297,6 +298,8 @@ JPushBinding.RemoveLocalNotification(1);    // 1：特定通知的 Notification 
 ```csharp
 JPushBinding.ClearLocalNotifications();
 ```
+
+## 获取推送连接状态
 
 ### GetConnectionState()
 
