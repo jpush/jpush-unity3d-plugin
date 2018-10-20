@@ -71,9 +71,7 @@ public class PluginsDemo : MonoBehaviour
         if (GUILayout.Button("getRegistrationId", GUILayout.Height(80)))
         {
             string registrationId = JPushBinding.GetRegistrationId();
-            bool isconnect = JPushBinding.GetConnectionState();
-            Debug.Log("------>registrationId: " + registrationId+" :"+ isconnect);
-            
+	    Debug.Log("------>registrationId: " + registrationId);
         }
 
         if (GUILayout.Button("addTags", GUILayout.Height(80)))
