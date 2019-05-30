@@ -71,7 +71,8 @@ public class PluginsDemo : MonoBehaviour
         if (GUILayout.Button("getRegistrationId", GUILayout.Height(80)))
         {
             string registrationId = JPushBinding.GetRegistrationId();
-	    Debug.Log("------>registrationId: " + registrationId);
+            Debug.Log("------>registrationId: " + registrationId);
+            
         }
 
         if (GUILayout.Button("addTags", GUILayout.Height(80)))
@@ -114,18 +115,18 @@ public class PluginsDemo : MonoBehaviour
         #if UNITY_IPHONE || UNITY_IOS
         if (GUILayout.Button("Trigger local notification after 3 seconds", GUILayout.Height(80)))
         {
-            JsonData params = new JsonData();
-            params["title"] = "the title";
-            params["id"] = 5;
-            params["content"] = "the content";
-            params["badge"] = 9;
+            JsonData paramsJ = new JsonData();
+            paramsJ["title"] = "the title";
+            paramsJ["id"] = 5;
+            paramsJ["content"] = "the content";
+            paramsJ["badge"] = 9;
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
             long ret = Convert.ToInt64(ts.TotalSeconds) + 3;
-            params["fireTime"] = ret;
-            params["subtitle"] = "the subtitle";
+            paramsJ["fireTime"] = ret;
+            paramsJ["subtitle"] = "the subtitle";
 
-            JPushBinding.SendLocalNotification(params.ToJson());
+            JPushBinding.SendLocalNotification(paramsJ.ToJson());
         }
         #endif
     }
