@@ -112,7 +112,46 @@ public class PluginsDemo : MonoBehaviour
             Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
         }
 
-        #if UNITY_IPHONE || UNITY_IOS
+#if UNITY_ANDROID
+        if (GUILayout.Button("setChannel", GUILayout.Height(80)))
+        {
+            JPushBinding.SetChannel("unityChannel");
+        }
+
+        if (GUILayout.Button("filterValidTags", GUILayout.Height(80)))
+        {
+            List<string> tags = new List<string>();
+            tags.Add("1");
+            tags.Add("2");
+            tags.Add("3");
+            tags.Add("4");
+            List<string> reList =   JPushBinding.FilterValidTags(tags);
+            string str = string.Join(",", reList.ToArray());
+            Debug.Log("filterValidTags reList:" + str);
+            str_unity = str;
+        }
+
+
+        if (GUILayout.Button("setGeofenceInterval", GUILayout.Height(80)))
+        {
+            JPushBinding.SetGeofenceInterval(1000*60*5);
+        }
+        if (GUILayout.Button("setMaxGeofenceNumber", GUILayout.Height(80)))
+        {
+            JPushBinding.SetMaxGeofenceNumber(20);
+        }
+        if (GUILayout.Button("setMobileNumber", GUILayout.Height(80)))
+        {
+            JPushBinding.SetMobileNumber(callbackId++,"12345678921");
+        }
+        if (GUILayout.Button("setPowerSaveMode", GUILayout.Height(80)))
+        {
+            JPushBinding.SetPowerSaveMode(false);
+        }
+
+#endif
+
+#if UNITY_IPHONE || UNITY_IOS
         if (GUILayout.Button("Trigger local notification after 3 seconds", GUILayout.Height(80)))
         {
             JsonData paramsJ = new JsonData();
@@ -195,4 +234,11 @@ public class PluginsDemo : MonoBehaviour
         Debug.Log("JPush on get registration Id: " + result);
         str_unity = "JPush on get registration Id: " + result;		
     }
+
+    void OnMobileNumberOperatorResult(string result)
+    {
+        Debug.Log("JPush On Mobile Number Operator Result: " + result);
+        str_unity = "JPush On Mobile Number Operator Result: " + result;
+    }
+
 }

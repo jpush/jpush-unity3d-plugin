@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import cn.jpush.android.api.CustomMessage;
@@ -121,8 +123,8 @@ public class JPushEventReceiver extends JPushMessageReceiver {
     public void onMessage(Context context, CustomMessage customMessage) {
         String message = customMessage.message;//bundle.getString(JPushInterface.EXTRA_MESSAGE);
         String extras = customMessage.extra;//bundle.getString(JPushInterface.EXTRA_EXTRA);
-        String msgStr = msg2str(message, extras);
-
+        String messageId = customMessage.messageId;
+        String msgStr = msg2str(messageId,message, extras);
         if (!TextUtils.isEmpty(JPushBridge.gameObject)) {
             UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnReceiveMessage", msgStr);
         } else {
@@ -136,7 +138,8 @@ public class JPushEventReceiver extends JPushMessageReceiver {
         String content = notificationMessage.notificationContent;//bundle.getString(JPushInterface.EXTRA_ALERT);
         String title = notificationMessage.notificationTitle;//bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         String extras = notificationMessage.notificationExtras;//bundle.getString(JPushInterface.EXTRA_EXTRA);
-        String receiveNotiStr = noti2str(title, content, extras);
+        String msgId = notificationMessage.msgId;
+        String receiveNotiStr = noti2str(msgId,title, content, extras);
 
         Log.i(TAG, "GameObject: " + JPushBridge.gameObject);
 
@@ -161,7 +164,8 @@ public class JPushEventReceiver extends JPushMessageReceiver {
         String title = notificationMessage.notificationTitle;//bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         String content = notificationMessage.notificationContent;//bundle.getString(JPushInterface.EXTRA_ALERT);
         String extras =notificationMessage.notificationExtras;// bundle.getString(JPushInterface.EXTRA_EXTRA);
-        String openNotiStr = noti2str(title, content, extras);
+        String msgId = notificationMessage.msgId;
+        String openNotiStr = noti2str(msgId,title, content, extras);
 
         Log.i(TAG, "GameObject: " + JPushBridge.gameObject);
 
@@ -172,11 +176,78 @@ public class JPushEventReceiver extends JPushMessageReceiver {
         }
     }
 
-    private static String noti2str(String title, String content, String extras) {
-        return ("{\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"extras\":" + extras + "}");
+    @Override
+    public void onMobileNumberOperatorResult(Context context, JPushMessage jPushMessage) {
+        super.onMobileNumberOperatorResult(context, jPushMessage);
+
+
+        JSONObject resultJson = new JSONObject();
+
+        int sequence = jPushMessage.getSequence();
+        try {
+            resultJson.put("sequence", sequence);
+            resultJson.put("code", jPushMessage.getErrorCode());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (jPushMessage.getErrorCode() == 0) {
+            try {
+                if (!TextUtils.isEmpty(jPushMessage.getMobileNumber())) {
+                    resultJson.put("mobileNumber", jPushMessage.getMobileNumber());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        UnityPlayer.UnitySendMessage(JPushBridge.gameObject, "OnMobileNumberOperatorResult", resultJson.toString());
     }
 
-    private static String msg2str(String content, String extras) {
-        return ("{\"message\":\"" + content + "\",\"extras\":" + extras + "}");
+    private static String noti2str(String msgId,String title, String content, String extras) {
+
+//        return ("{\"msgId:\""+msgId+"\",\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"extras\":" + extras + "}");
+
+        Map<String,String> jsonMap = new HashMap<String, String>();
+        jsonMap.put("msgId",msgId);
+        jsonMap.put("title",title);
+        jsonMap.put("content",content);
+        jsonMap.put("extras",extras);
+        return toJson(jsonMap);
+    }
+
+    private static String msg2str(String msgId,String content, String extras) {
+//        return ("{\"msgId:\""+msgId+"\",\"message\":\"" + content + "\",\"extras\":" + extras + "}");
+        Map<String,String> jsonMap = new HashMap<String, String>();
+        jsonMap.put("msgId",msgId);
+        jsonMap.put("message",content);
+        jsonMap.put("extras",extras);
+        return toJson(jsonMap);
+    }
+
+    private static String toJson(Map<String,String> jsonMap){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("{");
+
+        if (!jsonMap.isEmpty()){
+            Set<Map.Entry<String, String>> entries = jsonMap.entrySet();
+            for (Map.Entry<String, String> e:
+                    entries) {
+                String key = e.getKey();
+                String value = e.getValue();
+                buffer.append("\"");
+                buffer.append(key);
+                buffer.append("\"");
+                buffer.append(":");
+                buffer.append("\"");
+                buffer.append(value);
+                buffer.append("\"");
+                buffer.append(",");
+            }
+            buffer.deleteCharAt(buffer.length()-1);
+        }
+
+        buffer.append("}");
+        return buffer.toString();
     }
 }

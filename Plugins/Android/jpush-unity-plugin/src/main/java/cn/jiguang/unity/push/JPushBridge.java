@@ -99,18 +99,7 @@ public class JPushBridge {
             return;
         }
 
-        Set<String> tagSet = new LinkedHashSet<String>();
-
-        try {
-            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
-            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
-
-            for (int i = 0; i < tagsJsonArr.length(); i++) {
-                tagSet.add(tagsJsonArr.getString(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Set<String> tagSet = JsonUtil.jsonToSet(tagsJsonStr);
 
         JPushInterface.setTags(mContext, sequence, tagSet);
     }
@@ -120,53 +109,33 @@ public class JPushBridge {
             return;
         }
 
-        Set<String> tagSet = new LinkedHashSet<String>();
-
-        try {
-            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
-            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
-
-            for (int i = 0; i < tagsJsonArr.length(); i++) {
-                tagSet.add(tagsJsonArr.getString(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Set<String> tagSet = JsonUtil.jsonToSet(tagsJsonStr);
 
         JPushInterface.addTags(mContext, sequence, tagSet);
     }
+
+
 
     public void deleteTags(int sequence, String tagsJsonStr) {
         if (TextUtils.isEmpty(tagsJsonStr)) {
             return;
         }
 
-        Set<String> tagSet = new LinkedHashSet<String>();
-
-        try {
-            JSONObject itemsJsonObj = new JSONObject(tagsJsonStr);
-            JSONArray tagsJsonArr = itemsJsonObj.getJSONArray("Items");
-
-            for (int i = 0; i < tagsJsonArr.length(); i++) {
-                tagSet.add(tagsJsonArr.getString(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Set<String> tagSet = JsonUtil.jsonToSet(tagsJsonStr);
 
         JPushInterface.deleteTags(mContext, sequence, tagSet);
     }
 
     public void cleanTags(int sequence) {
-      JPushInterface.cleanTags(mContext, sequence);
+        JPushInterface.cleanTags(mContext, sequence);
     }
 
     public void getAllTags(int sequence) {
         JPushInterface.getAllTags(mContext, sequence);
     }
 
-    public void checkTagBindState(int sequence , String tag) {
-        JPushInterface.checkTagBindState(mContext, sequence ,tag);
+    public void checkTagBindState(int sequence, String tag) {
+        JPushInterface.checkTagBindState(mContext, sequence, tag);
     }
 
     public void setAlias(int sequence, String alias) {
@@ -359,4 +328,79 @@ public class JPushBridge {
         }
         return mContext.getResources().getIdentifier(resourceName, type, mContext.getPackageName());
     }
+
+    //新加
+
+
+    //动态配置 channel，优先级比 AndroidManifest 里配置的高
+    //
+    //参数说明
+    //
+    //context 应用的 ApplicationContext
+    //channel 希望配置的 channel，传 null 表示依然使用 AndroidManifest 里配置的 channel
+    public  void setChannel(String channel) {
+        JPushInterface.setChannel(mContext, channel);
+    }
+
+    //接口返回
+    //有效的 tag 集合。
+    public  String filterValidTags(String jsonTags) {
+        if (null == jsonTags){
+            return null;
+        }
+        Set<String> tags = JsonUtil.jsonToSet(jsonTags);
+        return JsonUtil.setToJson(JPushInterface.filterValidTags(tags));
+    }
+
+    //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
+    //参数说明
+    //context：应用的 ApplicationContext
+    //msgId：推送每一条消息和通知对应的唯一 ID。（ msgId 来源于发送消息和通知的 Extra 字段 JPushInterface.EXTRA_MSG_ID，参考 接收推送消息 Receiver ）
+    public void reportNotificationOpened(String msgId) {
+        JPushInterface.reportNotificationOpened(mContext, msgId);
+    }
+
+    //功能说明
+    //
+    //设置地理围栏监控周期，最小3分钟，最大1天。默认为15分钟，当距离地理围栏边界小于1000米周期自动调整为3分钟。设置成功后一直使用设置周期，不会进行调整。
+    //参数说明
+    //
+    //context 是应用的 ApplicationContext
+    //interval 监控周期，单位是毫秒。
+    public void setGeofenceInterval(long interval) {
+        JPushInterface.setGeofenceInterval(mContext, interval);
+    }
+
+    //功能说明
+    //
+    //设置最多允许保存的地理围栏数量，超过最大限制后，如果继续创建先删除最早创建的地理围栏。默认数量为10个，允许设置最小1个，最大100个。
+    //参数说明
+    //
+    //context 是应用的 ApplicationContext
+    //maxNumber 最多允许保存的地理围栏个数
+    public void setMaxGeofenceNumber(int maxNumber) {
+        JPushInterface.setMaxGeofenceNumber(mContext,maxNumber);
+    }
+
+    //调用此 API 设置手机号码。该接口会控制调用频率，频率为 10s 之内最多 3 次。
+    //sequence
+    //用户自定义的操作序列号，同操作结果一起返回，用来标识一次操作的唯一性。
+    //mobileNumber
+    //手机号码。如果传 null 或空串则为解除号码绑定操作。
+    //限制：只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和数字。
+    public void setMobileNumber(int sequence, String mobileNumber) {
+        JPushInterface.setMobileNumber(mContext,sequence,mobileNumber);
+    }
+
+    //JPush SDK 开启和关闭省电模式，默认为关闭。
+    //参数说明
+    //
+    //context 当前应用的 Activity 的上下文
+    //enable 是否需要开启或关闭，true 为开启，false 为关闭
+    public void setPowerSaveMode(boolean enable) {
+        JPushInterface.setPowerSaveMode(mContext,enable);
+    }
+
+
+
 }

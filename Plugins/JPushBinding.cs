@@ -262,6 +262,97 @@ namespace JPush
 
         #if UNITY_ANDROID
 
+        //-----
+        //动态配置 channel，优先级比 AndroidManifest 里配置的高
+        //channel 希望配置的 channel，传 null 表示依然使用 AndroidManifest 里配置的 channel
+        public static void SetChannel(string channel)
+        {
+            _plugin.Call("setChannel",channel);
+        }
+
+        //接口返回
+        //有效的 tag 集合。
+        public static List<string> FilterValidTags(List<string> jsonTags)
+        {
+           string tagsJsonStr = JsonHelper.ToJson(jsonTags);
+            string reJson =  _plugin.Call<string>("filterValidTags",tagsJsonStr);
+            if (null == reJson)
+            {
+                return new List<string>();
+            }
+
+            string[] reStringArray = JsonHelper.FromJson<string>(reJson);
+
+            if(null == reStringArray)
+            {
+                return new List<string>();
+            }
+
+            List<string> reList =  new List<string>(); ;
+            for (int i = 0; i < reStringArray.Length; i++)
+            {
+                reList.Add(reStringArray[i]);
+            }
+
+            return reList;
+        }
+
+        //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
+        //参数说明
+        //msgId：推送每一条消息和通知对应的唯一 ID
+        public static void ReportNotificationOpened(string msgId)
+        {
+            _plugin.Call("reportNotificationOpened",msgId);
+        }
+
+        //功能说明
+        //
+        //设置地理围栏监控周期，最小3分钟，最大1天。默认为15分钟，当距离地理围栏边界小于1000米周期自动调整为3分钟。设置成功后一直使用设置周期，不会进行调整。
+        //参数说明
+        //
+        //interval 监控周期，单位是毫秒。
+        public static void SetGeofenceInterval(long interval)
+        {
+            _plugin.Call("setGeofenceInterval", interval);
+        }
+
+        //功能说明
+        //
+        //设置最多允许保存的地理围栏数量，超过最大限制后，如果继续创建先删除最早创建的地理围栏。默认数量为10个，允许设置最小1个，最大100个。
+        //参数说明
+        //
+        //maxNumber 最多允许保存的地理围栏个数
+        public static void SetMaxGeofenceNumber(int maxNumber)
+        {
+            _plugin.Call("setMaxGeofenceNumber", maxNumber);
+        }
+
+        //调用此 API 设置手机号码。该接口会控制调用频率，频率为 10s 之内最多 3 次。
+        //sequence
+        //用户自定义的操作序列号，同操作结果一起返回，用来标识一次操作的唯一性。
+        //mobileNumber
+        //手机号码。如果传 null 或空串则为解除号码绑定操作。
+        //限制：只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和数字。
+        public static void SetMobileNumber(int sequence, string mobileNumber)
+        {
+            _plugin.Call("setMobileNumber", sequence, mobileNumber);
+        }
+
+        //JPush SDK 开启和关闭省电模式，默认为关闭。
+        //参数说明
+        //S
+        //enable 是否需要开启或关闭，true 为开启，false 为关闭
+        public static void SetPowerSaveMode(bool enable)
+        {
+            _plugin.Call("setPowerSaveMode", enable);
+        }
+
+
+        //-------
+
+
+
+
         /// <summary>
         /// 停止 JPush 推送服务。 
         /// </summary>
