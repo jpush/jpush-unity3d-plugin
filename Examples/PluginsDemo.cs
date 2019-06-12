@@ -112,12 +112,6 @@ public class PluginsDemo : MonoBehaviour
             Debug.Log("Alias 将在 OnJPushTagOperateResult 中回调");
         }
 
-#if UNITY_ANDROID
-        if (GUILayout.Button("setChannel", GUILayout.Height(80)))
-        {
-            JPushBinding.SetChannel("unityChannel");
-        }
-
         if (GUILayout.Button("filterValidTags", GUILayout.Height(80)))
         {
             List<string> tags = new List<string>();
@@ -125,28 +119,22 @@ public class PluginsDemo : MonoBehaviour
             tags.Add("2");
             tags.Add("3");
             tags.Add("4");
-            List<string> reList =   JPushBinding.FilterValidTags(tags);
+            List<string> reList = JPushBinding.FilterValidTags(tags);
             string str = string.Join(",", reList.ToArray());
             Debug.Log("filterValidTags reList:" + str);
             str_unity = str;
         }
 
-
-        if (GUILayout.Button("setGeofenceInterval", GUILayout.Height(80)))
-        {
-            JPushBinding.SetGeofenceInterval(1000*60*5);
-        }
-        if (GUILayout.Button("setMaxGeofenceNumber", GUILayout.Height(80)))
-        {
-            JPushBinding.SetMaxGeofenceNumber(20);
-        }
         if (GUILayout.Button("setMobileNumber", GUILayout.Height(80)))
         {
-            JPushBinding.SetMobileNumber(callbackId++,"12345678921");
+            JPushBinding.SetMobileNumber(callbackId++, "12345678921");
         }
-        if (GUILayout.Button("setPowerSaveMode", GUILayout.Height(80)))
+
+
+#if UNITY_ANDROID
+        if (GUILayout.Button("setChannel", GUILayout.Height(80)))
         {
-            JPushBinding.SetPowerSaveMode(false);
+            JPushBinding.SetChannel("unityChannel");
         }
 
 #endif
@@ -156,7 +144,7 @@ public class PluginsDemo : MonoBehaviour
         {
             JsonData paramsJ = new JsonData();
             paramsJ["title"] = "the title";
-            paramsJ["id"] = 5;
+            paramsJ["id"] = "5";
             paramsJ["content"] = "the content";
             paramsJ["badge"] = 9;
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
@@ -167,7 +155,12 @@ public class PluginsDemo : MonoBehaviour
 
             JPushBinding.SendLocalNotification(paramsJ.ToJson());
         }
-        #endif
+
+        if (GUILayout.Button("remove Notification All", GUILayout.Height(80)))
+        {
+            JPushBinding._removeNotificationAll();
+        }
+#endif
     }
 
     /* data format

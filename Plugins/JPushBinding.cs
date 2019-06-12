@@ -260,7 +260,66 @@ namespace JPush
             #endif
         }
 
-        #if UNITY_ANDROID
+
+        ///接口返回
+        ///有效的 tag 集合。
+        public static List<string> FilterValidTags(List<string> jsonTags)
+        {
+            string tagsJsonStr = JsonHelper.ToJson(jsonTags);
+            string reJson;
+
+            #if UNITY_ANDROID
+            reJson = _plugin.Call<string>("filterValidTags", tagsJsonStr);
+            #elif UNITY_IOS
+            reJson =  _filterValidTags(tagsJsonStr);
+            #endif
+            if (null == reJson)
+            {
+                return new List<string>();
+            }
+
+            string[] reStringArray = JsonHelper.FromJson<string>(reJson);
+
+            if (null == reStringArray)
+            {
+                return new List<string>();
+            }
+
+            List<string> reList = new List<string>(); ;
+            for (int i = 0; i < reStringArray.Length; i++)
+            {
+                reList.Add(reStringArray[i]);
+            }
+
+            return reList;
+        }
+        /// <summary>
+        /// 设置最多允许保存的地理围栏数量，超过最大限制后，如果继续创建先删除最早创建的地理围栏。默认数量为10个
+        /// </summary>
+        /// <param name="maxNumber">
+        /// Andorid:允许设置最小1个，最大100个.
+        /// IOS:iOS系统要求最大不能超过20个，否则会报错。
+        /// </param>
+        public static void SetMaxGeofenceNumber(int maxNumber)
+        {
+            #if UNITY_ANDROID
+            SetMaxGeofenceNumberAndroid(maxNumber);
+            #elif UNITY_IOS
+            _setGeofenecMaxCount(maxNumber);
+            #endif
+        }
+
+      public static void SetMobileNumber(int sequence, string mobileNumber)
+        {
+            #if UNITY_ANDROID
+            SetMobileNumberAndroid(sequence,mobileNumber);
+            #elif UNITY_IOS
+            _setMobileNumber(sequence, mobileNumber);
+            #endif
+        }
+
+
+#if UNITY_ANDROID
 
         //-----
         //动态配置 channel，优先级比 AndroidManifest 里配置的高
@@ -270,32 +329,6 @@ namespace JPush
             _plugin.Call("setChannel",channel);
         }
 
-        //接口返回
-        //有效的 tag 集合。
-        public static List<string> FilterValidTags(List<string> jsonTags)
-        {
-           string tagsJsonStr = JsonHelper.ToJson(jsonTags);
-            string reJson =  _plugin.Call<string>("filterValidTags",tagsJsonStr);
-            if (null == reJson)
-            {
-                return new List<string>();
-            }
-
-            string[] reStringArray = JsonHelper.FromJson<string>(reJson);
-
-            if(null == reStringArray)
-            {
-                return new List<string>();
-            }
-
-            List<string> reList =  new List<string>(); ;
-            for (int i = 0; i < reStringArray.Length; i++)
-            {
-                reList.Add(reStringArray[i]);
-            }
-
-            return reList;
-        }
 
         //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
         //参数说明
@@ -322,7 +355,7 @@ namespace JPush
         //参数说明
         //
         //maxNumber 最多允许保存的地理围栏个数
-        public static void SetMaxGeofenceNumber(int maxNumber)
+        public static void SetMaxGeofenceNumberAndroid(int maxNumber)
         {
             _plugin.Call("setMaxGeofenceNumber", maxNumber);
         }
@@ -333,7 +366,7 @@ namespace JPush
         //mobileNumber
         //手机号码。如果传 null 或空串则为解除号码绑定操作。
         //限制：只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和数字。
-        public static void SetMobileNumber(int sequence, string mobileNumber)
+        public static void SetMobileNumberAndroid(int sequence, string mobileNumber)
         {
             _plugin.Call("setMobileNumber", sequence, mobileNumber);
         }
@@ -555,6 +588,39 @@ namespace JPush
             _clearAllLocalNotifications();
         }
 
+        /// <summary>
+        ///  移除通知中心显示推送和待推送请求，
+        /// </summary>
+        /// <param name="idKeys">要移除的id列表，null 移除所有</param>
+        /// <param name="delivered">ture 显示的通知，false 还没有显示的通知，iOS10以下无效</param>
+        public static void RemoveNotification(List<string> idKeys, bool delivered)
+        {
+            string idKeysStr = "";
+            if (null != idKeys && idKeys.Count > 0)
+            {
+                idKeysStr = JsonHelper.ToJson(idKeys);
+            }
+            _removeNotification(idKeysStr, delivered);
+
+        }
+
+        /// <summary>
+        ///  查找通知中心显示推送和待推送请求，
+        /// </summary>
+        /// <param name="idKeys">要查找的id列表，null 查找所有</param>
+        /// <param name="delivered">ture 显示的通知，false 还没有显示的通知，iOS10以下无效</param>
+        //public static void FindNotification(List<string> idKeys, bool delivered)
+        //{
+        //    string idKeysStr = "";
+        //    if (null != idKeys && idKeys.Count > 0)
+        //    {
+        //        idKeysStr = JsonHelper.ToJson(idKeys);
+        //    }
+        //    _findNotification(idKeysStr, delivered);
+
+        //}
+
+
         // 本地通知 - end
 
         [DllImport("__Internal")]
@@ -583,6 +649,11 @@ namespace JPush
 
         [DllImport("__Internal")]
         private static extern void _checkTagBindState(int sequence, string tag);
+
+
+        [DllImport("__Internal")]
+        private static extern string _filterValidTags(string tags);
+
 
         [DllImport("__Internal")]
         private static extern void _setAlias(int sequence, string alias);
@@ -626,6 +697,58 @@ namespace JPush
         [DllImport("__Internal")]
         public static extern void _clearAllLocalNotifications();
 
-        #endif
+
+
+        ///    调用此 API 来设置最大的地理围栏监听个数，默认值为10
+        ///    参数说明
+        ///    count
+        ///    类型要求为NSInteger 类型
+        ///    默认值为10
+        ///    iOS系统要求最大不能超过20个，否则会报错。
+        [DllImport("__Internal")]
+        public static extern void _setGeofenecMaxCount(int count);
+
+
+        //功能说明
+        //API 用于统计用户应用崩溃日志
+        //调用说明
+        //如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
+        [DllImport("__Internal")]
+        public static extern void _crashLogON();
+
+        //   功能说明
+
+        //用于短信补充功能。设置手机号码后，可实现“推送不到短信到”的通知方式，提高推送达到率。
+        //参数说明
+        //mobileNumber 手机号码。只能以 “+” 或者数字开头，后面的内容只能包含 “-” 和数字，并且长度不能超过 20。如果传 nil 或空串则为解除号码绑定操作
+        //completion 响应回调。成功则 error 为空，失败则 error 带有错误码及错误信息，具体错误码详见错误码定义
+        //调用说明
+        //此接口调用频率有限制，10s 之内最多 3 次。建议在登录成功以后，再调用此接口。结果信息通过 completion 异步返回，也可将completion 设置为 nil 不处理结果信息。
+        [DllImport("__Internal")]
+        public static extern void _setMobileNumber(int sequence,string mobileNumber);
+
+        [DllImport("__Internal")]
+        public static extern void _setLatitude(double latitude, double longitude);
+
+        /// <summary>
+        ///  移除通知中心显示推送和待推送请求，
+        /// </summary>
+        /// <param name="idKey">要移除的id列表，null 移除所有</param>
+        /// <param name="delivered">ture 显示的通知，false 还没有显示的通知，iOS10以下无效</param>
+        [DllImport("__Internal")]
+        public static extern void _removeNotification(string idKey, bool delivered);
+
+
+        [DllImport("__Internal")]
+        public static extern void _removeNotificationAll();
+
+        /// <summary>
+        ///  查找通知中心显示推送和待推送请求，
+        /// </summary>
+        /// <param name="idKey">要查找的id列表，null 查找所有</param>
+        /// <param name="delivered">ture 显示的通知，false 还没有显示的通知，iOS10以下无效</param>
+        //[DllImport("__Internal")]
+        //public static extern void _findNotification(string idKey, bool delivered);
+#endif
     }
 }

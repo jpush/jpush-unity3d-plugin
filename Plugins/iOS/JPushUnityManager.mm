@@ -207,6 +207,32 @@ extern "C" {
         } seq:(NSInteger)sequence];
     }
 
+    const char * _filterValidTags(char *tags){
+        
+        NSString *nsTags = CreateNSString(tags);
+        if (![nsTags length]) {
+            return nil;
+        }
+        
+        NSData *data = [nsTags dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = APNativeJSONObject(data);
+        NSArray *array = dict[@"Items"];
+        NSSet *set = [[NSSet alloc] initWithArray:array];
+        
+        NSSet *rSet =  [JPUSHService filterValidTags:set];
+        
+        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    
+        if ([rSet count]) {
+            dic[@"Items"] = [rSet allObjects];
+        } else {
+           return  nil;
+        }
+    
+        return MakeHeapString([messageAsDictionary(dic) UTF8String]);
+
+    }
+    
     void _setAlias(int sequence, const char * alias){
         NSString *nsAlias = CreateNSString(alias);
         if (![nsAlias length]) {
@@ -363,8 +389,14 @@ extern "C" {
     request.trigger = trigger;
     
     if (dict[@"id"]) {
-      NSNumber *identify = dict[@"id"];
-      request.requestIdentifier = [identify stringValue];
+        if ([dict[@"id"] isKindOfClass:[NSString class]])
+        {
+            request.requestIdentifier = dict[@"id"];
+
+        }else{
+            NSNumber *identify = dict[@"id"];
+            request.requestIdentifier = [identify stringValue];
+        }
     }
     request.completionHandler = ^(id result) {
       NSLog(@"result");
@@ -389,7 +421,118 @@ extern "C" {
         [JPUSHService clearAllLocalNotifications];
     }
 
+    
+    
+
+    void _removeNotification(char *idKey,bool delivered){
+        JPushNotificationIdentifier *identifier = [[JPushNotificationIdentifier alloc] init];
+        NSString *nsIdKey = CreateNSString(idKey);
+        if (![nsIdKey length]) {
+            NSLog(@"![nsIdKey length]");
+            identifier.identifiers = nil;
+        } else {
+            NSData *data = [nsIdKey dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dict = APNativeJSONObject(data);
+            NSArray *idKeyArr = dict[@"Items"];
+            identifier.identifiers = idKeyArr;
+        }
+        identifier.delivered = delivered;
+        [JPUSHService removeNotification:identifier];
+    }
+    
+    void _removeNotificationAll(){
+        [JPUSHService removeNotification:nil];
+    }
+    
+    void _findNotification(char *idKey,bool delivered){
+        JPushNotificationIdentifier *identifier = [[JPushNotificationIdentifier alloc] init];
+        NSString *nsIdKey = CreateNSString(idKey);
+        if (![nsIdKey length]) {
+            NSLog(@"![nsIdKey length]");
+            identifier.identifiers = nil;
+        } else {
+            NSData *data = [nsIdKey dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dict = APNativeJSONObject(data);
+            NSArray *idKeyArr = dict[@"Items"];
+            identifier.identifiers = idKeyArr;
+        }
+        identifier.delivered = delivered;
+        
+        identifier.findCompletionHandler = ^(NSArray *results) {
+            //results iOS10以下返回UILocalNotification对象数组
+            //iOS10以上 根据delivered传入值返回UNNotification或UNNotificationRequest对象数组
+            NSLog(@"查找指定通知 - 返回结果为：%@",results);
+//            UnitySendMessage([gameObjectName UTF8String], "OnMobileNumberOperatorResult", messageAsDictionary(dic).UTF8String);
+        };
+        
+        [JPUSHService findNotification:identifier];
+    }
+    
+    
     // 本地通知旧接口 - end
+    
+    //地理围栏 - start
+    
+    /**
+//    调用此 API 来设置最大的地理围栏监听个数，默认值为10
+//    参数说明
+//    count
+//    类型要求为NSInteger 类型
+//    默认值为10
+//    iOS系统要求最大不能超过20个，否则会报错。
+     */
+    void _setGeofenecMaxCount(const int count){
+        [JPUSHService setGeofenecMaxCount:integerValue(count)];
+    }
+    
+    
+    //地理围栏 - end
+    
+    //other - start
+    /**
+     功能说明
+     API 用于统计用户应用崩溃日志
+     调用说明
+     如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
+     */
+    void _crashLogON(){
+        [JPUSHService crashLogON];
+    }
+    
+    /**
+     功能说明
+     
+     用于短信补充功能。设置手机号码后，可实现“推送不到短信到”的通知方式，提高推送达到率。
+     参数说明
+     mobileNumber 手机号码。只能以 “+” 或者数字开头，后面的内容只能包含 “-” 和数字，并且长度不能超过 20。如果传 nil 或空串则为解除号码绑定操作
+     completion 响应回调。成功则 error 为空，失败则 error 带有错误码及错误信息，具体错误码详见错误码定义
+     调用说明
+     此接口调用频率有限制，10s 之内最多 3 次。建议在登录成功以后，再调用此接口。结果信息通过 completion 异步返回，也可将completion 设置为 nil 不处理结果信息。
+     */
+    void _setMobileNumber(int sequence,char *mobileNumber){
+        NSString *nsMobileNumber = CreateNSString(mobileNumber);
+        if (![nsMobileNumber length]) {
+            return;
+        }
+        [JPUSHService setMobileNumber:nsMobileNumber completion:^(NSError *error) {
+            NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+            [dic setValue:[NSNumber numberWithUnsignedInteger:sequence] forKey:@"sequence"];
+            if (!error) {
+                [dic setValue:[NSNumber numberWithUnsignedInteger:0] forKey:@"code"];
+                UnitySendMessage([gameObjectName UTF8String], "OnMobileNumberOperatorResult", messageAsDictionary(dic).UTF8String);
+            }else{
+                [dic setValue:[NSNumber numberWithUnsignedInteger:[error code]] forKey:@"code"];
+            }
+            UnitySendMessage([gameObjectName UTF8String], "OnMobileNumberOperatorResult", messageAsDictionary(dic).UTF8String);
+        }];
+    }
+    
+    
+    void _setLatitude(double latitude, double longitude){
+        [JPUSHService setLatitude:latitude longitude:longitude];
+    }
+    
+    //other - end
     
 #if defined(__cplusplus)
 }
