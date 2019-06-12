@@ -158,7 +158,7 @@ public class PluginsDemo : MonoBehaviour
 
         if (GUILayout.Button("remove Notification All", GUILayout.Height(80)))
         {
-            JPushBinding._removeNotificationAll();
+            JPushBinding.RemoveNotificationAll();
         }
 #endif
     }

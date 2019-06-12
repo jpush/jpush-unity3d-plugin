@@ -16,12 +16,17 @@
   - [SetAlias(int sequence, string alias)](#setaliasint-sequence-string-alias)
   - [DeleteAlias(int sequence)](#deletealiasint-sequence)
   - [GetAlias(int sequence)](#getaliasint-sequence)
+  - [FilterValidTags(List<string>)](#filterValidTags)
+- [API](#API)
+  - [SetMaxGeofenceNumber(int maxNumber)](#setMaxGeofenceNumber)
+  - [SetMobileNumber(int sequence, string mobileNumber)](#setMobileNumber-sequence-string-mobileNumber)
 - [事件监听](#事件监听)
   - [OnReceiveNotification(string notification)](#onreceivenotificationstring-notification)
   - [OnReceiveMessage(string msg)](#onreceivemessagestring-msg)
   - [OnOpenNotification(string notification)](#onopennotificationstring-notification)
   - [OnJPushTagOperateResult(result)](#onjpushtagoperateresultresult)
   - [OnJPushAliasOperateResult(result)](#onjpushaliasoperateresultresult)
+  - [OnMobileNumberOperatorResult(result)](#onjpushMobileNumberoperateresultresult)
 
 ## 初始化与调试
 
@@ -138,6 +143,35 @@
 
 - sequence: 作为一次操作的唯一标识，会在 `OnJPushTagOperateResult` 回调中一并返回。
 
+### FilterValidTags(List<string> tags)
+
+过滤非法tag
+
+#### 参数说明
+
+- tags: tag列表
+
+## API
+
+### SetMaxGeofenceNumber(int maxNumber)
+
+设置最多允许保存的地理围栏数量，超过最大限制后，如果继续创建先删除最早创建的地理围栏。默认数量为10个
+
+#### 参数说明
+
+- maxNumber: 允许最大数，
+                Andorid:允许设置最小1个，最大100个。
+                IOS:iOS系统要求最大不能超过20个，否则会报错。
+
+### SetMobileNumber(int sequence, string mobileNumber)
+
+调用此 API 设置手机号码。该接口会控制调用频率，频率为 10s 之内最多 3 次。
+
+#### 参数说明
+
+- sequence: 用户自定义的操作序列号，同操作结果一起返回，用来标识一次操作的唯一性。
+- mobileNumber: 手机号码。如果传 null 或空串则为解除号码绑定操作。 限制：只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和数字。
+
 ## 事件监听
 
 监听事件都需要在插件 `init(gameObject)` 方法传入的对应 GameObject 中实现。
@@ -154,6 +188,7 @@ Android 的通知内容格式为：
 
 ```text
 {
+  "msgId":"信息id"
   "title": "通知标题",
   "content": "通知内容",
   "extras": {   // 自定义键值对
@@ -191,6 +226,7 @@ Android 的通知内容格式为：
 
 ```text
 {
+  "msgId":"信息id"
   "message": "自定义消息内容",
   "extras": {   // 自定义键值对
     "key1": "value1",
@@ -223,6 +259,7 @@ Android 的通知内容格式为：
 
 ```text
 {
+  "msgId":"信息id"
   "title": "通知标题",
   "content": "通知内容",
   "extras": {   // 自定义键值对
@@ -278,5 +315,20 @@ JPush 的别名相关操作回调。
   "sequence": 1, // 调用标签或别名方法时传入的。
   "code": 0,     // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
   "alias": "查询或传入的 alias"
+}
+```
+
+### OnMobileNumberOperatorResult(result)
+
+JPush 设置电话号码回调
+
+#### 参数说明
+
+- result: Json 格式字符串。格式为：
+
+```text
+{
+  "sequence": 1, // 调用标签或别名方法时传入的。
+  "code": 0,     // 结果码。0：成功；其他：失败（详细说明可参见官网文档）。
 }
 ```

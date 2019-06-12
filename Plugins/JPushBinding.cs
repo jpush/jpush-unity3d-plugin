@@ -604,6 +604,12 @@ namespace JPush
 
         }
 
+        public static void RemoveNotificationAll()
+        {
+            _removeNotificationAll();
+
+        }
+
         /// <summary>
         ///  查找通知中心显示推送和待推送请求，
         /// </summary>
@@ -622,6 +628,31 @@ namespace JPush
 
 
         // 本地通知 - end
+
+        //其他 - start
+
+  
+        /// <summary>
+        /// 用于统计用户应用崩溃日志,如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
+        /// </summary>
+        public static void CrashLogON()
+        {
+            _crashLogON();
+
+        }
+
+        /// <summary>
+        /// 地理位置上报
+        /// </summary>
+        /// <param name="latitude">纬度</param>
+        /// <param name="longitude">经度</param>
+        public static void SetLatitude(double latitude, double longitude)
+        {
+            _setLatitude( latitude, longitude);
+
+        }
+        //其他 - end
+
 
         [DllImport("__Internal")]
         private static extern void _init(string gameObject);

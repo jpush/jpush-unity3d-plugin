@@ -9,6 +9,11 @@
 - [设置保留最近通知条数](#设置保留最近通知条数)
 - [本地通知](#本地通知)
 - [获取推送连接状态](#获取推送连接状态)
+- [动态设置channel](#动态设置channel)
+- [通知栏被打开](#通知栏被打开)
+- [设置地理围栏监控周期](#设置地理围栏监控周期)
+- [开启和关闭省电模式](#开启和关闭省电模式)
+
 
 ## 停止与恢复推送服务
 
@@ -310,3 +315,37 @@ JPushBinding.ClearLocalNotifications();
 ```csharp
 bool isConnect = JPushBinding.GetConnectionState();
 ```
+
+
+### SetChannel(string channel)
+
+动态配置 channel
+
+#### 参数说明
+
+- channel: channel的值。
+
+
+### ReportNotificationOpened(string msgId)
+
+用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
+
+#### 参数说明
+
+- msgId：推送每一条消息和通知对应的唯一 ID
+
+### SetGeofenceInterval(long interval)
+
+设置地理围栏监控周期，最小3分钟，最大1天。默认为15分钟，当距离地理围栏边界小于1000米周期自动调整为3分钟。设置成功后一直使用设置周期，不会进行调整。
+
+#### 参数说明
+
+- interval 监控周期，单位是毫秒。
+
+### SetPowerSaveMode(bool enable)
+
+JPush SDK 开启和关闭省电模式，默认为关闭。
+
+#### 参数说明
+
+- enable 是否需要开启或关闭，true 为开启，false 为关闭

@@ -14,6 +14,11 @@
   - [SetLocalNotification(int delay, string content, int badge, string idKey)](#setlocalnotificationint-delay-string-content-int-badge-string-idkey)
   - [DeleteLocalNotificationWithIdentifierKey(string idKey)](#deletelocalnotificationwithidentifierkeystring-idkey)
   - [ClearAllLocalNotifications()](#clearalllocalnotifications)
+  - [RemoveNotification(List<string> idKeys, bool delivere)](#removeNotification-idKeys-bool-delivere)
+  - [RemoveNotificationAll()](#RemoveNotificationAll)
+- [API](#API)
+  - [CrashLogON()](#CrashLogON)
+  - [SetLatitude(double latitude, double longitude)](#SetLatitude-latitude-double-longitude)
 
 ## 角标（badge）
 
@@ -133,3 +138,31 @@ JPushBinding.StopLogPageView("login"); // 记录退出 login 页面。
 ### ClearAllLocalNotifications()
 
 清除所有注册的本地通知。
+
+### RemoveNotification(List<string> idKeys, bool delivered)
+
+移除通知中心显示推送和待推送请求。
+
+#### 参数说明
+
+- idKeys: 要查找的idKey列表，null 查找所有；
+- badge: ture 显示的通知，false 还没有显示的通知，iOS10以下无效；
+
+### RemoveNotificationAll()
+
+清除所有注册的本地通知。
+
+## API
+
+###  CrashLogON()
+
+用于统计用户应用崩溃日志,如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
+
+### SetLatitude(double latitude, double longitude)
+
+地理位置上报。
+
+#### 参数说明
+
+- latitude: 纬度；
+- longitude: 经度；
