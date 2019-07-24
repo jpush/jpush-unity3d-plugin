@@ -38,10 +38,10 @@ android {
 }
 
 dependencies {
-//    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided files('libs/unity-classes.jar')
-    compile files('libs/jcore-android-2.1.2.jar')
-    compile files('libs/jpush-android-3.3.4.jar')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided files('libsprovided/unity-classes.jar')
+//    compile files('libs/jcore-android-2.1.2.jar')
+//    compile files('libs/jpush-android-3.3.4.jar')
 }
 
 repositories {
