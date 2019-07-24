@@ -9,7 +9,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen HXHG. All rights reserved.
  */
 
-#define JPUSH_VERSION_NUMBER 3.2.0
+#define JPUSH_VERSION_NUMBER 3.2.1
 
 #import <Foundation/Foundation.h>
 
@@ -389,6 +389,13 @@ typedef NS_OPTIONS(NSUInteger, JPAuthorizationOptions) {
  @param launchOptions app启动完成是收到的字段参数
  */
 + (void)registerLbsGeofenceDelegate:(id<JPUSHGeofenceDelegate>)delegate withLaunchOptions:(NSDictionary *)launchOptions;
+
+/**
+ 删除地理围栏
+ 
+ @param geofenceId 地理围栏id
+ */
++ (void)removeGeofenceWithIdentifier:(NSString *)geofenceId;
 
 ///----------------------------------------------------
 /// @name Local Notification 本地通知

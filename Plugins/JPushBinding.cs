@@ -308,8 +308,20 @@ namespace JPush
             _setGeofenecMaxCount(maxNumber);
             #endif
         }
+        /// <summary>
+        /// 删除地理围栏
+        /// </summary>
+        /// <param name="geofenceid">地理围栏ID</param>
+        public static void DeleteGeofence(string geofenceid)
+        {
+            #if UNITY_ANDROID
+            DeleteGeofenceAndroid(geofenceid);
+            #elif UNITY_IOS
+            _removeGeofenceWithIdentifier(geofenceid);
+            #endif
+        }
 
-      public static void SetMobileNumber(int sequence, string mobileNumber)
+        public static void SetMobileNumber(int sequence, string mobileNumber)
         {
             #if UNITY_ANDROID
             SetMobileNumberAndroid(sequence,mobileNumber);
@@ -358,6 +370,12 @@ namespace JPush
         public static void SetMaxGeofenceNumberAndroid(int maxNumber)
         {
             _plugin.Call("setMaxGeofenceNumber", maxNumber);
+        }
+
+
+        public static void DeleteGeofenceAndroid(string geofenceid)
+        {
+            _plugin.Call("deleteGeofence", geofenceid);
         }
 
         //调用此 API 设置手机号码。该接口会控制调用频率，频率为 10s 之内最多 3 次。
@@ -523,9 +541,9 @@ namespace JPush
             return _plugin.Call<bool>("getConnectionState");
         }
 
-        #endif
+#endif
 
-        #if UNITY_IOS
+#if UNITY_IOS
 
         public static void SetBadge(int badge)
         {
@@ -738,6 +756,13 @@ namespace JPush
         ///    iOS系统要求最大不能超过20个，否则会报错。
         [DllImport("__Internal")]
         public static extern void _setGeofenecMaxCount(int count);
+
+        /// <summary>
+        /// 删除地理围栏
+        /// </summary>
+        /// <param name="geofenceId">地理围栏ID</param>
+        [DllImport("__Internal")]
+        public static extern void _removeGeofenceWithIdentifier(string geofenceId);
 
 
         //功能说明
