@@ -104,7 +104,24 @@
       [[JPushEventCache sharedInstance] sendEvent:userInfo withKey:@"JPushPluginReceiveNotification"];
     }
     ```
+    
+5.有些Unity版本在导出Xcode项目之后，需要修改：
 
+```Objective-C
+    Preprocessor.h 文件中
+
+    #define UNITY_USES_REMOTE_NOTIFICATIONS 0
+    更改为
+    #define UNITY_USES_REMOTE_NOTIFICATIONS 1
+
+    否则
+
+    didReceiveRemoteNotification
+    didRegisterForRemoteNotificationsWithDeviceToken
+    didReceiveRemoteNotification
+
+    都将无法使用
+```
 ## API 说明
 
 Android 与 iOS [通用 API](/Doc/CommonAPI.md)。
