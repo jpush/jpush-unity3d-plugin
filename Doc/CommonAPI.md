@@ -20,6 +20,7 @@
 - [API](#API)
   - [SetMaxGeofenceNumber(int maxNumber)](#setMaxGeofenceNumber)
   - [SetMobileNumber(int sequence, string mobileNumber)](#setMobileNumber-sequence-string-mobileNumber)
+  - [DeleteGeofence(string geofenceid)](#deleteGeofence-string-geofenceid)
 - [事件监听](#事件监听)
   - [OnReceiveNotification(string notification)](#onreceivenotificationstring-notification)
   - [OnReceiveMessage(string msg)](#onreceivemessagestring-msg)
@@ -171,6 +172,16 @@
 
 - sequence: 用户自定义的操作序列号，同操作结果一起返回，用来标识一次操作的唯一性。
 - mobileNumber: 手机号码。如果传 null 或空串则为解除号码绑定操作。 限制：只能以 “+” 或者 数字开头；后面的内容只能包含 “-” 和数字。
+
+
+### DeleteGeofence(string geofenceid)
+
+删除地理围栏。
+
+#### 参数说明
+
+- geofenceid: 地理围栏ID.
+
 
 ## 事件监听
 
