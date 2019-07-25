@@ -2,6 +2,7 @@ package cn.jiguang.unity.push;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
 
@@ -382,6 +383,10 @@ public class JPushBridge {
         JPushInterface.setMaxGeofenceNumber(mContext,maxNumber);
     }
 
+    //删除指定id的地理围栏
+    public void deleteGeofence(String geofenceid){
+        JPushInterface.deleteGeofence(mContext,geofenceid);
+    }
     //调用此 API 设置手机号码。该接口会控制调用频率，频率为 10s 之内最多 3 次。
     //sequence
     //用户自定义的操作序列号，同操作结果一起返回，用来标识一次操作的唯一性。
