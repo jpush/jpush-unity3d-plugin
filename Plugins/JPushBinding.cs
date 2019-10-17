@@ -1,3 +1,4 @@
+#if UNITY_ANDROID || UNITY_IOS
 using UnityEngine;
 using System;
 using System.Collections;
@@ -808,3 +809,4 @@ namespace JPush
 #endif
     }
 }
+#endif
