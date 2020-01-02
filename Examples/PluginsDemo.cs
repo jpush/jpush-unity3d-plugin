@@ -17,8 +17,8 @@ public class PluginsDemo : MonoBehaviour
     void Start()
     {
         gameObject.name = "Main Camera";
-        JPushBinding.Init(gameObject.name);
         JPushBinding.SetDebug(true);
+        JPushBinding.Init(gameObject.name);
     }
 
     // Update is called once per frame
