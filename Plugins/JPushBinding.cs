@@ -53,7 +53,7 @@ namespace JPush
             _plugin.Call("initPush", gameObject);
 
             #elif UNITY_IOS
-            _init(gameObject);
+            _initJpush(gameObject);
 
             #endif
         }
@@ -69,7 +69,7 @@ namespace JPush
             _plugin.Call("setDebug", enable);
 
             #elif UNITY_IOS
-            _setDebug(enable);
+            _setDebugJpush(enable);
 
             #endif
         }
@@ -84,7 +84,7 @@ namespace JPush
             return _plugin.Call<string>("getRegistrationId");
 
             #elif UNITY_IOS
-            return _getRegistrationId();
+            return _getRegistrationIdJpush();
 
             #else
             return "";
@@ -111,7 +111,7 @@ namespace JPush
             _plugin.Call("setTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-            _setTags(sequence, tagsJsonStr);
+            _setTagsJpush(sequence, tagsJsonStr);
 
             #endif
         }
@@ -134,7 +134,7 @@ namespace JPush
             _plugin.Call("addTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-            _addTags(sequence, tagsJsonStr);
+            _addTagsJpush(sequence, tagsJsonStr);
 
             #endif
         }
@@ -157,7 +157,7 @@ namespace JPush
             _plugin.Call("deleteTags", sequence, tagsJsonStr);
 
             #elif UNITY_IOS
-            _deleteTags(sequence, tagsJsonStr);
+            _deleteTagsJpush(sequence, tagsJsonStr);
 
             #endif
         }
@@ -172,7 +172,7 @@ namespace JPush
             _plugin.Call("cleanTags", sequence);
 
             #elif UNITY_IOS
-            _cleanTags(sequence);
+            _cleanTagsJpush(sequence);
 
             #endif
         }
@@ -188,7 +188,7 @@ namespace JPush
             _plugin.Call("getAllTags", sequence);
 
             #elif UNITY_IOS
-            _getAllTags(sequence);
+            _getAllTagsJpush(sequence);
 
             #endif
         }
@@ -204,7 +204,7 @@ namespace JPush
             _plugin.Call("checkTagBindState", sequence, tag);
 
             #elif UNITY_IOS
-            _checkTagBindState(sequence, tag);
+            _checkTagBindStateJpush(sequence, tag);
 
             #endif
         }
@@ -225,7 +225,7 @@ namespace JPush
             _plugin.Call("setAlias", sequence, alias);
 
             #elif UNITY_IOS
-            _setAlias(sequence, alias);
+            _setAliasJpush(sequence, alias);
 
             #endif
         }
@@ -240,7 +240,7 @@ namespace JPush
             _plugin.Call("deleteAlias", sequence);
 
             #elif UNITY_IOS
-            _deleteAlias(sequence);
+            _deleteAliasJpush(sequence);
 
             #endif
         }
@@ -255,7 +255,7 @@ namespace JPush
             _plugin.Call("getAlias", sequence);
 
             #elif UNITY_IOS
-            _getAlias(sequence);
+            _getAliasJpush(sequence);
 
             #endif
         }
@@ -271,7 +271,7 @@ namespace JPush
             #if UNITY_ANDROID
             reJson = _plugin.Call<string>("filterValidTags", tagsJsonStr);
             #elif UNITY_IOS
-            reJson =  _filterValidTags(tagsJsonStr);
+            reJson =  _filterValidTagsJpush(tagsJsonStr);
             #endif
             if (null == reJson)
             {
@@ -305,7 +305,7 @@ namespace JPush
             #if UNITY_ANDROID
             SetMaxGeofenceNumberAndroid(maxNumber);
             #elif UNITY_IOS
-            _setGeofenecMaxCount(maxNumber);
+            _setGeofenecMaxCountJpush(maxNumber);
             #endif
         }
         /// <summary>
@@ -317,7 +317,7 @@ namespace JPush
             #if UNITY_ANDROID
             DeleteGeofenceAndroid(geofenceid);
             #elif UNITY_IOS
-            _removeGeofenceWithIdentifier(geofenceid);
+            _removeGeofenceWithIdentifierJpush(geofenceid);
             #endif
         }
 
@@ -326,7 +326,7 @@ namespace JPush
             #if UNITY_ANDROID
             SetMobileNumberAndroid(sequence,mobileNumber);
             #elif UNITY_IOS
-            _setMobileNumber(sequence, mobileNumber);
+            _setMobileNumberJpush(sequence, mobileNumber);
             #endif
         }
 
@@ -547,44 +547,44 @@ namespace JPush
 
         public static void SetBadge(int badge)
         {
-            _setBadge(badge);
+            _setBadgeJpush(badge);
         }
 
         public static void ResetBadge()
         {
-            _resetBadge();
+            _resetBadgeJpush();
         }
 
         public static void SetApplicationIconBadgeNumber(int badge)
         {
-            _setApplicationIconBadgeNumber(badge);
+            _setApplicationIconBadgeNumberJpush(badge);
         }
 
         public static int GetApplicationIconBadgeNumber()
         {
-            return _getApplicationIconBadgeNumber();
+            return _getApplicationIconBadgeNumberJpush();
         }
 
         public static void StartLogPageView(string pageName)
         {
-            _startLogPageView(pageName);
+            _startLogPageViewJpush(pageName);
         }
 
         public static void StopLogPageView(string pageName)
         {
-            _stopLogPageView(pageName);
+            _stopLogPageViewJpush(pageName);
         }
 
         public static void BeginLogPageView(string pageName, int duration)
         {
-            _beginLogPageView(pageName, duration);
+            _beginLogPageViewJpush(pageName, duration);
         }
 
         // 本地通知 -start
 
         public static void SendLocalNotification(string localParams)
         {
-            _sendLocalNotification(localParams);
+            _sendLocalNotificationJpush(localParams);
         }
 
         public static void SetLocalNotification(int delay, string content, int badge, string idKey) {
@@ -592,18 +592,18 @@ namespace JPush
             jd["alertBody"] = content;
             jd["idKey"] = idKey;
             string jsonStr = JsonMapper.ToJson(jd);
-            _setLocalNotification(delay, badge, jsonStr);
+            _setLocalNotificationJpush(delay, badge, jsonStr);
         }
 
         public static void DeleteLocalNotificationWithIdentifierKey(string idKey) {
             JsonData jd = new JsonData();
             jd["idKey"] = idKey;
             string jsonStr = JsonMapper.ToJson(jd);
-            _deleteLocalNotificationWithIdentifierKey(jsonStr);
+            _deleteLocalNotificationWithIdentifierKeyJpush(jsonStr);
         }
 
         public static void ClearAllLocalNotifications() {
-            _clearAllLocalNotifications();
+            _clearAllLocalNotificationsJpush();
         }
 
         /// <summary>
@@ -618,13 +618,13 @@ namespace JPush
             {
                 idKeysStr = JsonHelper.ToJson(idKeys);
             }
-            _removeNotification(idKeysStr, delivered);
+            _removeNotificationJpush(idKeysStr, delivered);
 
         }
 
         public static void RemoveNotificationAll()
         {
-            _removeNotificationAll();
+            _removeNotificationAllJpush();
 
         }
 
@@ -655,7 +655,7 @@ namespace JPush
         /// </summary>
         public static void CrashLogON()
         {
-            _crashLogON();
+            _crashLogONJpush();
 
         }
 
@@ -666,85 +666,85 @@ namespace JPush
         /// <param name="longitude">经度</param>
         public static void SetLatitude(double latitude, double longitude)
         {
-            _setLatitude( latitude, longitude);
+            _setLatitudeJpush( latitude, longitude);
 
         }
         //其他 - end
 
 
         [DllImport("__Internal")]
-        private static extern void _init(string gameObject);
+        private static extern void _initJpush(string gameObject);
 
         [DllImport("__Internal")]
-        private static extern void _setDebug(bool enable);
+        private static extern void _setDebugJpush(bool enable);
 
         [DllImport("__Internal")]
-        private static extern string _getRegistrationId();
+        private static extern string _getRegistrationIdJpush();
 
         [DllImport("__Internal")]
-        private static extern void _setTags(int sequence, string tags);
+        private static extern void _setTagsJpush(int sequence, string tags);
 
         [DllImport("__Internal")]
-        private static extern void _addTags(int sequence, string tags);
+        private static extern void _addTagsJpush(int sequence, string tags);
 
         [DllImport("__Internal")]
-        private static extern void _deleteTags(int sequence, string tags);
+        private static extern void _deleteTagsJpush(int sequence, string tags);
 
         [DllImport("__Internal")]
-        private static extern void _cleanTags(int sequence);
+        private static extern void _cleanTagsJpush(int sequence);
 
         [DllImport("__Internal")]
-        private static extern void _getAllTags(int sequence);
+        private static extern void _getAllTagsJpush(int sequence);
 
         [DllImport("__Internal")]
-        private static extern void _checkTagBindState(int sequence, string tag);
-
-
-        [DllImport("__Internal")]
-        private static extern string _filterValidTags(string tags);
+        private static extern void _checkTagBindStateJpush(int sequence, string tag);
 
 
         [DllImport("__Internal")]
-        private static extern void _setAlias(int sequence, string alias);
+        private static extern string _filterValidTagsJpush(string tags);
+
 
         [DllImport("__Internal")]
-        private static extern void _deleteAlias(int sequence);
+        private static extern void _setAliasJpush(int sequence, string alias);
 
         [DllImport("__Internal")]
-        private static extern void _getAlias(int sequence);
+        private static extern void _deleteAliasJpush(int sequence);
 
         [DllImport("__Internal")]
-        private static extern void _setBadge(int badge);
+        private static extern void _getAliasJpush(int sequence);
 
         [DllImport("__Internal")]
-        private static extern void _resetBadge();
+        private static extern void _setBadgeJpush(int badge);
 
         [DllImport("__Internal")]
-        private static extern void _setApplicationIconBadgeNumber(int badge);
+        private static extern void _resetBadgeJpush();
 
         [DllImport("__Internal")]
-        private static extern int _getApplicationIconBadgeNumber();
+        private static extern void _setApplicationIconBadgeNumberJpush(int badge);
 
         [DllImport("__Internal")]
-        private static extern void _startLogPageView(string pageName);
+        private static extern int _getApplicationIconBadgeNumberJpush();
 
         [DllImport("__Internal")]
-        private static extern void _stopLogPageView(string pageName);
+        private static extern void _startLogPageViewJpush(string pageName);
 
         [DllImport("__Internal")]
-        private static extern void _beginLogPageView(string pageName, int duration);
+        private static extern void _stopLogPageViewJpush(string pageName);
 
         [DllImport("__Internal")]
-        public static extern void _setLocalNotification(int delay, int badge, string alertBodyAndIdKey);
+        private static extern void _beginLogPageViewJpush(string pageName, int duration);
 
         [DllImport("__Internal")]
-        public static extern void _sendLocalNotification(string localParams);
+        public static extern void _setLocalNotificationJpush(int delay, int badge, string alertBodyAndIdKey);
+
+        [DllImport("__Internal")]
+        public static extern void _sendLocalNotificationJpush(string localParams);
         
         [DllImport("__Internal")]
-        public static extern void _deleteLocalNotificationWithIdentifierKey(string idKey);
+        public static extern void _deleteLocalNotificationWithIdentifierKeyJpush(string idKey);
 
         [DllImport("__Internal")]
-        public static extern void _clearAllLocalNotifications();
+        public static extern void _clearAllLocalNotificationsJpush();
 
 
 
@@ -755,14 +755,14 @@ namespace JPush
         ///    默认值为10
         ///    iOS系统要求最大不能超过20个，否则会报错。
         [DllImport("__Internal")]
-        public static extern void _setGeofenecMaxCount(int count);
+        public static extern void _setGeofenecMaxCountJpush(int count);
 
         /// <summary>
         /// 删除地理围栏
         /// </summary>
         /// <param name="geofenceId">地理围栏ID</param>
         [DllImport("__Internal")]
-        public static extern void _removeGeofenceWithIdentifier(string geofenceId);
+        public static extern void _removeGeofenceWithIdentifierJpush(string geofenceId);
 
 
         //功能说明
@@ -770,7 +770,7 @@ namespace JPush
         //调用说明
         //如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
         [DllImport("__Internal")]
-        public static extern void _crashLogON();
+        public static extern void _crashLogONJpush();
 
         //   功能说明
 
@@ -781,10 +781,10 @@ namespace JPush
         //调用说明
         //此接口调用频率有限制，10s 之内最多 3 次。建议在登录成功以后，再调用此接口。结果信息通过 completion 异步返回，也可将completion 设置为 nil 不处理结果信息。
         [DllImport("__Internal")]
-        public static extern void _setMobileNumber(int sequence,string mobileNumber);
+        public static extern void _setMobileNumberJpush(int sequence,string mobileNumber);
 
         [DllImport("__Internal")]
-        public static extern void _setLatitude(double latitude, double longitude);
+        public static extern void _setLatitudeJpush(double latitude, double longitude);
 
         /// <summary>
         ///  移除通知中心显示推送和待推送请求，
@@ -792,11 +792,11 @@ namespace JPush
         /// <param name="idKey">要移除的id列表，null 移除所有</param>
         /// <param name="delivered">ture 显示的通知，false 还没有显示的通知，iOS10以下无效</param>
         [DllImport("__Internal")]
-        public static extern void _removeNotification(string idKey, bool delivered);
+        public static extern void _removeNotificationJpush(string idKey, bool delivered);
 
 
         [DllImport("__Internal")]
-        public static extern void _removeNotificationAll();
+        public static extern void _removeNotificationAllJpush();
 
         /// <summary>
         ///  查找通知中心显示推送和待推送请求，

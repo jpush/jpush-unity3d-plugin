@@ -112,7 +112,7 @@ extern "C" {
     }
     // private - end
     
-    void _init(char *gameObject) {
+    void _initJpush(char *gameObject) {
         gameObjectName = [NSString stringWithUTF8String:gameObject];
         NSNotificationCenter *msgCenter = [NSNotificationCenter defaultCenter];
         [[NSNotificationCenter defaultCenter] addObserver:[JPushUnityInstnce sharedInstance]
@@ -132,7 +132,7 @@ extern "C" {
         [[JPushEventCache sharedInstance] scheduleNotificationQueue];
     }
     
-    void _setDebug(bool enable) {
+    void _setDebugJpush(bool enable) {
         if (enable) {
             [JPUSHService setDebugMode];
         } else {
@@ -140,14 +140,14 @@ extern "C" {
         }
     }
     
-    const char *_getRegistrationId() {
+    const char *_getRegistrationIdJpush() {
         NSString *registrationID = [JPUSHService registrationID];
         return MakeHeapString([registrationID UTF8String]);
     }
     
     // Tag & Alias - start
     
-    void _setTags(int sequence, const char *tags) {
+    void _setTagsJpush(int sequence, const char *tags) {
         NSString *nsTags = CreateNSString(tags);
         if (![nsTags length]) {
             return;
@@ -161,7 +161,7 @@ extern "C" {
         [JPUSHService setTags:set completion:tagsOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _addTags(int sequence, char *tags) {
+    void _addTagsJpush(int sequence, char *tags) {
         NSString* tagsJsonStr = CreateNSString(tags);
         
         NSData *data = [tagsJsonStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -172,7 +172,7 @@ extern "C" {
         [JPUSHService addTags:tagSet completion:tagsOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _deleteTags(int sequence, char *tags) {
+    void _deleteTagsJpush(int sequence, char *tags) {
         NSString *tagsJsonStr = CreateNSString(tags);
         
         NSData *data = [tagsJsonStr dataUsingEncoding:NSUTF8StringEncoding];
@@ -183,15 +183,15 @@ extern "C" {
         [JPUSHService deleteTags:tagSet completion:tagsOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _cleanTags(int sequence) {
+    void _cleanTagsJpush(int sequence) {
         [JPUSHService cleanTags:tagsOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _getAllTags(int sequence) {
+    void _getAllTagsJpush(int sequence) {
         [JPUSHService getAllTags:tagsOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _checkTagBindState(int sequence, char *tag) {
+    void _checkTagBindStateJpush(int sequence, char *tag) {
         NSString *nsTag = CreateNSString(tag);
         [JPUSHService validTag:nsTag completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq, BOOL isBind) {
             NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
@@ -207,7 +207,7 @@ extern "C" {
         } seq:(NSInteger)sequence];
     }
     
-    const char * _filterValidTags(char *tags){
+    const char * _filterValidTagsJpush(char *tags){
         
         NSString *nsTags = CreateNSString(tags);
         if (![nsTags length]) {
@@ -233,7 +233,7 @@ extern "C" {
         
     }
     
-    void _setAlias(int sequence, const char * alias){
+    void _setAliasJpush(int sequence, const char * alias){
         NSString *nsAlias = CreateNSString(alias);
         if (![nsAlias length]) {
             return ;
@@ -242,11 +242,11 @@ extern "C" {
         [JPUSHService setAlias:nsAlias completion:aliasOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _getAlias(int sequence) {
+    void _getAliasJpush(int sequence) {
         [JPUSHService getAlias:aliasOperationCompletion seq:(NSInteger)sequence];
     }
     
-    void _deleteAlias(int sequence) {
+    void _deleteAliasJpush(int sequence) {
         [JPUSHService deleteAlias:aliasOperationCompletion seq:(NSInteger)sequence];
     }
     
@@ -254,19 +254,19 @@ extern "C" {
     
     // 角标处理 - start
     
-    void _setBadge(const int badge){
+    void _setBadgeJpush(const int badge){
         [JPUSHService setBadge:integerValue(badge)];
     }
     
-    void _resetBadge(){
+    void _resetBadgeJpush(){
         [JPUSHService resetBadge];
     }
     
-    void _setApplicationIconBadgeNumber(const int badge){
+    void _setApplicationIconBadgeNumberJpush(const int badge){
         [UIApplication sharedApplication].applicationIconBadgeNumber = integerValue(badge);
     }
     
-    int _getApplicationIconBadgeNumber(){
+    int _getApplicationIconBadgeNumberJpush(){
         return intValue([UIApplication sharedApplication].applicationIconBadgeNumber);
     }
     
@@ -274,7 +274,7 @@ extern "C" {
     
     // 页面统计 - start
     
-    void _startLogPageView(const char *pageName) {
+    void _startLogPageViewJpush(const char *pageName) {
         NSString *nsPageName = CreateNSString(pageName);
         if (![nsPageName length]) {
             return;
@@ -286,7 +286,7 @@ extern "C" {
         [JPUSHService startLogPageView:sendPageName];
     }
     
-    void _stopLogPageView(const char *pageName) {
+    void _stopLogPageViewJpush(const char *pageName) {
         NSString *nsPageName = CreateNSString(pageName);
         if (![nsPageName length]) {
             return;
@@ -298,7 +298,7 @@ extern "C" {
         [JPUSHService stopLogPageView:sendPageName];
     }
     
-    void _beginLogPageView(const char *pageName, const int duration) {
+    void _beginLogPageViewJpush(const char *pageName, const int duration) {
         NSString *nsPageName = CreateNSString(pageName);
         if (![nsPageName length]) {
             return;
@@ -314,7 +314,7 @@ extern "C" {
     
     // 本地通知旧接口 - start
     
-    void _setLocalNotification(int delay, int badge, char *alertBodyAndIdKey){
+    void _setLocalNotificationJpush(int delay, int badge, char *alertBodyAndIdKey){
         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:integerValue(delay)];
         
         NSString *nsalertBodyAndIdKey = CreateNSString(alertBodyAndIdKey);
@@ -329,7 +329,7 @@ extern "C" {
         [JPUSHService setLocalNotification:date alertBody:sendAlertBody badge:badge alertAction:nil identifierKey:sendIdkey userInfo:nil soundName:nil];
     }
     
-    void _sendLocalNotification(char *params) {
+    void _sendLocalNotificationJpush(char *params) {
         NSString *nsalertBodyAndIdKey = CreateNSString(params);
         if (![nsalertBodyAndIdKey length]) {
             return ;
@@ -405,7 +405,7 @@ extern "C" {
         [JPUSHService addNotification:request];
     }
     
-    void _deleteLocalNotificationWithIdentifierKey(char *idKey){
+    void _deleteLocalNotificationWithIdentifierKeyJpush(char *idKey){
         NSString *nsIdKey = CreateNSString(idKey);
         if (![nsIdKey length]) {
             return ;
@@ -417,14 +417,14 @@ extern "C" {
         [JPUSHService deleteLocalNotificationWithIdentifierKey:sendIdkey];
     }
     
-    void _clearAllLocalNotifications(){
+    void _clearAllLocalNotificationsJpush(){
         [JPUSHService clearAllLocalNotifications];
     }
     
     
     
     
-    void _removeNotification(char *idKey,bool delivered){
+    void _removeNotificationJpush(char *idKey,bool delivered){
         JPushNotificationIdentifier *identifier = [[JPushNotificationIdentifier alloc] init];
         NSString *nsIdKey = CreateNSString(idKey);
         if (![nsIdKey length]) {
@@ -440,7 +440,7 @@ extern "C" {
         [JPUSHService removeNotification:identifier];
     }
     
-    void _removeNotificationAll(){
+    void _removeNotificationAllJpush(){
         [JPUSHService removeNotification:nil];
     }
     
@@ -481,12 +481,12 @@ extern "C" {
      //    默认值为10
      //    iOS系统要求最大不能超过20个，否则会报错。
      */
-    void _setGeofenecMaxCount(const int count){
+    void _setGeofenecMaxCountJpush(const int count){
         [JPUSHService setGeofenecMaxCount:integerValue(count)];
     }
     
     //
-    void _removeGeofenceWithIdentifier(char *geofenceId){
+    void _removeGeofenceWithIdentifierJpush(char *geofenceId){
         NSString *nsGeofenceId = CreateNSString(geofenceId);
         [JPUSHService removeGeofenceWithIdentifier:nsGeofenceId];
     }
@@ -501,7 +501,7 @@ extern "C" {
      调用说明
      如果需要统计 Log 信息，调用该接口。当你需要自己收集错误信息时，切记不要调用该接口。
      */
-    void _crashLogON(){
+    void _crashLogONJpush(){
         [JPUSHService crashLogON];
     }
     
@@ -515,7 +515,7 @@ extern "C" {
      调用说明
      此接口调用频率有限制，10s 之内最多 3 次。建议在登录成功以后，再调用此接口。结果信息通过 completion 异步返回，也可将completion 设置为 nil 不处理结果信息。
      */
-    void _setMobileNumber(int sequence,char *mobileNumber){
+    void _setMobileNumberJpush(int sequence,char *mobileNumber){
         NSString *nsMobileNumber = CreateNSString(mobileNumber);
         if (![nsMobileNumber length]) {
             return;
@@ -534,7 +534,7 @@ extern "C" {
     }
     
     
-    void _setLatitude(double latitude, double longitude){
+    void _setLatitudeJpush(double latitude, double longitude){
         [JPUSHService setLatitude:latitude longitude:longitude];
     }
     
