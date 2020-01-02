@@ -7,10 +7,6 @@
 
 ## 集成
 
-运行插件目录下的 JPushUnityPlugin_vX.X.X.unitypackage
-
-或者
-
 把Plugins文件夹里的文件合并到您自己的项目Assets/Plugins文件夹下面
 
 ### Android
