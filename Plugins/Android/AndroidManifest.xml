@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="应用的包名"
+    package="cn.cloud.push"
     >
     <!-- Required -->
     <permission
-    android:name="应用的包名.permission.JPUSH_MESSAGE"
+    android:name="cn.cloud.push.permission.JPUSH_MESSAGE"
     android:protectionLevel="signature" />
     
     <!-- Required  一些系统要求的权限，如访问网络等-->
-    <uses-permission android:name="应用的包名.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="cn.cloud.push.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -65,7 +65,7 @@
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="应用的包名" />
+                <category android:name="cn.cloud.push" />
             </intent-filter>
         </activity>
         
@@ -85,7 +85,7 @@
         
         <!-- since 3.0.9 Required SDK 核心功能-->
         <provider
-        android:authorities="应用的包名.DataProvider"
+        android:authorities="cn.cloud.push.DataProvider"
         android:name="cn.jpush.android.service.DataProvider"
         android:process=":pushcore"
         android:exported="false"
@@ -99,14 +99,14 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
-                <category android:name="应用的包名" />
+                <category android:name="cn.cloud.push" />
             </intent-filter>
             
         </service>
         
         <!-- since 3.1.0 Required SDK 核心功能-->
         <provider
-        android:authorities="应用的包名.DownloadProvider"
+        android:authorities="cn.cloud.push.DownloadProvider"
         android:name="cn.jpush.android.service.DownloadProvider"
         android:exported="true"
         />
@@ -118,7 +118,7 @@
             android:exported="false">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   <!--Required  显示通知栏 -->
-                <category android:name="应用的包名" />
+                <category android:name="cn.cloud.push" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -140,7 +140,7 @@
         <receiver android:name="cn.jiguang.unity.push.JPushEventReceiver">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
-                <category android:name="应用的包名"></category>
+                <category android:name="cn.cloud.push"></category>
             </intent-filter>
         </receiver>
         
@@ -152,7 +152,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.JNotifyActivity" />
-                <category android:name="应用的包名" />
+                <category android:name="cn.cloud.push" />
             </intent-filter>
         </activity>
         
@@ -168,7 +168,7 @@
         
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="应用的 AppKey" /> <!--  </>值来自开发者平台取得的AppKey-->
+        <meta-data android:name="JPUSH_APPKEY" android:value="0e9b1e93acb5efb93fd984c9" /> <!--  </>值来自开发者平台取得的AppKey-->
         
     </application>
 </manifest>
