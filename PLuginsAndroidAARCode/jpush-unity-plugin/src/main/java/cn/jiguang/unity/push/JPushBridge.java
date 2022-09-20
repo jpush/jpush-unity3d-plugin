@@ -49,6 +49,7 @@ public class JPushBridge {
     public void initPush(String gameObject) {
         JPushBridge.gameObject = gameObject;
         mContext = UnityPlayer.currentActivity.getApplicationContext();
+        JPushInterface.setNotificationCallBackEnable(mContext,true);
         JPushInterface.init(mContext);
 
         if (!receiveNotiStrCache.isEmpty()) {

@@ -154,12 +154,12 @@ public class JPushEventReceiver extends JPushMessageReceiver {
     public void onNotifyMessageOpened(Context context, NotificationMessage notificationMessage) {
         JPushInterface.reportNotificationOpened(context, notificationMessage.msgId);//bundle.getString(JPushInterface.EXTRA_MSG_ID)
 
-        Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        if (launch != null) {
-            launch.addCategory(Intent.CATEGORY_LAUNCHER);
-            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            context.startActivity(launch);
-        }
+//        Intent launch = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+//        if (launch != null) {
+//            launch.addCategory(Intent.CATEGORY_LAUNCHER);
+//            launch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            context.startActivity(launch);
+//        }
 
         String title = notificationMessage.notificationTitle;//bundle.getString(JPushInterface.EXTRA_NOTIFICATION_TITLE);
         String content = notificationMessage.notificationContent;//bundle.getString(JPushInterface.EXTRA_ALERT);
