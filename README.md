@@ -39,7 +39,6 @@
 
 1. 生成 iOS 工程，并打开该工程。
 2. 添加必要的框架：
-
    - CFNetwork.framework
    - CoreFoundation.framework
    - CoreTelephony.framework
@@ -53,6 +52,8 @@
    - UserNotifications.framework（Xcode 8 及以上）
    - libresolv.tbd（JPush 2.2.0 及以上版本需要，Xcode 7 以下版本是 libresolv.dylib）
    - WebKit.framework（JPush 3.3.0 及以上版本需要）
+   - AppTrackingTransparency.framework(Xcode 12 及以上，获取 IDFA 需要；如果不使用 IDFA，请不要添加)
+   - StoreKit.framework(JPush 3.3.6 及以上版本需要)
 
 
       ​
