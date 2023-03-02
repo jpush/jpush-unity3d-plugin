@@ -482,7 +482,7 @@ extern "C" {
      //    iOS系统要求最大不能超过20个，否则会报错。
      */
     void _setGeofenecMaxCountJpush(const int count){
-        [JPUSHService setGeofenecMaxCount:integerValue(count)];
+        [JPUSHService setGeofeneceMaxCount:integerValue(count)];
     }
     
     //
