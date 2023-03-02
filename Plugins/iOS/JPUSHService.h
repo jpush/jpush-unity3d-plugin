@@ -9,7 +9,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen HXHG. All rights reserved.
  */
 
-#define JPUSH_VERSION_NUMBER 3.3.4
+#define JPUSH_VERSION_NUMBER 4.8.1
 
 #import <Foundation/Foundation.h>
 
@@ -20,13 +20,15 @@
 @class UNNotificationSettings;
 @class UNNotificationRequest;
 @class UNNotification;
+@class UIView;
 @protocol JPUSHRegisterDelegate;
 @protocol JPUSHGeofenceDelegate;
-@protocol JPushInMessageDelegate;
+@protocol JPUSHNotiInMessageDelegate;
 
 typedef void (^JPUSHTagsOperationCompletion)(NSInteger iResCode, NSSet *iTags, NSInteger seq);
 typedef void (^JPUSHTagValidOperationCompletion)(NSInteger iResCode, NSSet *iTags, NSInteger seq, BOOL isBind);
 typedef void (^JPUSHAliasOperationCompletion)(NSInteger iResCode, NSString *iAlias, NSInteger seq);
+typedef void (^JPUSHPropertiesOperationCompletion)(NSInteger iResCode, NSDictionary *properties, NSInteger seq);
 
 extern NSString *const kJPFNetworkIsConnectingNotification; // 正在连接中
 extern NSString *const kJPFNetworkDidSetupNotification;     // 建立连接
@@ -117,6 +119,11 @@ typedef NS_ENUM(NSUInteger, JPAuthorizationStatus) {
 @property (nonatomic, copy) NSString *summaryArgument NS_AVAILABLE_IOS(12.0);  //插入到通知摘要中的部分参数。iOS12以上有效。
 @property (nonatomic, assign) NSUInteger summaryArgumentCount NS_AVAILABLE_IOS(12.0); //插入到通知摘要中的项目数。iOS12以上有效。
 @property (nonatomic, copy) NSString *targetContentIdentifier NS_AVAILABLE_IOS(13.0);  // An identifier for the content of the notification used by the system to customize the scene to be activated when tapping on a notification.
+//iOS15以上的新增属性 interruptionLevel为枚举UNNotificationInterruptionLevel
+// The interruption level determines the degree of interruption associated with the notification
+@property (nonatomic, assign) NSUInteger interruptionLevel NS_AVAILABLE_IOS(15.0);
+// Relevance score determines the sorting for the notification across app notifications. The expected range is between 0.0f and 1.0f.
+@property (nonatomic, assign) double relevanceScore NS_AVAILABLE_IOS(15.0);
 
 @end
 
@@ -357,6 +364,49 @@ typedef NS_ENUM(NSUInteger, JPAuthorizationStatus) {
  */
 + (NSSet *)filterValidTags:(NSSet *)tags;
 
+
+/*!
+ * Property操作接口
+ * 支持增加/删除/清空操作
+ * 详情请参考文档：https://docs.jiguang.cn/jpush/client/iOS/ios_api/）
+ */
+
+/**
+ 新增/更新用户属性
+ 
+ 如果某个用户属性之前已经存在了，则会更新；不存在，则会新增
+ 
+ @param properties  需要新增或者更新的的用户属性内容，类型为NSDictionary；
+                   Key 为用户属性名称，类型必须是 NSString 类型；Value为用户属性值，只支持 NSString、NSNumber、NSDate类型，如果属性为BOOL类型，传值时请转成NSNumber类型
+ @param completion 响应回调
+ @param seq 请求序列号
+ */
++ (void)setProperties:(NSDictionary *)properties
+           completion:(JPUSHPropertiesOperationCompletion)completion
+                  seq:(NSInteger)seq;
+
+
+/**
+ 删除指定属性
+
+ @param keys 需要删除的属性名称集合
+ @param completion 响应回调
+ @param seq 请求序列号
+ */
++ (void)deleteProperties:(NSSet<NSString *> *)keys
+              completion:(JPUSHPropertiesOperationCompletion)completion
+                     seq:(NSInteger)seq;
+
+
+/**
+ 清空所有属性
+ @param completion 响应回调
+ @param seq 请求序列号
+ */
++ (void)cleanProperties:(JPUSHPropertiesOperationCompletion)completion
+                    seq:(NSInteger)seq;
+
+
 ///----------------------------------------------------
 /// @name Stats 统计功能
 ///----------------------------------------------------
@@ -416,7 +466,14 @@ typedef NS_ENUM(NSUInteger, JPAuthorizationStatus) {
  默认值为 10 ，iOS系统默认地理围栏最大个数为20
  @param count 个数 count
  */
-+ (void)setGeofenecMaxCount:(NSInteger)count;
++ (void)setGeofeneceMaxCount:(NSInteger)count;
+
+/**
+ 设置地理围栏'圈内'类型的检测周期
+ 默认15分钟检测一次
+ */
++ (void)setGeofenecePeriodForInside:(NSInteger)seconds;
+
 /**
  注册地理围栏的代理
 
@@ -642,13 +699,15 @@ typedef NS_ENUM(NSUInteger, JPAuthorizationStatus) {
  */
 + (void)setLocationEanable:(BOOL)isEanble;
 
+
 /*!
-* @abstract 设置应用内消息的代理
+* @abstract 设置应用内提醒消息的代理
 *
-* @discussion 遵守JPushInMessageDelegate的代理对象
+* @discussion 遵守JPushNotiInMessageDelegate的代理对象
 *
 */
-+ (void)setInMessageDelegate:(id<JPushInMessageDelegate>)inMessageDelegate;
++ (void)setNotiInMessageDelegate:(id<JPUSHNotiInMessageDelegate>)notiInMessageDelegate;
+
 
 ///----------------------------------------------------
 ///********************下列方法已过期********************
@@ -722,6 +781,20 @@ callbackSelector:(SEL)cbSelector
 @end
 
 @protocol JPUSHGeofenceDelegate <NSObject>
+/**
+ 触发地理围栏
+ @param geofence 地理围栏触发时返回的信息
+ @param error 错误信息
+ */
+- (void)jpushGeofenceRegion:(NSDictionary *)geofence
+                      error:(NSError *)error;
+
+/**
+ 拉取地理围栏列表的回调
+ 
+ @param geofenceList 地理围栏列表
+ */
+- (void)jpushCallbackGeofenceReceived:(NSArray<NSDictionary*> *)geofenceList;
 
 /**
  进入地理围栏区域
@@ -730,7 +803,7 @@ callbackSelector:(SEL)cbSelector
  @param userInfo 地理围栏触发时返回的信息
  @param error 错误信息
  */
-- (void)jpushGeofenceIdentifer:(NSString *)geofenceId didEnterRegion:(NSDictionary *)userInfo error:(NSError *)error;
+- (void)jpushGeofenceIdentifer:(NSString *)geofenceId didEnterRegion:(NSDictionary *)userInfo error:(NSError *)error __attribute__((deprecated("JPush 3.6.0 版本已过期")));
 
 /**
  离开地理围栏区域
@@ -739,26 +812,27 @@ callbackSelector:(SEL)cbSelector
  @param userInfo 地理围栏触发时返回的信息
  @param error 错误信息
  */
-- (void)jpushGeofenceIdentifer:(NSString *)geofenceId didExitRegion:(NSDictionary *)userInfo error:(NSError *)error;
+- (void)jpushGeofenceIdentifer:(NSString *)geofenceId didExitRegion:(NSDictionary *)userInfo error:(NSError *)error __attribute__((deprecated("JPush 3.6.0 版本已过期")));
 
 @end
 
-@protocol JPushInMessageDelegate <NSObject>
 
-@optional
-/**
- *是否允许应用内消息弹出,默认为允许
-*/
-- (BOOL)jPushInMessageIsAllowedInMessagePop;
+@protocol JPUSHNotiInMessageDelegate <NSObject>
 
 /**
- *应用内消息已弹出
-*/
-- (void)jPushInMessageAlreadyPop;
+ 应用内提醒消息展示的回调
+ 
+ @param content 应用内提醒消息的内容
+
+ */
+- (void)jPushNotiInMessageDidShowWithContent:(NSDictionary *)content;
 
 /**
- *应用内消息已消失
-*/
-- (void)jPushInMessageAlreadyDisapperar;
+ 应用内提醒消息点击的回调
+ 
+ @param content 应用内提醒消息的内容
+
+ */
+- (void)jPushNotiInMessageDidClickWithContent:(NSDictionary *)content;
 
 @end
