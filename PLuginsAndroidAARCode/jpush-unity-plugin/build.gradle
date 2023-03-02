@@ -1,11 +1,8 @@
 buildscript {
     repositories {
         google()
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+        jcenter()
         mavenCentral()
-        maven{ url'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
 
     }
     dependencies {
@@ -20,7 +17,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         minSdkVersion 14
@@ -45,14 +42,20 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided files('libsprovided/unity-classes.jar')
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly files('libsprovided/unity-classes.jar')
 //    compile files('libs/jcore-android-2.1.2.jar')
 //    compile files('libs/jpush-android-3.3.4.jar')
+
+    compileOnly 'cn.jiguang.sdk:jpush:4.9.0'  // 此处以JPush 4.9.0 版本为例。
+    compileOnly 'cn.jiguang.sdk:jcore:4.1.0'  // 此处以JCore 4.1.0 版本为例。
 }
 
 repositories {
     flatDir{
         dirs 'libs'  //this way we can find the .aar file in libs folder
+        google()
+        jcenter()
+        mavenCentral()
     }
 }

@@ -11,9 +11,29 @@
 
 ### Android
 
-1. 替换 AndroidManifest.xml 里的包名。
-2. 将 AndroidManifest.xml 中的 JPUSH_APPKEY 值替换成极光控制台应用详情中的 AppKey 值。
-3. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Identifier* 设置为应用的包名。
+1. 生成build文件：
+   在 Unity 中选择 *File---Build Settings---Player Settings*
+   ---Publishing Settings ---- Build 勾上选以下选项下：
+*  Custom Launcher Gradle Template
+##### 会生成以下文件
+*  launcherTemplate.gradle文件
+#### 修改launcherTemplate.gradle文件：
+- 在dependencies里面加
+```
+    implementation 'cn.jiguang.sdk:jpush:4.9.0'  // 此处以JPush 4.9.0 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:4.1.0'  // 此处以JCore 4.1.0 版本为例。
+```
+- 在defaultConfig里面加,并填写对应信息
+```
+ manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "你的 Appkey ", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+```
+具体可参考Examples下  launcherTemplate.gradle 文件
+
+2. 配置项目里的包名：在 Unity 中选择 *File---Build Settings---Player Settings*，将 *Identification* 选项下的 *Bundle Identifier* 设置为应用的包名。
 
 ### iOS
 
