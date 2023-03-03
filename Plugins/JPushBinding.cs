@@ -266,7 +266,7 @@ namespace JPush
         public static List<string> FilterValidTags(List<string> jsonTags)
         {
             string tagsJsonStr = JsonHelper.ToJson(jsonTags);
-            string reJson;
+            string reJson = null;
 
             #if UNITY_ANDROID
             reJson = _plugin.Call<string>("filterValidTags", tagsJsonStr);
