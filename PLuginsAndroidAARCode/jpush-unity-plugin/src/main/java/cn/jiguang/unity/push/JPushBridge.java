@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import cn.jiguang.api.utils.JCollectionAuth;
 import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
@@ -42,6 +43,9 @@ public class JPushBridge {
         return jpushBridge;
     }
 
+    public void setAuth(boolean enable){
+        JCollectionAuth.setAuth(mContext,enable);
+    }
     public void setDebug(boolean enable) {
         JPushInterface.setDebugMode(enable);
     }

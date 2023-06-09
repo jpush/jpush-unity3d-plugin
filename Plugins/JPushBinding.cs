@@ -340,6 +340,10 @@ namespace JPush
         {
             _plugin.Call("setChannel",channel);
         }
+        public static void SetAuth(bool enable)
+        {
+            _plugin.Call("setAuth", enable);
+        }
 
 
         //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
