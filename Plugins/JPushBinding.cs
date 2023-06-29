@@ -330,6 +330,15 @@ namespace JPush
             #endif
         }
 
+         public static void SetAuth(bool enable)
+        {
+             #if UNITY_ANDROID
+            _plugin.Call("setAuth", enable);
+             #elif UNITY_IOS
+             _setAuth(enable);
+            #endif
+        }
+
 
 #if UNITY_ANDROID
 
@@ -339,10 +348,6 @@ namespace JPush
         public static void SetChannel(string channel)
         {
             _plugin.Call("setChannel",channel);
-        }
-        public static void SetAuth(bool enable)
-        {
-            _plugin.Call("setAuth", enable);
         }
 
 
@@ -681,6 +686,9 @@ namespace JPush
 
         [DllImport("__Internal")]
         private static extern void _setDebugJpush(bool enable);
+
+        [DllImport("__Internal")]
+        private static extern void _setAuth(bool enable);
 
         [DllImport("__Internal")]
         private static extern string _getRegistrationIdJpush();
