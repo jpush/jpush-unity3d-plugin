@@ -147,6 +147,7 @@ public class PluginsDemo : MonoBehaviour
             paramsJ["id"] = "5";
             paramsJ["content"] = "the content";
             paramsJ["badge"] = 9;
+            paramsJ["repeat"] = true;
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
             long ret = Convert.ToInt64(ts.TotalSeconds) + 3;
