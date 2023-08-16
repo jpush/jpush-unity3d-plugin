@@ -391,6 +391,12 @@ extern "C" {
                 trigger.fireDate = [NSDate dateWithTimeIntervalSince1970: [date doubleValue]];
             }
         }
+
+        if (dict[@"repeat"] && [dict[@"repeat"] isKindOfClass:[NSNumber class]]) {
+            BOOL repeat = [dict[@"repeat"] boolValue];
+            trigger.repeat = repeat;
+        }
+
         JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
         request.content = content;
         request.trigger = trigger;
