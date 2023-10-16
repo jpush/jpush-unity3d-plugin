@@ -1,6 +1,7 @@
 #import "JPushUnityManager.h"
 #import "JPUSHService.h"
 #import "JPushEventCache.h"
+#import "JGInforCollectionAuth.h"
 
 #pragma mark - Utility Function
 
@@ -143,6 +144,12 @@ extern "C" {
     const char *_getRegistrationIdJpush() {
         NSString *registrationID = [JPUSHService registrationID];
         return MakeHeapString([registrationID UTF8String]);
+    }
+
+     void _setAuth(bool enable) {
+        [JGInforCollectionAuth JCollectionAuth:^(JGInforCollectionAuthItems * _Nonnull authInfo) {
+            authInfo.isAuth = enable;
+        }];
     }
     
     // Tag & Alias - start
@@ -384,6 +391,12 @@ extern "C" {
                 trigger.fireDate = [NSDate dateWithTimeIntervalSince1970: [date doubleValue]];
             }
         }
+
+        if (dict[@"repeat"] && [dict[@"repeat"] isKindOfClass:[NSNumber class]]) {
+            BOOL repeat = [dict[@"repeat"] boolValue];
+            trigger.repeat = repeat;
+        }
+
         JPushNotificationRequest *request = [[JPushNotificationRequest alloc] init];
         request.content = content;
         request.trigger = trigger;

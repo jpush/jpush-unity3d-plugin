@@ -330,6 +330,15 @@ namespace JPush
             #endif
         }
 
+         public static void SetAuth(bool enable)
+        {
+             #if UNITY_ANDROID
+            _plugin.Call("setAuth", enable);
+             #elif UNITY_IOS
+             _setAuth(enable);
+            #endif
+        }
+
 
 #if UNITY_ANDROID
 
@@ -340,15 +349,11 @@ namespace JPush
         {
             _plugin.Call("setChannel",channel);
         }
-        public static void SetAuth(bool enable)
-        {
-            _plugin.Call("setAuth", enable);
-        }
-         public static void EnableAutoWakeup(bool enable)
+
+        public static void EnableAutoWakeup(bool enable)
         {
             _plugin.Call("enableAutoWakeup", enable);
         }
-
 
         //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
         //参数说明
@@ -685,6 +690,9 @@ namespace JPush
 
         [DllImport("__Internal")]
         private static extern void _setDebugJpush(bool enable);
+
+        [DllImport("__Internal")]
+        private static extern void _setAuth(bool enable);
 
         [DllImport("__Internal")]
         private static extern string _getRegistrationIdJpush();
