@@ -19,12 +19,12 @@ import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.api.NotificationMessage;
-import cn.jpush.android.service.JPushMessageReceiver;
+import cn.jpush.android.service.JPushMessageService;
 
 /**
  * 处理 tag/alias 相关 API 的操作结果。
  */
-public class JPushEventReceiver extends JPushMessageReceiver {
+public class JPushEventReceiver extends JPushMessageService {
     private static final String TAG = "JPushEventReceiver";
 
     @Override

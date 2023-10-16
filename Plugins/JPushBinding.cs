@@ -350,6 +350,10 @@ namespace JPush
             _plugin.Call("setChannel",channel);
         }
 
+        public static void EnableAutoWakeup(bool enable)
+        {
+            _plugin.Call("enableAutoWakeup", enable);
+        }
 
         //用于上报用户的通知栏被打开，或者用于上报用户自定义消息被展示等客户端需要统计的事件。
         //参数说明
