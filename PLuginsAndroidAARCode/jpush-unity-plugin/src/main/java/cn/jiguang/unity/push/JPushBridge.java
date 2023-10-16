@@ -46,6 +46,11 @@ public class JPushBridge {
     public void setAuth(boolean enable){
         JCollectionAuth.setAuth(mContext,enable);
     }
+
+    public void enableAutoWakeup(boolean enable){
+        JCollectionAuth.enableAutoWakeup(mContext,enable);
+    }
+
     public void setDebug(boolean enable) {
         JPushInterface.setDebugMode(enable);
     }
