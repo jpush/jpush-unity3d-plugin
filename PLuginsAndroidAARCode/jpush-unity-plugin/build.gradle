@@ -47,7 +47,7 @@ dependencies {
 //    compile files('libs/jcore-android-2.1.2.jar')
 //    compile files('libs/jpush-android-3.3.4.jar')
 
-    compileOnly 'cn.jiguang.sdk:jpush:5.2.0'  // 此处以JPush 4.9.0 版本为例。
+    compileOnly 'cn.jiguang.sdk:jpush:5.2.4'  // 此处以JPush 4.9.0 版本为例。
 //    compileOnly 'cn.jiguang.sdk:jcore:4.1.0'  // 此处以JCore 4.1.0 版本为例。
 }
 
