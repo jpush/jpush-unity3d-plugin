@@ -19,12 +19,12 @@ import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.api.NotificationMessage;
-import cn.jpush.android.service.JPushMessageService;
+import cn.jpush.android.service.JPushMessageReceiver;
 
 /**
  * 处理 tag/alias 相关 API 的操作结果。
  */
-public class JPushEventReceiver extends JPushMessageService {
+public class JPushEventReceiver extends JPushMessageReceiver {
     private static final String TAG = "JPushEventReceiver";
 
     @Override
@@ -207,22 +207,27 @@ public class JPushEventReceiver extends JPushMessageService {
     private static String noti2str(String msgId,String title, String content, String extras) {
 
 //        return ("{\"msgId:\""+msgId+"\",\"title\":\"" + title + "\",\"content\":\"" + content + "\",\"extras\":" + extras + "}");
-
-        Map<String,String> jsonMap = new HashMap<String, String>();
-        jsonMap.put("msgId",msgId);
-        jsonMap.put("title",title);
-        jsonMap.put("content",content);
-        jsonMap.put("extras",extras);
-        return toJson(jsonMap);
+        JSONObject object=new JSONObject();
+        try {
+            object.put("title",title);
+            object.put("content",content);
+            object.put("msgId",msgId);
+            object.put("extras",new JSONObject(extras));
+        }catch (Throwable throwable){
+        }
+        return object.toString();
     }
 
     private static String msg2str(String msgId,String content, String extras) {
 //        return ("{\"msgId:\""+msgId+"\",\"message\":\"" + content + "\",\"extras\":" + extras + "}");
-        Map<String,String> jsonMap = new HashMap<String, String>();
-        jsonMap.put("msgId",msgId);
-        jsonMap.put("message",content);
-        jsonMap.put("extras",extras);
-        return toJson(jsonMap);
+        JSONObject object=new JSONObject();
+        try {
+            object.put("message",content);
+            object.put("msgId",msgId);
+            object.put("extras",new JSONObject(extras));
+        }catch (Throwable throwable){
+        }
+        return object.toString();
     }
 
     private static String toJson(Map<String,String> jsonMap){
