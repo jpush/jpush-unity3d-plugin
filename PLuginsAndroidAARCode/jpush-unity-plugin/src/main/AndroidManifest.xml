@@ -19,15 +19,15 @@
         <!-- 新的 tag/alias 接口结果返回需要开发者配置一个自定的广播 -->
         <!-- 3.3.0开始所有事件将通过该类回调 -->
         <!-- 该广播需要继承 JPush 提供的 JPushMessageReceiver 类, 并如下新增一个 Intent-Filter -->
-        <service
+        <receiver
             android:name="cn.jiguang.unity.push.JPushEventReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.SERVICE_MESSAGE" />
+                <action android:name="cn.jpush.android.intent.RECEIVER_MESSAGE" />
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </service>
+        </receiver>
 
     </application>
 </manifest>
